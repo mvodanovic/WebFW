@@ -59,6 +59,7 @@ final class Framework
       if ($name === '') $name = \Config\Specifics\Data::GetItem('DEFAULT_CTL');
       if ($name === null || $name === '')
       {
+         echo \WebFW\Core\Doctype::XHTML11;
          require_once \WebFW\Config\FW_PATH . '/templates/helloworld.template.php';
          return;
       }

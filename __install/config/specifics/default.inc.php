@@ -9,7 +9,7 @@ final class Data
       'INCLUDE_FW_SIGNATURE' => true,
       'DISPLAY_ERRORS' => true,
       'ERROR_REPORTING' => -1,
-      'DEFAULT_CTL' => 'Test',
+      'DEFAULT_CTL' => null
    );
    
    public static function GetItem($key)
