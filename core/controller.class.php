@@ -56,6 +56,17 @@ abstract class Controller
          $this->error404('Action not defined: ' . $action . ' (in controller ' . $this->_className . ')');
       }
 
+      $reflection = new \ReflectionMethod($this, $action);
+      if (!$reflection->isPublic())
+      {
+         $this->error404('Action not declared as public: ' . $action . ' (in controller ' . $this->_className . ')');
+      }
+
+      if ($reflection->isStatic())
+      {
+         $this->error404('Action declared as static: ' . $action . ' (in controller ' . $this->_className . ')');
+      }
+
       $this->$action();
 
       if ($this->useTemplate === true)
