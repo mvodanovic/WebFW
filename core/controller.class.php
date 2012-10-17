@@ -23,18 +23,18 @@ abstract class Controller
       if (array_key_exists('action', $_REQUEST)) $value = trim($_REQUEST['action']);
       if ($value === '') $value = \Config\Specifics\Data::GetItem('DEFAULT_CTL_ACTION');
       if ($value !== null && $value !== '') $this->_action = $value;
-      
+
       $value = \Config\Specifics\Data::GetItem('DEFAULT_CTL_TEMPLATE');
       if ($value !== null) $this->template = $value;
-      
+
       $value = \Config\Specifics\Data::GetItem('DEFAULT_BASE_TEMPLATE');
       if ($value !== null) $this->baseTemplate = $value;
-      
+
       $value = \Config\Specifics\Data::GetItem('DEFAULT_DOCTYPE');
       if ($value === null) $value = $this->doctype;
       $value = '\WebFW\Core\Doctype::' . $value;
       if (defined($value))  $this->doctype = constant($value);
-      
+
       $this->_className = get_class($this);
    }
 
@@ -53,7 +53,18 @@ abstract class Controller
 
       if (!method_exists($this, $action))
       {
-         throw new \WebFW\Core\Exception('Action not defined: ' . $action . ' (in controller ' . $this->_className . ')');
+         $this->error404('Action not defined: ' . $action . ' (in controller ' . $this->_className . ')');
+      }
+
+      $reflection = new \ReflectionMethod($this, $action);
+      if (!$reflection->isPublic())
+      {
+         $this->error404('Action not declared as public: ' . $action . ' (in controller ' . $this->_className . ')');
+      }
+
+      if ($reflection->isStatic())
+      {
+         $this->error404('Action declared as static: ' . $action . ' (in controller ' . $this->_className . ')');
       }
 
       $this->$action();
@@ -150,6 +161,11 @@ abstract class Controller
    final protected function setCustomHtmlHead($html)
    {
       $this->_customHtmlHead = $html;
+   }
+
+   protected function error404($debugMessage = '404 Not Found')
+   {
+      \WebFW\Core\Framework::Error404($debugMessage);
    }
 }
 
