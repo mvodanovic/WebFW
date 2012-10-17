@@ -12,6 +12,7 @@ final class Exception extends \Exception
       else
       {
          header("HTTP/1.1 500 Internal Server Error");
+         trigger_error($this->getFile() . ': ' . $this->getLine() . ': ' .  $this->getMessage());
       }
       ob_end_clean();
       echo Doctype::XHTML11;
