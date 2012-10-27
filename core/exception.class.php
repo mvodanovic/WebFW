@@ -1,7 +1,7 @@
 <?php
 namespace WebFW\Core;
 
-final class Exception extends \Exception
+class Exception extends \Exception
 {
    public function ErrorMessage()
    {
@@ -21,5 +21,3 @@ final class Exception extends \Exception
       die;
    }
 }
-
-?>

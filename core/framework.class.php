@@ -46,6 +46,14 @@ final class Framework
 
       $file = \Config\Specifics\Data::GetItem('DISPLAY_ERRORS');
       if ($file !== null) ini_set('display_errors', $file);
+
+      $dbUsername = \Config\Specifics\Data::GetItem('DB_USERNAME');
+      $dbPassword = \Config\Specifics\Data::GetItem('DB_PASSWORD');
+      $dbName = \Config\Specifics\Data::GetItem('DB_NAME');
+      $dbHost = \Config\Specifics\Data::GetItem('DB_HOST');
+      if ($dbUsername !== null && $dbPassword !== null && $dbName !== null) {
+         \WebFW\Core\Database\PgSQLHandler::createNewConnection($dbUsername, $dbPassword, $dbName, $dbHost);
+      }
    }
 
    public static function Start()
@@ -76,8 +84,6 @@ final class Framework
 
    public static function ComponentRunner($name, &$params = null, $action = null)
    {
-      global $wFW_Component;
-
       if (!class_exists(self::$_cmpPath . $name))
       {
          throw new Exception('Component missing: ' . $name);
@@ -85,19 +91,19 @@ final class Framework
 
       $name = self::$_cmpPath . $name;
 
-      $wFW_Component = new $name();
+      $component = new $name();
 
       if (is_string($action))
       {
-         $wFW_Component->SetAction($action);
+         $component->SetAction($action);
       }
 
       if (is_array($params))
       {
-         $wFW_Component->SetParams($params);
+         $component->SetParams($params);
       }
 
-      $wFW_Component->Init();
+      return $component->Init();
    }
 
    public static function Error404($debugMessage = '404 Not Found')

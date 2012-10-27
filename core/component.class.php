@@ -6,10 +6,11 @@ abstract class Component
    protected $template = 'default';
    protected $useTemplate = true;
    protected $param = array();
-   private $_action = 'Execute';
-   private $_className;
+   protected $_action = 'Execute';
+   protected $_className;
+   protected $templateVariables = array();
 
-   final public function __construct()
+   public function __construct()
    {
       $this->_className = get_class($this);
    }
@@ -31,17 +32,27 @@ abstract class Component
 
       if ($this->useTemplate === true)
       {
-         $template = explode('\\', $this->_className);
-         $template = \WebFW\Config\CMP_TEMPLATE_PATH . DIRECTORY_SEPARATOR . strtolower(end($template)) . DIRECTORY_SEPARATOR . strtolower($this->template) . '.template.php';
-         if (!file_exists($template))
-         {
-            throw new Exception('Component template missing: ' . $template);
-         }
+         $templateDir = explode('\\', $this->_className);
+         $templateDir = strtolower(end($templateDir));
+         $templateDir = \WebFW\Config\CMP_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDir . DIRECTORY_SEPARATOR;
 
-         include $template;
+         try {
+            $template = new \WebFW\Externals\PHPTemplate($this->template . '.template.php', $templateDir);
+         } catch (Exception $e) {
+            throw new Exception('Component template missing: ' . $templateDir . $this->template . '.template.php');
+         }
+         foreach ($this->templateVariables as $name => &$value) {
+            $template->set($name, $value);
+         }
+         return $template->fetch();
       }
 
       $this->afterWork();
+   }
+
+   final protected function SetTplVar($name, $value)
+   {
+      $this->templateVariables[$name] = $value;
    }
 
    final public function SetAction($action)
@@ -71,5 +82,3 @@ abstract class Component
    {
    }
 }
-
-?>

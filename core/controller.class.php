@@ -9,19 +9,24 @@ abstract class Controller
    protected $useTemplate = true;
    protected $simpleOutput = false;
    protected $doctype = 'XHTML11';
+   protected $redirectUrl = null;
+   protected $templateVariables = array();
 
-   private $_action = 'Execute';
-   private $_className;
+   protected $_action;
+   protected $_className;
    private $_urlJS = array();
    private $_urlCSS = array();
    private $_htmlMeta = array();
    private $_customHtmlHead = '';
 
-   final public function __construct()
+   const DEFAULT_ACTION_NAME = 'Execute';
+
+   public function __construct()
    {
+      $this->_action = $this->getDefaultActionName();
+
       $value = '';
       if (array_key_exists('action', $_REQUEST)) $value = trim($_REQUEST['action']);
-      if ($value === '') $value = \Config\Specifics\Data::GetItem('DEFAULT_CTL_ACTION');
       if ($value !== null && $value !== '') $this->_action = $value;
 
       $value = \Config\Specifics\Data::GetItem('DEFAULT_CTL_TEMPLATE');
@@ -45,10 +50,6 @@ abstract class Controller
 
    final public function Init()
    {
-      global $wFW_HtmlBody, $wFW_HtmlHead, $wFW_PageTitle, $wFW_Controller;
-
-      ob_start();
-
       $action = $this->_action;
 
       if (!method_exists($this, $action))
@@ -67,19 +68,35 @@ abstract class Controller
          $this->error404('Action declared as static: ' . $action . ' (in controller ' . $this->_className . ')');
       }
 
+      if ($this->_action !== $this->getDefaultActionName()) {
+         $this->template = strtolower($action);
+      }
+
       $this->$action();
 
-      if ($this->useTemplate === true)
-      {
-         $template = explode('\\', $this->_className);
-         $template = \WebFW\Config\CTL_TEMPLATE_PATH . DIRECTORY_SEPARATOR . strtolower(end($template)) . DIRECTORY_SEPARATOR . strtolower($this->template) . '.template.php';
-         if (!file_exists($template))
-         {
-            throw new Exception('Controller template missing: ' . $template);
-         }
-
-         include $template;
+      if ($this->redirectUrl !== null) {
+         $this->setRedirectUrl($this->redirectUrl, true);
       }
+
+      if ($this->useTemplate !== true) {
+         return;
+      }
+
+      $templateDir = explode('\\', $this->_className);
+      $templateDir = strtolower(end($templateDir));
+      $templateDir = \WebFW\Config\CTL_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDir . DIRECTORY_SEPARATOR;
+
+      try {
+         $template = new \WebFW\Externals\PHPTemplate($this->template . '.template.php', $templateDir);
+      } catch (Exception $e) {
+         throw new Exception('Controller template missing: ' . $templateDir . $this->template . '.template.php');
+      }
+      foreach ($this->templateVariables as $name => &$value) {
+         $template->set($name, $value);
+      }
+
+      $wFW_HtmlBody = $template->fetch();
+      $wFW_HtmlHead = $this->_customHtmlHead;
 
       foreach ($this->_urlJS as &$url)
       {
@@ -108,30 +125,27 @@ abstract class Controller
          }
       }
 
-      $wFW_HtmlHead .= $this->_customHtmlHead;
-
-      $wFW_HtmlBody = ob_get_contents();
-      $wFW_PageTitle = $this->pageTitle;
-      ob_end_clean();
-
-      ob_start();
       if ($this->simpleOutput === false)
       {
-         $baseTemplate = \WebFW\Config\BASE_TEMPLATE_PATH . DIRECTORY_SEPARATOR . strtolower($this->baseTemplate) . '.template.php';
-         if (!file_exists($baseTemplate))
-         {
-            throw new Exception('Base template missing: ' . $baseTemplate);
-         }
+         $templateDir = \WebFW\Config\BASE_TEMPLATE_PATH . DIRECTORY_SEPARATOR;
 
-         echo $this->doctype;
-         echo \WebFW\Core\Doctype::wFW_SIG;
-         include $baseTemplate;
+         try {
+            $template = new \WebFW\Externals\PHPTemplate($this->baseTemplate . '.template.php', $templateDir);
+         } catch (Exception $e) {
+            throw new Exception('Base template missing: ' . $templateDir . $this->baseTemplate . '.template.php');
+         }
+         foreach ($this->templateVariables as $name => &$value) {
+            $template->set($name, $value);
+         }
+         $template->set('wFW_HtmlBody', $wFW_HtmlBody);
+         $template->set('wFW_HtmlHead', $wFW_HtmlHead);
+         $template->set('wFW_PageTitle', $this->pageTitle);
+         $template->set('wFW_Controller', $this);
+
+         $wFW_HtmlBody = $this->doctype . $template->fetch();
       }
-      else
-      {
-         echo $wFW_HtmlBody;
-      }
-      ob_end_flush();
+
+      echo $wFW_HtmlBody;
    }
 
    final protected function setLinkedJavaScript($url)
@@ -166,6 +180,34 @@ abstract class Controller
    protected function error404($debugMessage = '404 Not Found')
    {
       \WebFW\Core\Framework::Error404($debugMessage);
+   }
+
+   final protected function SetTplVar($name, $value)
+   {
+      $this->templateVariables[$name] = $value;
+   }
+
+   protected function setRedirectUrl($url, $doRedirectNow = false)
+   {
+      if ($doRedirectNow === true) {
+         if (array_key_exists('redirect_debug', $_REQUEST) && $_REQUEST['redirect_debug'] == 1) {
+            trigger_error('Redirect: ' . $url);
+         }
+         header('Location: ' . $url);
+         die;
+      }
+
+      $this->redirectUrl = $url;
+   }
+
+   protected function getDefaultActionName()
+   {
+      $action = \Config\Specifics\Data::GetItem('DEFAULT_CTL_ACTION');
+      if ($action === null || $action === '') {
+         $action = static::DEFAULT_ACTION_NAME;
+      }
+
+      return $action;
    }
 }
 
