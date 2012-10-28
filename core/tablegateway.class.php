@@ -15,7 +15,7 @@ abstract class TableGateway
 	protected $recordSetIsNew = true;
 
 	const SQL_SELECT = 'SELECT ::field_names:: FROM ::table_name:: WHERE ::field_pairs:: LIMIT 1;';
-	const SQL_INSERT = 'INSERT INTO ::table_name:: (::field_names::) VALUES (::field_values::);';
+	const SQL_INSERT = 'INSERT INTO ::table_name:: (::field_names::) VALUES (::field_values::) RETURNING ::primary_key_name::;';
 	const SQL_UPDATE = 'UPDATE ::table_name:: SET ::field_pairs:: WHERE ::primary_key_name:: = ::primary_key_value::;';
 	const SQL_DELETE = 'DELETE FROM ::table_name:: WHERE ::primary_key_name:: = ::primary_key_value::;';
 
@@ -127,10 +127,12 @@ abstract class TableGateway
 			$fieldValues[] = $this->escapeTableLiteral($value);
 		}
 		$fieldValues = implode(',', $fieldValues);
+		$primaryKeyName = $this->getEscapedPrimaryKeyName();
 
 		$sql = preg_replace('#::table_name::#', $tableName, $sql, 1);
 		$sql = preg_replace('#::field_names::#', $fieldNames, $sql, 1);
 		$sql = preg_replace('#::field_values::#', $fieldValues, $sql, 1);
+		$sql = preg_replace('#::primary_key_name::#', $primaryKeyName, $sql, 1);
 
 		$result = BaseHandler::getInstance()->query($sql);
 		if ($result === false) {
@@ -139,6 +141,15 @@ abstract class TableGateway
 
 		if (BaseHandler::getInstance()->getAffectedRows($result) === 0) {
 			throw new Exception('Database insert failed!');
+		}
+
+		$row = BaseHandler::getInstance()->fetchAssoc($result);
+		if ($row === false) {
+			throw new Exception('Database insert failed!');
+		}
+
+		foreach ($row as $key => $value) {
+			$this->recordData[$key] = TableDefinition::castValueToType($value, $this->tableDefinition->getFieldType($key));
 		}
 
 		$this->oldValues = $this->recordData;
