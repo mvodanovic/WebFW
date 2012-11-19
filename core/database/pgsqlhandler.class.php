@@ -3,11 +3,13 @@ namespace WebFW\Core\Database;
 
 use \WebFW\Core\Exception;
 
-class PgSQLHandler extends BaseHandler implements \WebFW\Interfaces\IDatabaseHandler
+class PgSQLHandler extends BaseHandler
 {
 	protected $connectionResource = false;
 	protected $connectionString = '';
 	protected $lastQueryResource = false;
+
+	const DEFAULT_PORT = 5432;
 
 	protected function __construct($username, $password, $dbName, $host, $port)
 	{

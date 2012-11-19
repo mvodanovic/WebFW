@@ -3,10 +3,12 @@ namespace WebFW\Core\Database;
 
 use \WebFW\Core\Exception;
 
-abstract class BaseHandler
+abstract class BaseHandler implements \WebFW\Interfaces\IDatabaseHandler
 {
 	protected static $instances = array();
 	protected static $activeInstanceID = null;
+
+	const DEFAULT_PORT = null;
 
 	public static function getInstance($instanceID = null)
 	{
@@ -39,9 +41,17 @@ abstract class BaseHandler
 		return static::$activeInstanceID;
 	}
 
-	public static function createNewConnection($username, $password, $dbName, $host = '127.0.0.1', $port = 5432)
+	public static function createNewConnection($username, $password, $dbName, $host = null, $port = null)
 	{
-		$instance = new static($username, $password, $dbName, $host = '127.0.0.1', $port = 5432);
+		if ($port === null) {
+			$port = static::DEFAULT_PORT;
+		}
+
+		if ($host === null) {
+			$host = '127.0.0.1';
+		}
+
+		$instance = new static($username, $password, $dbName, $host, $port);
 		static::$instances[] = &$instance;
 		end(static::$instances);
 		$instanceID = key(static::$instances);

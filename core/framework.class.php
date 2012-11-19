@@ -1,6 +1,8 @@
 <?php
 namespace WebFW\Core;
 
+use \Config\Specifics\Data;
+
 final class Framework
 {
    private static $_ctlPath = 'Application\Controllers\\';
@@ -41,18 +43,24 @@ final class Framework
          throw new Exception('Method \'GetItem\' missing in class \'\Config\Specifics\Data\' in file: ' . $file);
       }
 
-      $file = \Config\Specifics\Data::GetItem('ERROR_REPORTING');
+      $file = Data::GetItem('ERROR_REPORTING');
       if ($file !== null) error_reporting($file);
 
-      $file = \Config\Specifics\Data::GetItem('DISPLAY_ERRORS');
+      $file = Data::GetItem('DISPLAY_ERRORS');
       if ($file !== null) ini_set('display_errors', $file);
 
-      $dbUsername = \Config\Specifics\Data::GetItem('DB_USERNAME');
-      $dbPassword = \Config\Specifics\Data::GetItem('DB_PASSWORD');
-      $dbName = \Config\Specifics\Data::GetItem('DB_NAME');
-      $dbHost = \Config\Specifics\Data::GetItem('DB_HOST');
+      $dbUsername = Data::GetItem('DB_USERNAME');
+      $dbPassword = Data::GetItem('DB_PASSWORD');
+      $dbName = Data::GetItem('DB_NAME');
+      $dbHost = Data::GetItem('DB_HOST');
+      $dbPort = Data::GetItem('DB_PORT');
       if ($dbUsername !== null && $dbPassword !== null && $dbName !== null) {
-         \WebFW\Core\Database\PgSQLHandler::createNewConnection($dbUsername, $dbPassword, $dbName, $dbHost);
+         $handler = Data::GetItem('DB_HANDLER');
+         if (class_exists($handler) && is_subclass_of($handler, '\WebFW\Core\Database\BaseHandler')) {
+            $handler::createNewConnection($dbUsername, $dbPassword, $dbName, $dbHost, $dbPort);
+         } else {
+            throw new Exception('DB handler \'' . $handler . '\' does not exist.');
+         }
       }
    }
 
@@ -64,7 +72,7 @@ final class Framework
 
       $name = '';
       if (array_key_exists('ctl', $_REQUEST)) $name = trim($_REQUEST['ctl']);
-      if ($name === '') $name = \Config\Specifics\Data::GetItem('DEFAULT_CTL');
+      if ($name === '') $name = Data::GetItem('DEFAULT_CTL');
       if ($name === null || $name === '')
       {
          echo \WebFW\Core\Doctype::XHTML11;
@@ -108,14 +116,14 @@ final class Framework
 
    public static function Error404($debugMessage = '404 Not Found')
    {
-      if (\Config\Specifics\Data::GetItem('SHOW_DEBUG_INFO') === true)
+      if (Data::GetItem('SHOW_DEBUG_INFO') === true)
       {
          throw new Exception($debugMessage, 404);
       }
-      elseif (file_exists(\Config\Specifics\Data::GetItem('ERROR_404_PAGE')))
+      elseif (file_exists(Data::GetItem('ERROR_404_PAGE')))
       {
          header("HTTP/1.1 404 Not Found");
-         readfile(\Config\Specifics\Data::GetItem('ERROR_404_PAGE'));
+         readfile(Data::GetItem('ERROR_404_PAGE'));
          die;
       }
       else
