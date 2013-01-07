@@ -6,24 +6,23 @@ use \Config\Specifics\Data;
 
 class Router
 {
-    protected static $_instance;
-    protected static $_class;
+    protected static $instance;
+    protected static $class;
 
     public static function GetInstance()
    {
-        if (!isset(static::$_instance)) {
-            static::$_class = get_called_class();
-            static::$_instance = new static::$_class;
+        if (!isset(static::$instance)) {
+            static::$class = get_called_class();
+            static::$instance = new static::$class;
         }
 
-        return self::$_instance;
+        return static::$instance;
    }
 
-    public static function URL($controller, $action = 'execute', $params = array(), $escapeAmps = true, $rawurlencode = true)
+    public static function URL($controller, $action = null, $params = array(), $escapeAmps = true, $rawurlencode = true)
     {
-        if (!isset(static::$_instance)) {
-            static::$_class = get_called_class();
-            static::$_instance = new static::$_class;
+        if (!isset(static::$instance)) {
+            static::GetInstance();
         }
 
         $amp = '&amp;';
@@ -38,15 +37,19 @@ class Router
 
         $url = '';
 
+        if ($action === null) {
+            $action = Controller::getDefaultActionName();
+        }
+
         if (Data::GetItem('APP_REWRITE_ACTIVE') === true) {
         } elseif (
             $controller === Data::GetItem('DEFAULT_CTL')
-            && $action === Data::GetItem('DEFAULT_CTL_ACTION')
+            && $action === Controller::getDefaultActionName()
         ) {
             $url = Data::GetItem('APP_REWRITE_BASE');
         } else {
             $url = Data::GetItem('APP_REWRITE_BASE') . '?ctl=' . $encodeFunction($controller);
-            if ($action !== 'Execute' && $action !== null) {
+            if ($action !== \WebFW\Core\Controller::DEFAULT_ACTION_NAME && $action !== null) {
                 $url .= $amp . 'action=' . $encodeFunction($action);
             }
 
@@ -69,7 +72,7 @@ class Router
 
     public static function GetClass()
     {
-        return static::$_class;
+        return static::$class;
     }
 
     final public function __clone()

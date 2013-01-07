@@ -20,7 +20,7 @@ abstract class Controller
 
     public function __construct()
     {
-        $this->action = $this->getDefaultActionName();
+        $this->action = static::getDefaultActionName();
 
         $value = '';
         if (array_key_exists('action', $_REQUEST)) {
@@ -55,7 +55,7 @@ abstract class Controller
             $this->error404('Action declared as static: ' . $action . ' (in controller ' . $this->className . ')');
         }
 
-        if ($this->action !== $this->getDefaultActionName()) {
+        if ($this->action !== static::getDefaultActionName()) {
             $this->template = strtolower($action);
         }
 
@@ -108,7 +108,7 @@ abstract class Controller
         $this->redirectUrl = $url;
     }
 
-    protected function getDefaultActionName()
+    public static function getDefaultActionName()
     {
         $action = Data::GetItem('DEFAULT_CTL_ACTION');
         if ($action === null || $action === '') {
