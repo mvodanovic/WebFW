@@ -1,4 +1,5 @@
 <?php
+
 namespace WebFW\Externals;
 
 /*~ class.pop3.php

@@ -10,5 +10,3 @@ define ('WebFW\Config\CTL_TEMPLATE_PATH', realpath(GENERAL_TEMPLATE_PATH . '/con
 define ('WebFW\Config\BASE_TEMPLATE_PATH', realpath(GENERAL_TEMPLATE_PATH . '/base'));
 define ('WebFW\Config\CMP_TEMPLATE_PATH', realpath(GENERAL_TEMPLATE_PATH . '/components'));
 define ('WebFW\Config\APP_ID', 'WebFW');
-
-?>

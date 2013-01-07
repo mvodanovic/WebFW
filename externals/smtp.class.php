@@ -1,4 +1,5 @@
 <?php
+
 namespace WebFW\Externals;
 
 /*~ class.smtp.php
