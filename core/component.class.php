@@ -2,83 +2,86 @@
 
 namespace WebFW\Core;
 
+use \WebFW\Externals\PHPTemplate;
+
 abstract class Component
 {
-    protected $template = 'default';
     protected $useTemplate = true;
-    protected $param = array();
-    protected $_action = 'execute';
-    protected $_className;
+    protected $params = array();
     protected $templateVariables = array();
+    protected $ownerObject;
 
-    public function __construct()
+    public function __construct(&$params, &$ownerObject)
     {
-        $this->_className = get_class($this);
-    }
-
-    final public function Init()
-    {
-        $action = $this->_action;
-
-        if (!method_exists($this, $action)) {
-            throw new Exception('Action not defined: ' . $action . ' (in component ' . $this->_className . ')');
+        $this->setDefaultParams();
+        if (is_array($params)) {
+            foreach ($params as $name => &$value) {
+                $this->setParam($name, $value);
+            }
         }
 
-        $this->setDefaultParams();
+        $this->ownerObject = &$ownerObject;
+    }
 
-        $this->beforeWork();
-
-        $this->$action();
+    public function run()
+    {
+        $executeResult = $this->execute();
 
         if ($this->useTemplate === true) {
-            $templateDir = explode('\\', $this->_className);
-            $templateDir = strtolower(end($templateDir));
-            $templateDir = \WebFW\Config\CMP_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDir . DIRECTORY_SEPARATOR;
-
             try {
-                $template = new \WebFW\Externals\PHPTemplate($this->template . '.template.php', $templateDir);
+                $template = new PHPTemplate(
+                    $this->getParam('template') . '.template.php',
+                    $this->getParam('templateDirectory')
+                );
             } catch (Exception $e) {
-                throw new Exception('Component template missing: ' . $templateDir . $this->template . '.template.php');
+                throw new Exception('Component template missing: '
+                    . $this->getParam('templateDirectory')
+                    . $this->getParam('template')
+                    . '.template.php'
+                );
             }
+            $template->set('component', $this);
+            $template->set('ownerObject', $this->ownerObject);
             foreach ($this->templateVariables as $name => &$value) {
                 $template->set($name, $value);
             }
             return $template->fetch();
         }
 
-        $this->afterWork();
+        return $executeResult;
     }
 
-    final protected function SetTplVar($name, $value)
+    protected function setTplVar($name, $value)
     {
         $this->templateVariables[$name] = $value;
     }
 
-    final public function SetAction($action)
-    {
-        if (is_string($action)) {
-            $this->_action = $action;
-        }
-    }
-
-    final public function SetParams(&$params)
-    {
-        if (is_array($params)) {
-            foreach ($params as $key => &$value) {
-                $this->param[$key] = $value;
-            }
-        }
-    }
-
     protected function setDefaultParams()
     {
+        $templateDirectory = explode('\\', get_class($this));
+        $templateDirectory = strtolower(end($templateDirectory));
+        $templateDirectory = \WebFW\Config\CMP_TEMPLATE_PATH
+            . DIRECTORY_SEPARATOR
+            . $templateDirectory
+            . DIRECTORY_SEPARATOR;
+
+        $this->setParam('templateDirectory', $templateDirectory);
+        $this->setParam('template', 'default');
     }
 
-    protected function beforeWork()
+    protected function getParam($name)
     {
+        if (!array_key_exists($name, $this->params)) {
+            return null;
+        }
+
+        return $this->params[$name];
     }
 
-    protected function afterWork()
+    protected function setParam($name, $value)
     {
+        $this->params[$name] = $value;
     }
+
+    abstract protected function execute();
 }

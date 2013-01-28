@@ -52,8 +52,6 @@ final class Framework
 
     public static function Start()
     {
-        global $wFW_Controller;
-
         self::_loadConfig();
 
         $name = '';
@@ -67,35 +65,40 @@ final class Framework
             require_once \WebFW\Config\FW_PATH . '/templates/helloworld.template.php';
             return;
         }
-        if (!class_exists(self::$_ctlPath . $name)) {
+        $namespace = static::$_ctlPath;
+        if (array_key_exists('ns', $_REQUEST) && $_REQUEST['ns'] !== '') {
+            $namespace = $_REQUEST['ns'];
+        }
+        if (substr($namespace, -1) !== '\\') {
+            $namespace .= '\\';
+        }
+        if (!class_exists($namespace . $name)) {
             self::Error404('Controller missing: ' . $name);
         }
 
-        $name = self::$_ctlPath . $name;
+        $name = $namespace . $name;
 
-        $wFW_Controller = new $name();
-        $wFW_Controller->Init();
+        $controller = new $name();
+        $controller->executeAction();
+        $controller->processOutput();
+        echo $controller->getOutput();
     }
 
-    public static function ComponentRunner($name, &$params = null, $action = null)
+    public static function runComponent($name, $namespace = null, $params = null, $ownerObject = null)
     {
-        if (!class_exists(self::$_cmpPath . $name)) {
+        if ($namespace === null) {
+            $namespace = static::$_cmpPath;
+        }
+
+        $name = $namespace . $name;
+
+        if (!class_exists($name)) {
             throw new Exception('Component missing: ' . $name);
         }
 
-        $name = self::$_cmpPath . $name;
+        $component = new $name($params, $ownerObject);
 
-        $component = new $name();
-
-        if (is_string($action)) {
-            $component->SetAction($action);
-        }
-
-        if (is_array($params)) {
-            $component->SetParams($params);
-        }
-
-        return $component->Init();
+        return $component->run();
     }
 
     public static function Error404($debugMessage = '404 Not Found')

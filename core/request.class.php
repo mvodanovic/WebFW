@@ -10,6 +10,11 @@ class Request
     protected function __construct()
     {
         $this->values = &$_REQUEST;
+        foreach ($this->values as $key => $value) {
+            if ($value === '') {
+                unset ($this->values[$key]);
+            }
+        }
     }
 
     public static function getInstance()

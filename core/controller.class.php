@@ -15,6 +15,7 @@ abstract class Controller
     protected $templateVariables = array();
     protected $action;
     protected $className;
+    protected $output;
 
     const DEFAULT_ACTION_NAME = 'execute';
 
@@ -36,31 +37,27 @@ abstract class Controller
         }
 
         $this->className = get_class($this);
-    }
 
-    public function init()
-    {
-        $action = $this->action;
-
-        if (!method_exists($this, $action)) {
-            $this->error404('Action not defined: ' . $action . ' (in controller ' . $this->className . ')');
+        if (!method_exists($this, $this->action)) {
+            $this->error404('Action not defined: ' . $this->action . ' (in controller ' . $this->className . ')');
         }
 
-        $reflection = new ReflectionMethod($this, $action);
+        $reflection = new ReflectionMethod($this, $this->action);
         if (!$reflection->isPublic()) {
-            $this->error404('Action not declared as public: ' . $action . ' (in controller ' . $this->className . ')');
+            $this->error404('Action not declared as public: ' . $this->action . ' (in controller ' . $this->className . ')');
         }
 
         if ($reflection->isStatic()) {
-            $this->error404('Action declared as static: ' . $action . ' (in controller ' . $this->className . ')');
+            $this->error404('Action declared as static: ' . $this->action . ' (in controller ' . $this->className . ')');
         }
 
         if ($this->action !== static::getDefaultActionName()) {
-            $this->template = strtolower($action);
+            $this->template = strtolower($this->action);
         }
+    }
 
-        $this->$action();
-
+    public function processOutput()
+    {
         if ($this->redirectUrl !== null) {
             $this->setRedirectUrl($this->redirectUrl, true);
         }
@@ -78,11 +75,12 @@ abstract class Controller
         } catch (Exception $e) {
             throw new Exception('Controller template missing: ' . $templateDir . $this->template . '.template.php');
         }
+        $template->set('controller', $this);
         foreach ($this->templateVariables as $name => &$value) {
             $template->set($name, $value);
         }
 
-        echo $template->fetch();
+        $this->output = $template->fetch();
     }
 
     protected function error404($debugMessage = '404 Not Found')
@@ -116,5 +114,15 @@ abstract class Controller
         }
 
         return $action;
+    }
+
+    public function executeAction()
+    {
+        $this->{$this->action}();
+    }
+
+    public function getOutput()
+    {
+        return $this->output;
     }
 }

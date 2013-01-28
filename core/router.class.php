@@ -3,6 +3,7 @@
 namespace WebFW\Core;
 
 use \Config\Specifics\Data;
+use \WebFW\Core\Controller;
 
 class Router
 {
@@ -19,7 +20,7 @@ class Router
         return static::$instance;
    }
 
-    public static function URL($controller, $action = null, $params = array(), $escapeAmps = true, $rawurlencode = true)
+    public static function URL($controller, $action = null, $namespace = null, $params = array(), $escapeAmps = true, $rawurlencode = true)
     {
         if (!isset(static::$instance)) {
             static::GetInstance();
@@ -48,26 +49,42 @@ class Router
         ) {
             $url = Data::GetItem('APP_REWRITE_BASE');
         } else {
-            $url = Data::GetItem('APP_REWRITE_BASE') . '?ctl=' . $encodeFunction($controller);
-            if ($action !== \WebFW\Core\Controller::DEFAULT_ACTION_NAME && $action !== null) {
-                $url .= $amp . 'action=' . $encodeFunction($action);
+            $urlParams = array('ctl=' . $encodeFunction($controller));
+
+            if ($action !== Controller::DEFAULT_ACTION_NAME && $action !== null) {
+                $urlParams[] = 'action=' . $encodeFunction($action);
+            }
+
+            if ($namespace !== null) {
+                $urlParams[] = 'ns=' . $encodeFunction($namespace);
             }
 
             if (is_array($params)) {
-                foreach ($params as $key => $value)
-                {
-                    $key = trim($key);
-                    $value = trim($value);
+                foreach ($params as $key => $value) {
                     if ($key === '' || $value === '') {
                         continue;
                     }
 
-                    $url .= $amp . $encodeFunction($key) . '=' . $encodeFunction($value);
+                    $urlParams[] = $encodeFunction($key) . '=' . $encodeFunction($value);
                 }
             }
+
+            $url = Data::GetItem('APP_REWRITE_BASE') . '?' . implode($amp, $urlParams);
         }
 
         return $url;
+    }
+
+    public static function URLFromRoute(Route $route)
+    {
+        return static::URL(
+            $route->controller,
+            $route->action,
+            $route->namespace,
+            $route->params,
+            $route->escapeAmps,
+            $route->rawurlencode
+        );
     }
 
     public static function GetClass()

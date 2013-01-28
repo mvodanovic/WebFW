@@ -31,11 +31,10 @@ abstract class HTMLController extends Controller
         return $this->pageTitle;
     }
 
-    public function init()
+    public function processOutput()
     {
-        ob_start();
-        parent::init();
-        $htmlBody = ob_get_clean();
+        parent::processOutput();
+
         $htmlHead = $this->customHtmlHead;
 
         foreach ($this->urlJS as &$url) {
@@ -84,15 +83,13 @@ abstract class HTMLController extends Controller
             foreach ($this->templateVariables as $name => &$value) {
                 $template->set($name, $value);
             }
-            $template->set('htmlBody', $htmlBody);
+            $template->set('htmlBody', $this->output);
             $template->set('htmlHead', $htmlHead);
             $template->set('pageTitle', $this->pageTitle);
             $template->set('controller', $this);
 
-            $htmlBody = $template->fetch();
+            $this->output = $template->fetch();
         }
-
-        echo $htmlBody;
     }
 
     protected function setLinkedJavaScript($url)
