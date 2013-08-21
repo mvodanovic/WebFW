@@ -194,11 +194,12 @@ abstract class Controller extends \WebFW\Core\HTMLController
         }
     }
 
-    protected function addListColumn($key, $caption)
+    protected function addListColumn($key, $caption, $shrinked = false)
     {
         $this->listColumns[] = array(
             'key' => $key,
             'caption' => $caption,
+            'shrinked' => $shrinked,
         );
     }
 
@@ -287,5 +288,23 @@ abstract class Controller extends \WebFW\Core\HTMLController
     public function getErrorMessage()
     {
         return $this->errorMessage;
+    }
+
+    public static function getBooleanPrint($boolean)
+    {
+        switch (true) {
+            case $boolean === true:
+            case $boolean === 1:
+            case $boolean === '1':
+            case $boolean === 't':
+                return 'true';
+            case $boolean === false:
+            case $boolean === 0:
+            case $boolean === '0':
+            case $boolean === 'f':
+                return 'false';
+            default:
+                return 'n/a';
+        }
     }
 }

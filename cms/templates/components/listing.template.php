@@ -2,6 +2,7 @@
 
 use \WebFW\Core\Framework;
 use \WebFW\Core\Classes\HTML\Message;
+use \WebFW\Core\ArrayAccess;
 
 ?>
 <?=Framework::runComponent(
@@ -39,7 +40,9 @@ use \WebFW\Core\Classes\HTML\Message;
         <th class="shrinked"><input type="checkbox" /></th>
         <?php endif; ?>
         <?php foreach ($listColumns as &$column): ?>
-        <th><?=htmlspecialchars($column['caption']); ?></th>
+        <th<?php if ($column['shrinked'] === true): ?> class="shrinked"<?php endif; ?>>
+            <?=htmlspecialchars($column['caption']); ?>
+        </th>
         <?php endforeach; ?>
         <?php if (!empty($rowButtons)): ?>
         <th class="shrinked">Actions</th>
@@ -63,7 +66,9 @@ use \WebFW\Core\Classes\HTML\Message;
             <td class="shrinked"><input type="checkbox" /></td>
             <?php endif; ?>
             <?php foreach ($listColumns as &$column): ?>
-            <td><?=array_key_exists($column['key'], $listRow) ? $listRow[$column['key']] : ''; ?></td>
+            <td<?php if ($column['shrinked'] === true): ?> class="shrinked"<?php endif; ?>>
+                <?=ArrayAccess::keyExists($column['key'], $listRow) ? $listRow[$column['key']] : ''; ?>
+            </td>
             <?php endforeach; ?>
             <?php if (!empty($rowButtons)): ?>
             <td class="shrinked">

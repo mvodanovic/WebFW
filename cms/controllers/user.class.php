@@ -10,9 +10,7 @@ use \WebFW\Core\Classes\HTML\Textarea;
 use \WebFW\Core\Classes\HTML\Select;
 use \WebFW\CMS\Classes\EditTab;
 use \WebFW\CMS\DBLayer\ListFetchers\UserType as LFUserType;
-use \WebFW\CMS\DBLayer\UserType as TGUserType;
 use \WebFW\CMS\Classes\ListHelper;
-use WebFW\Core\Exception;
 
 class User extends Controller
 {
@@ -32,12 +30,12 @@ class User extends Controller
             'user_id' => 'ASC',
         );
 
-        $this->addListColumn('user_id', 'User ID');
+        $this->addListColumn('user_id', 'User ID', true);
         $this->addListColumn('strUserType', 'User type');
         $this->addListColumn('username', 'Username');
         $this->addListColumn('email', 'E-mail');
         $this->addListColumn('strFullName', 'Name');
-        $this->addListColumn('active', 'Active');
+        $this->addListColumn('strActive', 'Active', true);
     }
 
     public function initEdit()
@@ -48,8 +46,6 @@ class User extends Controller
 
         $userTypeLf = new LFUserType();
         $userTypes = ListHelper::GetKeyValueList($userTypeLf->getList(null, array('user_type_id' => 'ASC')), 'user_type_id', 'caption');
-        //unset($userTypeLf);
-        //var_dump($userTypeLf->getList(), $userTypes);
 
         $tab->addField(new Input('username', null, 'text', null, 'username'), 'Username');
         $tab->addField(new Input('email', null, 'text', null, 'email'), 'E-mail', null, false);
@@ -71,15 +67,10 @@ class User extends Controller
 
     public function processList(&$list)
     {
-        $userType = new TGUserType();
         foreach ($list as &$item) {
-            try {
-                $userType->load($item['user_type_id']);
-                $item['strUserType'] = $userType->caption;
-            } catch (Exception $e) {
-                $item['strUserType'] = '[unknown]';
-            }
-            $item['strFullName'] = htmlspecialchars($item['first_name'] . ' ' . $item['last_name']);
+            $item['strUserType'] = $item->getUserType() !== null ? $item->getUserType() : '[unknown]';
+            $item['strFullName'] = $item->getFullName();
+            $item['strActive'] = static::getBooleanPrint($item['active']);
         }
     }
 }

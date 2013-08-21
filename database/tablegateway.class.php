@@ -10,13 +10,15 @@ use \WebFW\Database\Query\Insert;
 use \WebFW\Database\Query\Update;
 use \WebFW\Database\Query\Delete;
 use \WebFW\Core\Exception;
+use \WebFW\Core\ArrayAccess;
 
-abstract class TableGateway
+abstract class TableGateway extends ArrayAccess
 {
     protected $table = null;
     protected $recordData = array();
     protected $oldValues = array();
     protected $recordSetIsNew = true;
+    protected $additionalData = array();
 
     public function __construct()
     {
@@ -60,6 +62,20 @@ abstract class TableGateway
         if (array_key_exists($key, $this->recordData)) {
             $this->recordData[$key] = Table::castValueToType($value, $this->table->getColumn($key)->getType());
         }
+    }
+
+    public function loadWithArray(array $values)
+    {
+        $this->beforeLoad();
+
+        foreach ($values as $key => $value) {
+            $this->recordData[$key] = Table::castValueToType($value, $this->table->getColumn($key)->getType());
+        }
+        $this->oldValues = $this->recordData;
+
+        $this->recordSetIsNew = false;
+
+        $this->afterLoad();
     }
 
     public function load($primaryKeyValue)
@@ -250,9 +266,13 @@ abstract class TableGateway
         $this->afterDelete();
     }
 
-    public function getValues()
+    public function getValues($appendAdditionalData = false)
     {
-        return $this->recordData;
+        if ($appendAdditionalData) {
+            return $this->recordData + $this->additionalData;
+        } else {
+            return $this->recordData;
+        }
     }
 
     public function getPrimaryKeyColumns()
@@ -270,4 +290,44 @@ abstract class TableGateway
     protected function afterSaveExisting() {}
     protected function beforeDelete() {}
     protected function afterDelete() {}
+
+    public function offsetExists($offset)
+    {
+        return isset($this->recordData[$offset]) || isset($this->additionalData[$offset]);
+    }
+
+    public function offsetGet($offset)
+    {
+        if (array_key_exists($offset, $this->recordData)) {
+            return $this->recordData[$offset];
+        }
+
+        if (array_key_exists($offset, $this->additionalData)) {
+            return $this->additionalData[$offset];
+        }
+
+        return null;
+    }
+
+    public function offsetSet($offset, $value)
+    {
+        if (array_key_exists($offset, $this->recordData)) {
+            $this->recordData[$offset] = $value;
+        } elseif (is_null($offset)) {
+            $this->additionalData[] = $value;
+        } else {
+            $this->additionalData[$offset] = $value;
+        }
+    }
+
+    public function offsetUnset($offset)
+    {
+        if (array_key_exists($offset, $this->recordData)) {
+            $this->recordData[$offset] = null;
+        }
+
+        if (array_key_exists($offset, $this->additionalData)) {
+            unset($this->additionalData[$offset]);
+        }
+    }
 }

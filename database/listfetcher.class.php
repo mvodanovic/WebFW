@@ -2,6 +2,7 @@
 
 namespace WebFW\Database;
 
+use \WebFW\Core\Exception;
 use \WebFW\Database\BaseHandler;
 use \WebFW\Database\Table;
 use \WebFW\Database\Query\Select;
@@ -9,10 +10,13 @@ use \WebFW\Database\Query\Select;
 abstract class ListFetcher
 {
     protected $table = null;
+    protected $tableGateway = null;
     protected $filter = array();
     protected $sort = array();
     protected $limit = 50;
     protected $offset = 0;
+    protected $getObjectList = true;
+    protected $objectClassName = null;
 
     public function __construct()
     {
@@ -33,8 +37,13 @@ abstract class ListFetcher
         $this->table = new $table;
 
         if (!($this->table instanceof Table)) {
-            throw new Exception('Invalid database table: ' . $namespace . $table);
+            throw new Exception("Class {$able} is not derived from \\WebFW\\Database\\Table");
         }
+    }
+
+    protected function setTableGateway($tableGateway, $namespace = '\\Application\\DBLayer\\')
+    {
+        $this->tableGateway = $namespace . $tableGateway;
     }
 
     public function getList($filter = null, $sort = null, $limit = null, $offset = null)
@@ -78,7 +87,24 @@ abstract class ListFetcher
             throw new Exception('Database query error!');
         }
 
-        return BaseHandler::getInstance()->fetchAll($result);
+        $list = BaseHandler::getInstance()->fetchAll($result);
+
+        if ($this->getObjectList && $this->tableGateway !== null) {
+            $objectsList = array();
+            foreach ($list as &$row) {
+                $object = new $this->tableGateway;
+                if (!($object instanceof TableGateway)) {
+                    throw new Exception(
+                        "Class {$this->tableGateway} is not derived from WebFW\\Database\\TableGateway"
+                    );
+                }
+                $object->loadWithArray($row);
+                $objectsList[] = $object;
+            }
+            $list = &$objectsList;
+        }
+
+        return $list;
     }
 
     public function getCount($filter = null)
@@ -110,5 +136,10 @@ abstract class ListFetcher
         }
 
         return (int) $row['cnt'];
+    }
+
+    public function setGetObjectListFlag($flag)
+    {
+        $this->getObjectList = (boolean) $flag;
     }
 }

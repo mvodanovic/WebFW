@@ -2,6 +2,7 @@
 
 namespace WebFW\CMS\Components;
 
+use \WebFW\Core\ArrayAccess;
 use \WebFW\Core\Component;
 use \WebFW\Core\Route;
 use \WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
@@ -99,7 +100,7 @@ class Listing extends Component
             $primaryKeyColumns = $this->ownerObject->getPrimaryKeyColumns();
             if (is_array($primaryKeyColumns)) {
                 foreach ($primaryKeyColumns as $column) {
-                    if (!array_key_exists($column, $listRow)) {
+                    if (!ArrayAccess::keyExists($column, $listRow)) {
                         $params = array();
                         break;
                     }
