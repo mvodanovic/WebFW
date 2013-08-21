@@ -255,6 +255,11 @@ abstract class TableGateway
         return $this->recordData;
     }
 
+    public function getPrimaryKeyColumns()
+    {
+        return $this->table->getPrimaryKeyColumns();
+    }
+
     protected function beforeLoad() {}
     protected function afterLoad() {}
     protected function beforeSave() {}

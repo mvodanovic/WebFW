@@ -20,7 +20,7 @@ use \WebFW\Core\Classes\HTML\Message;
         <div class="clear"></div>
     </div>
 
-    <div class="body">
+    <!-- div class="body">
         <table>
             <tr>
                 <td class="shrinked">Item 1:</td>
@@ -51,7 +51,30 @@ use \WebFW\Core\Classes\HTML\Message;
                 </td>
             </tr>
         </table>
+    </div -->
+
+    <?php foreach ($editTabs as $tab): ?>
+    <div class="body">
+        <table>
+            <?php foreach ($tab->getFields() as $fieldRow): ?>
+            <tr>
+                <?php foreach ($fieldRow as &$field): ?>
+                    <td
+                        <?php if ($field['colspan'] > 1): ?> colspan="<?=$field['colspan']; ?>"<?php endif; ?>
+                        <?php if ($field['rowspan'] > 1): ?> rowspan="<?=$field['rowspan']; ?>"<?php endif; ?>
+                        <?php if ($field['rowspanFix'] === true): ?> class="rowspan_fix"<?php endif; ?>
+                    >
+                        <label<?php if($field['formItem']->getID() !== null): ?> for="<?=$field['formItem']->getID(); ?>"<?php endif; ?>>
+                            <?=htmlspecialchars($field['label']); ?>:
+                        </label><br \>
+                        <?=$field['formItem']->parse(); ?>
+                    </td>
+                <?php endforeach; ?>
+            </tr>
+            <?php endforeach; ?>
+        </table>
     </div>
+    <?php endforeach; ?>
 
     <div class="footer">
         <?=Link::get('Save', null, \WebFW\Core\Classes\HTML\Link::IMAGE_SAVE); ?>

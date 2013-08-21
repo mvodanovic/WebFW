@@ -103,7 +103,7 @@ class Listing extends Component
                         $params = array();
                         break;
                     }
-                    $params[$column] = $listRow[$column];
+                    $params['pk_' . $column] = $listRow[$column];
                 }
             }
         }

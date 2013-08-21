@@ -6,6 +6,7 @@ use \WebFW\Core\Exception;
 use \WebFW\Database\ListFetcher;
 use \WebFW\Core\Router;
 use \WebFW\CMS\Classes\LoggedUser;
+use \WebFW\CMS\Classes\EditTab;
 use \WebFW\Core\Request;
 use \WebFW\Core\Route;
 use \WebFW\Core\Classes\HTML\Link;
@@ -28,6 +29,8 @@ abstract class Controller extends \WebFW\Core\HTMLController
     protected $listFooterButtons = array();
     protected $listHasCheckboxes = false;
     protected $listFilters = array();
+
+    protected $editTabs = array();
 
     protected $ctl;
     protected $ns;
@@ -79,6 +82,22 @@ abstract class Controller extends \WebFW\Core\HTMLController
     public function editItem()
     {
         $this->initEdit();
+
+        $primaryKeyValues = Request::getInstance()->getValuesWithPrefix('pk_', false);
+        if (!empty($primaryKeyValues)) {
+            try {
+                $this->tableGateway->loadBy($primaryKeyValues);
+            } catch (Exception $e) {
+                /// TODO
+                \ConsoleDebug::log($e);
+            }
+        }
+
+        foreach ($this->editTabs as $tab) {
+            $tab->setValues($this->tableGateway->getValues());
+        }
+
+        $this->setTplVar('editTabs', $this->editTabs);
     }
 
     protected function init()
@@ -93,7 +112,7 @@ abstract class Controller extends \WebFW\Core\HTMLController
         $this->initListButtons();
         $this->template = \WebFW\Config\FW_PATH . '/cms/templates/list';
         $this->pageTitle = 'Items List';
-        $this->filter += $this->filter_by_key_prefix(Request::getInstance()->getValues(), 'f_');
+        $this->filter += Request::getInstance()->getValuesWithPrefix('f_', false);
     }
 
     protected function initListButtons()
@@ -250,39 +269,6 @@ abstract class Controller extends \WebFW\Core\HTMLController
         return $this->tableGateway->getTable()->getPrimaryKeyColumns();
     }
 
-    public function getEditItemURL(&$listRow = null)
-    {
-        $params = array();
-        if ($listRow !== null) {
-            $primaryKeyColumns = $this->tableGateway->getTable()->getPrimaryKeyColumns();
-            if (is_array($primaryKeyColumns)) {
-                foreach ($primaryKeyColumns as $column) {
-                    if (!array_key_exists($column, $listRow)) {
-                        $params = array();
-                        break;
-                    }
-                    $params[$column] = $listRow[$column];
-                }
-            }
-        }
-
-        return Router::URL($this->ctl, 'editItem', $this->ns, $params);
-    }
-
-    protected function filter_by_key_prefix($array, $prefix, $dropPrefix = true)
-    {
-        $params = array();
-        foreach ($array as $key => $value) {
-            if (strpos($key, $prefix) === 0) {
-                if ($dropPrefix === true) {
-                    $key = substr($key, strlen($prefix));
-                }
-                $params[$key] = $value;
-            }
-        }
-        return $params;
-    }
-
     public function getControllerName()
     {
         return $this->ctl;
@@ -295,7 +281,7 @@ abstract class Controller extends \WebFW\Core\HTMLController
 
     public function getPaginatorFilter()
     {
-        return $this->filter_by_key_prefix(Request::getInstance()->getValues(), 'f_', false);
+        return Request::getInstance()->getValuesWithPrefix('f_');
     }
 
     public function getErrorMessage()

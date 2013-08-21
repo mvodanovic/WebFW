@@ -63,6 +63,24 @@ class Request
         return $this->values;
     }
 
+    public function getValuesWithPrefix($prefix, $keepPrefix = true)
+    {
+        $prefixedArray = array();
+        $prefixLength = strlen($prefix);
+
+        foreach ($this->values as $key => $value) {
+            /// startsWith()
+            if (!strncmp($key, $prefix, $prefixLength)) {
+                if ($keepPrefix !== true) {
+                    $key = substr($key, $prefixLength);
+                }
+                $prefixedArray[$key] = $value;
+            }
+        }
+
+        return $prefixedArray;
+    }
+
     public function removeValue($key)
     {
         if (array_key_exists($key, $this->values)) {

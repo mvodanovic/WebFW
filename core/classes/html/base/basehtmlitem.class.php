@@ -13,6 +13,7 @@ abstract class BaseHTMLItem
     protected $attributes = array();
     protected $hasClosingTag = true;
     protected $tagName = null;
+    protected $skipInnerHTMLDecoration = false;
 
     protected $innerHTML = '';
     protected $attributesHTML = '';
@@ -35,7 +36,7 @@ abstract class BaseHTMLItem
 
     public function __construct($value)
     {
-        $this->value = $value;
+        $this->setValue($value);
     }
 
     public function setID($id)
@@ -51,6 +52,11 @@ abstract class BaseHTMLItem
     public function setValue($value)
     {
         $this->value = $value;
+    }
+
+    public function getValue()
+    {
+        return $this->value;
     }
 
     public function addClass($class)
@@ -70,12 +76,16 @@ abstract class BaseHTMLItem
 
     public function prepareHTMLChunks()
     {
-        if ($this->image !== null) {
-            $this->innerHTMLElements[] = '<img src="' . $this->image . '" alt="" />';
-        }
+        if ($this->skipInnerHTMLDecoration === true) {
+            $this->innerHTMLElements[] = htmlspecialchars($this->value);
+        } else {
+            if ($this->image !== null) {
+                $this->innerHTMLElements[] = '<img src="' . $this->image . '" alt="" />';
+            }
 
-        if ($this->value !== null) {
-            $this->innerHTMLElements[] = '<span>' . htmlspecialchars($this->value) . '</span>';
+            if ($this->value !== null) {
+                $this->innerHTMLElements[] = '<span>' . htmlspecialchars($this->value) . '</span>';
+            }
         }
 
         $this->innerHTML = implode('', $this->innerHTMLElements);

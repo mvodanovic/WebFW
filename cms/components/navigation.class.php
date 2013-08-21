@@ -58,6 +58,28 @@ class Navigation extends Component
             $menu->addChild('item' . $i, $item);
         }
 
+        $subitem = new Item('Users');
+        $subitem->setRoute(new Route('User', null, '\\Application\\Controllers\\CMS\\'));
+        $subitem2 = new Item('Tasks');
+        $subitem2->setRoute(new Route('Task', null, '\\Application\\Controllers\\CMS\\'));
+        $item = new Item('App');
+        $item->setHref('javascript:select_nav_element(\'app\')');
+        $item->setHrefIsFull(true);
+        $item->addChild('application_controllers_cms_user', $subitem);
+        $item->addChild('application_controllers_cms_task', $subitem2);
+        $menu->addChild('app', $item);
+
+        $subitem = new Item('CMS Users');
+        $subitem->setRoute(new Route('User', null, '\\WebFW\\CMS\\Controllers\\'));
+        $subitem2 = new Item('CMS User Types');
+        $subitem2->setRoute(new Route('UserType', null, '\\WebFW\\CMS\\Controllers\\'));
+        $item = new Item('Root');
+        $item->setHref('javascript:select_nav_element(\'root\')');
+        $item->setHrefIsFull(true);
+        $item->addChild('webfw_cms_controllers_user', $subitem);
+        $item->addChild('webfw_cms_controllers_usertype', $subitem2);
+        $menu->addChild('root', $item);
+
         return $menu;
     }
 
