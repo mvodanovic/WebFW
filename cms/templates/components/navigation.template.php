@@ -1,6 +1,6 @@
 <?php
 
-use \WebFW\Core\Classes\HTML\Link;
+use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Framework;
 
 ?>

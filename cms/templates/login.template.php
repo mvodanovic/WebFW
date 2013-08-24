@@ -1,10 +1,10 @@
 <?php
 
-use \WebFW\Core\Classes\HTML\Button;
-use \WebFW\Core\Classes\HTML\Input;
-use \WebFW\Core\Classes\HTML\Message;;
-use \WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
-use \WebFW\Core\Router;
+use WebFW\Core\Classes\HTML\Button;
+use WebFW\Core\Classes\HTML\Input;
+use WebFW\Core\Classes\HTML\Message;;
+use WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
+use WebFW\Core\Router;
 
 ?>
 <div class="login_min_height"></div>

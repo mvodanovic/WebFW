@@ -2,12 +2,12 @@
 
 namespace WebFW\CMS\Components;
 
-use \WebFW\Core\Component;
-use \WebFW\CMS\Classes\LoggedUser;
-use \WebFW\Menu\Menu;
-use \WebFW\Menu\Item;
-use \WebFW\Menu\BaseNode;
-use \WebFW\Core\Route;
+use WebFW\Core\Component;
+use WebFW\CMS\Classes\LoggedUser;
+use WebFW\Menu\Menu;
+use WebFW\Menu\Item;
+use WebFW\Menu\BaseNode;
+use WebFW\Core\Route;
 
 class Navigation extends Component
 {

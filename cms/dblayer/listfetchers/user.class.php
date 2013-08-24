@@ -2,7 +2,7 @@
 
 namespace WebFW\CMS\DBLayer\ListFetchers;
 
-use \WebFW\Database\ListFetcher;
+use WebFW\Database\ListFetcher;
 
 class User extends ListFetcher
 {

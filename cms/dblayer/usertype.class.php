@@ -2,7 +2,7 @@
 
 namespace WebFW\CMS\DBLayer;
 
-use \WebFW\Database\TableGateway;
+use WebFW\Database\TableGateway;
 
 class UserType extends TableGateway
 {

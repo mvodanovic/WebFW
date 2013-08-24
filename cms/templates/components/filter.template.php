@@ -1,7 +1,7 @@
 <?php
 
-use \WebFW\Core\Classes\HTML\Button;
-use \WebFW\Core\Classes\HTML\Input;
+use WebFW\Core\Classes\HTML\Button;
+use WebFW\Core\Classes\HTML\Input;
 
 ?>
 

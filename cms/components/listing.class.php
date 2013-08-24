@@ -2,16 +2,12 @@
 
 namespace WebFW\CMS\Components;
 
-use WebFW\CMS\Classes\ListAction;
 use WebFW\CMS\Classes\ListRowAction;
-use \WebFW\Core\ArrayAccess;
+use WebFW\Core\ArrayAccess;
 use WebFW\Core\Classes\HTML\Input;
-use \WebFW\Core\Component;
-use \WebFW\Core\Route;
-use \WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
-use \WebFW\Core\Classes\HTML\Link;
-use \WebFW\Core\Exception;
-use \WebFW\CMS\Controller;
+use WebFW\Core\Component;
+use WebFW\Core\Exception;
+use WebFW\CMS\Controller;
 
 class Listing extends Component
 {
@@ -31,37 +27,10 @@ class Listing extends Component
         $namespace = $this->ownerObject->getNamespace();
         $paginatorFilter = $this->ownerObject->getPaginatorFilter();
         $errorMessage = $this->ownerObject->getErrorMessage();
-        //$headerButtons = $this->ownerObject->getListHeaderButtons();
-        //$rowButtons = $this->ownerObject->getListRowButtons();
-        //$footerButtons = $this->ownerObject->getListFooterButtons();
         $listActions = $this->ownerObject->getListActions();
         $listRowActions = $this->ownerObject->getListRowActions();
         $listMassActions = $this->ownerObject->getListMassActions();
-        $hasCheckboxes = $this->ownerObject->getListHasCheckboxes();
-
-//        foreach ($headerButtons as &$buttonDef) {
-//            $link = $buttonDef['link'];
-//            if ($link instanceof Route) {
-//                $link = $link->getURL();
-//            }
-//            $button = $buttonDef['button'];
-//            if ($button instanceof Link) {
-//                $button->addCustomAttribute('href', $link);
-//            }
-//            $buttonDef = $button->parse();
-//        }
-
-//        foreach ($footerButtons as &$buttonDef) {
-//            $link = $buttonDef['link'];
-//            if ($link instanceof Route) {
-//                $link = $link->getURL();
-//            }
-//            $button = $buttonDef['button'];
-//            if ($button instanceof Link) {
-//                $button->addCustomAttribute('href', $link);
-//            }
-//            $buttonDef = $button->parse();
-//        }
+        $hasCheckboxes = empty($listMassActions) ? false : true;
 
         if (!empty($listRowActions)) {
             $columnCount++;

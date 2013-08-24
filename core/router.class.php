@@ -2,8 +2,8 @@
 
 namespace WebFW\Core;
 
-use \Config\Specifics\Data;
-use \WebFW\Core\Controller;
+use Config\Specifics\Data;
+use WebFW\Core\Controller;
 
 class Router
 {

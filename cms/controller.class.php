@@ -2,21 +2,20 @@
 
 namespace WebFW\CMS;
 
-use \WebFW\CMS\Classes\EditAction;
-use \WebFW\CMS\Classes\ListAction;
-use \WebFW\CMS\Classes\ListMassAction;
-use \WebFW\CMS\Classes\ListRowAction;
-use \WebFW\Core\Classes\HTML\FormStart;
-use \WebFW\Core\Exception;
-use \WebFW\Database\ListFetcher;
-use \WebFW\Core\Router;
-use \WebFW\CMS\Classes\LoggedUser;
-use \WebFW\Core\Request;
-use \WebFW\Core\Classes\HTML\Link;
-use \WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
-use \WebFW\Core\Classes\HTML\Base\BaseFormItem;
-use \WebFW\Core\Classes\HTML\Button;
-use \WebFW\Core\HTMLController;
+use WebFW\CMS\Classes\EditAction;
+use WebFW\CMS\Classes\ListAction;
+use WebFW\CMS\Classes\ListMassAction;
+use WebFW\CMS\Classes\ListRowAction;
+use WebFW\Core\Classes\HTML\FormStart;
+use WebFW\Core\Exception;
+use WebFW\Database\ListFetcher;
+use WebFW\Core\Router;
+use WebFW\CMS\Classes\LoggedUser;
+use WebFW\Core\Request;
+use WebFW\Core\Classes\HTML\Link;
+use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Button;
+use WebFW\Core\HTMLController;
 
 abstract class Controller extends HTMLController
 {
@@ -28,10 +27,7 @@ abstract class Controller extends HTMLController
     protected $page = 1;
     protected $itemsPerPage = 30;
     protected $listColumns = array();
-    protected $listHeaderButtons = array();
-    protected $listRowButtons = array();
-    protected $listFooterButtons = array();
-    protected $listHasCheckboxes = false;
+
     protected $listFilters = array();
     protected $listActions = array();
     protected $listRowActions = array();
@@ -188,36 +184,10 @@ abstract class Controller extends HTMLController
 
     protected function initListActions()
     {
-//        $this->listHasCheckboxes = true;
-
-//        $this->addListHeaderAction(
-//            new Link('Add item', null, Link::IMAGE_ADD),
-//            new Route($this->ctl, 'editItem', $this->ns)
-//        );
-
+        /// New
         $HTMLItem = new Link('Add item', $this->getURL('editItem', false), Link::IMAGE_ADD);
         $listAction = new ListAction($HTMLItem);
         $this->registerListAction($listAction);
-
-//        $this->addListRowAction(
-//            new Link(null, null, Link::IMAGE_DELETE),
-//            new Route($this->ctl, 'deleteItem', $this->ns)
-//        );
-
-//        $this->addListRowAction(
-//            new Link(null, null, Link::IMAGE_EDIT),
-//            new Route($this->ctl, 'editItem', $this->ns)
-//        );
-
-        /*
-        $deleteButton = new Button(null, 'Delete', Link::IMAGE_DELETE);
-        $deleteButton->addCustomAttribute('type', 'submit');
-        $this->addListFooterButton($deleteButton);
-        $this->addListFooterButton(
-            new Link('Delete', null, Link::IMAGE_DELETE),
-            new Route($this->ctl, 'deleteItem', $this->ns)
-        );
-        */
     }
 
     protected function initListRowActions()
@@ -244,30 +214,6 @@ abstract class Controller extends HTMLController
         $button->addCustomAttribute('data-url', $this->getURL('massDeleteItems', false));
         $listMassAction = new ListMassAction($button);
         $this->registerListMassAction($listMassAction);
-    }
-
-    protected function addListHeaderAction(BaseHTMLItem $button, $link = null)
-    {
-        $this->listHeaderButtons[] = array(
-            'button' => $button,
-            'link' => $link,
-        );
-    }
-
-    protected function addListRowAction(BaseHTMLItem $button, $link = null)
-    {
-        $this->listRowButtons[] = array(
-            'button' => $button,
-            'link' => $link,
-        );
-    }
-
-    protected function addListFooterAction(BaseHTMLItem $button, $link = null)
-    {
-        $this->listFooterButtons[] = array(
-            'button' => $button,
-            'link' => $link,
-        );
     }
 
     protected function initListFilters() {}
@@ -371,36 +317,19 @@ abstract class Controller extends HTMLController
         return $this->listColumns;
     }
 
-    public function getListHeaderButtons()
-    {
-        return $this->listHeaderButtons;
-    }
     public function getListActions()
     {
         return $this->listActions;
     }
 
-    public function getListRowButtons()
-    {
-        return $this->listRowButtons;
-    }
     public function getListRowActions()
     {
         return $this->listRowActions;
     }
 
-    public function getListFooterButtons()
-    {
-        return $this->listFooterButtons;
-    }
     public function getListMassActions()
     {
         return $this->listMassActions;
-    }
-
-    public function getListHasCheckboxes()
-    {
-        return $this->listHasCheckboxes;
     }
 
     public function getListFilters()
@@ -466,13 +395,11 @@ abstract class Controller extends HTMLController
     public function registerListMassAction(ListMassAction $action)
     {
         $this->listMassActions[] = $action;
-        $this->listHasCheckboxes = true;
     }
 
     public function clearListMassActions()
     {
         $this->listMassActions = array();
-        $this->listHasCheckboxes = false;
     }
 
     public function clearEditActions()

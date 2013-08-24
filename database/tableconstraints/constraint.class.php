@@ -2,7 +2,7 @@
 
 namespace WebFW\Database\TableConstraints;
 
-use \WebFW\Core\Exception;
+use WebFW\Core\Exception;
 
 abstract class Constraint
 {

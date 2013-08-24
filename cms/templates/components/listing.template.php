@@ -1,8 +1,8 @@
 <?php
 
-use \WebFW\Core\Framework;
-use \WebFW\Core\Classes\HTML\Message;
-use \WebFW\Core\ArrayAccess;
+use WebFW\Core\Framework;
+use WebFW\Core\Classes\HTML\Message;
+use WebFW\Core\ArrayAccess;
 
 ?>
 <?=Framework::runComponent(

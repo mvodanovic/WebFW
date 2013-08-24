@@ -2,8 +2,8 @@
 
 namespace WebFW\Database;
 
-use \WebFW\Core\Exception;
-use \Config\Specifics\Data;
+use WebFW\Core\Exception;
+use Config\Specifics\Data;
 
 abstract class BaseHandler
 {

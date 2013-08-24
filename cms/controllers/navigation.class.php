@@ -2,13 +2,13 @@
 
 namespace WebFW\CMS\Controllers;
 
-use \WebFW\CMS\Controller;
-use \WebFW\CMS\DBLayer\ListFetchers\Navigation as LFNavigation;
-use \WebFW\CMS\DBLayer\Navigation as TGNavigation;
-use \WebFW\Core\Classes\HTML\Input;
-use \WebFW\Core\Classes\HTML\Textarea;
-use \WebFW\Core\Classes\HTML\Select;
-use \WebFW\CMS\Classes\EditTab;
+use WebFW\CMS\Controller;
+use WebFW\CMS\DBLayer\ListFetchers\Navigation as LFNavigation;
+use WebFW\CMS\DBLayer\Navigation as TGNavigation;
+use WebFW\Core\Classes\HTML\Input;
+use WebFW\Core\Classes\HTML\Textarea;
+use WebFW\Core\Classes\HTML\Select;
+use WebFW\CMS\Classes\EditTab;
 
 class Navigation extends Controller
 {
@@ -25,7 +25,7 @@ class Navigation extends Controller
         parent::initList();
 
         $this->sort = array(
-            'parent_node_id' => 'ASC',
+            'node_level' => 'ASC',
             'order_id' => 'ASC',
         );
 
@@ -51,7 +51,7 @@ class Navigation extends Controller
         $tab->addField(new Input('action', null, 'text', null, 'action'), 'Action');
         $tab->addField(new Input('params', null, 'text', null, 'params'), 'Params');
         $tab->addField(new Input('custom_url', null, 'text', null, 'custom_url'), 'Custom URL');
-        $tab->addField(new Input('active', null, 'text', null, 'active'), 'Active', null, true);
+        $tab->addField(new Input('active', null, 'checkbox', null, 'active'), 'Active', null, true);
 
         $this->editTabs[] = $tab;
     }
@@ -65,6 +65,7 @@ class Navigation extends Controller
     {
         foreach ($list as &$item) {
             $item['strURL'] = $item->getURL();
+            $item['strActive'] = static::getBooleanPrint($item['active']);
         }
     }
 }

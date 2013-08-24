@@ -2,7 +2,7 @@
 
 namespace WebFW\CMS\Classes;
 
-use \WebFW\Core\Classes\HTML\Button;
+use WebFW\Core\Classes\HTML\Button;
 
 class ListMassAction
 {

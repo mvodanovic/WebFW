@@ -2,10 +2,10 @@
 
 namespace WebFW\Core\Components;
 
-use \WebFW\Core\Component;
-use \WebFW\Core\Router;
-use \WebFW\Core\Controller;
-use \Config\Specifics\Data;
+use WebFW\Core\Component;
+use WebFW\Core\Router;
+use WebFW\Core\Controller;
+use Config\Specifics\Data;
 
 class Paginator extends Component
 {

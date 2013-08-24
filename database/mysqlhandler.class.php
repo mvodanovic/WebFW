@@ -2,7 +2,7 @@
 
 namespace WebFW\Core\Database;
 
-use \WebFW\Core\Exception;
+use WebFW\Core\Exception;
 
 class MySQLHandler extends BaseHandler
 {

@@ -2,7 +2,7 @@
 
 namespace WebFW\Database;
 
-use \WebFW\Core\Exception;
+use WebFW\Core\Exception;
 
 abstract class TreeTableGateway extends TableGateway
 {
@@ -25,10 +25,13 @@ abstract class TreeTableGateway extends TableGateway
             throw new Exception('parentNodeKeyColumns not set');
         } else {
             if (!is_array($this->parentNodeKeyColumns)) {
-                $this->parentNodeKeyColumns = array($this->parentNodeKeyColumns);
+                throw new Exception('parentNodeKeyColumns not set');
             }
-            foreach ($this->parentNodeKeyColumns as $column) {
-                if (!array_key_exists($column, $this->recordData)) {
+            foreach ($this->parentNodeKeyColumns as $parentColumn => $childColumn) {
+                if (!array_key_exists($parentColumn, $this->recordData)) {
+                    throw new Exception('Invalid parentNodeKeyColumns set');
+                }
+                if (!array_key_exists($childColumn, $this->recordData)) {
                     throw new Exception('Invalid parentNodeKeyColumns set');
                 }
             }
@@ -50,8 +53,8 @@ abstract class TreeTableGateway extends TableGateway
     {
         $key = array();
 
-        foreach ($this->parentNodeKeyColumns as $column) {
-            $key[$column] = $this->recordData[$column];
+        foreach ($this->parentNodeKeyColumns as $parentColumn => $childColumn) {
+            $key[$childColumn] = $this->recordData[$parentColumn];
         }
 
         if (count($key) <= 1 && $forceKeyArray === false) {
@@ -69,7 +72,7 @@ abstract class TreeTableGateway extends TableGateway
     public function getParentNode()
     {
         if ($this->parentNode === null) {
-            $this->parentNode = new $this();
+            $this->parentNode = new static();
             try {
                 $this->parentNode->loadBy($this->getParentNodeKey(true));
             } catch (Exception $e) {

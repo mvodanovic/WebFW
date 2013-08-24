@@ -1,7 +1,7 @@
 <?php
 
-use \WebFW\Core\Classes\HTML\Link;
-use \WebFW\Core\Classes\HTML\Message;
+use WebFW\Core\Classes\HTML\Link;
+use WebFW\Core\Classes\HTML\Message;
 
 ?>
 <div class="left">

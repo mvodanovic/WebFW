@@ -2,15 +2,15 @@
 
 namespace WebFW\CMS\Controllers;
 
-use \WebFW\CMS\Controller;
-use \WebFW\CMS\DBLayer\ListFetchers\User as LFUser;
-use \WebFW\CMS\DBLayer\User as TGUser;
-use \WebFW\Core\Classes\HTML\Input;
-use \WebFW\Core\Classes\HTML\Textarea;
-use \WebFW\Core\Classes\HTML\Select;
-use \WebFW\CMS\Classes\EditTab;
-use \WebFW\CMS\DBLayer\ListFetchers\UserType as LFUserType;
-use \WebFW\CMS\Classes\ListHelper;
+use WebFW\CMS\Controller;
+use WebFW\CMS\DBLayer\ListFetchers\User as LFUser;
+use WebFW\CMS\DBLayer\User as TGUser;
+use WebFW\Core\Classes\HTML\Input;
+use WebFW\Core\Classes\HTML\Textarea;
+use WebFW\Core\Classes\HTML\Select;
+use WebFW\CMS\Classes\EditTab;
+use WebFW\CMS\DBLayer\ListFetchers\UserType as LFUserType;
+use WebFW\CMS\Classes\ListHelper;
 
 class User extends Controller
 {

@@ -2,10 +2,10 @@
 
 namespace WebFW\Database;
 
-use \WebFW\Core\Exception;
-use \WebFW\Database\BaseHandler;
-use \WebFW\Database\Table;
-use \WebFW\Database\Query\Select;
+use WebFW\Core\Exception;
+use WebFW\Database\BaseHandler;
+use WebFW\Database\Table;
+use WebFW\Database\Query\Select;
 
 abstract class ListFetcher
 {

@@ -1,6 +1,6 @@
 <?php
 
-use \WebFW\Core\Framework;
+use WebFW\Core\Framework;
 
 ?>
 <!DOCTYPE html>

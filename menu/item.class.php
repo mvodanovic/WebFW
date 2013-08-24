@@ -2,8 +2,8 @@
 
 namespace WebFW\Menu;
 
-use \Config\Specifics\Data;
-use \WebFW\Core\Route;
+use Config\Specifics\Data;
+use WebFW\Core\Route;
 
 class Item extends BaseNode
 {

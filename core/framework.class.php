@@ -2,7 +2,7 @@
 
 namespace WebFW\Core;
 
-use \Config\Specifics\Data;
+use Config\Specifics\Data;
 
 final class Framework
 {

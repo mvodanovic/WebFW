@@ -2,12 +2,12 @@
 
 namespace WebFW\CMS;
 
-use \WebFW\Core\HTMLController;
-use \WebFW\Core\Exception;
-use \WebFW\Core\Request;
-use \WebFW\Core\SessionHandler;
-use \WebFW\Core\Router;
-use \WebFW\CMS\Classes\LoggedUser;
+use WebFW\Core\HTMLController;
+use WebFW\Core\Exception;
+use WebFW\Core\Request;
+use WebFW\Core\SessionHandler;
+use WebFW\Core\Router;
+use WebFW\CMS\Classes\LoggedUser;
 
 class CMSLogin extends HTMLController
 {

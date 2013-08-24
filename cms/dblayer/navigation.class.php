@@ -2,9 +2,9 @@
 
 namespace WebFW\CMS\DBLayer;
 
-use \WebFW\CMS\DBLayer\ListFetchers\Navigation as NavigationLF;
-use \WebFW\Core\Route;
-use \WebFW\Database\TreeTableGateway;
+use WebFW\CMS\DBLayer\ListFetchers\Navigation as NavigationLF;
+use WebFW\Core\Route;
+use WebFW\Database\TreeTableGateway;
 
 class Navigation extends TreeTableGateway
 {
@@ -14,7 +14,7 @@ class Navigation extends TreeTableGateway
     {
         $this->setTable('Navigation', '\\WebFW\\CMS\\DBLayer\\Tables\\');
         $this->nodeLevelColumn = 'node_level';
-        $this->parentNodeKeyColumns = 'parent_node_id';
+        $this->parentNodeKeyColumns = array('parent_node_id' => 'node_id');
         $this->maximumTreeDepth = 3;
         parent::__construct();
     }
@@ -39,7 +39,7 @@ class Navigation extends TreeTableGateway
             $this->node_level = 0;
         } else {
             $parent = $this->getParentNode();
-            if ($parent instanceof $this) {
+            if ($parent instanceof static) {
                 $this->node_level = $parent->node_level + 1;
             }
         }
@@ -49,14 +49,20 @@ class Navigation extends TreeTableGateway
     {
         if ($this->custom_url !== null) {
             return $this->custom_url;
-        } else {
+        } elseif ($this->controller !== null) {
             $params = array();
-            foreach (explode('&', $this->params) as $paramSet) {
-                $paramSet = explode('=', $paramSet);
-                $params[$paramSet[0]] = $paramSet[1];
+            if ($this->params !== null) {
+                foreach (explode('&', $this->params) as $paramSet) {
+                    $paramSet = explode('=', $paramSet);
+                    if (array_key_exists(1, $paramSet)) {
+                        $params[$paramSet[0]] = $paramSet[1];
+                    }
+                }
             }
-
-            return new Route($this->controller, $this->action, $this->namespace, $params);
+            $route = new Route($this->controller, $this->action, $this->namespace, $params);
+            return $route->getURL();
+        } else {
+            return null;
         }
     }
 }

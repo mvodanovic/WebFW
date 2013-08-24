@@ -2,7 +2,7 @@
 
 namespace WebFW\Database\Query;
 
-use \WebFW\Database\BaseHandler;
+use WebFW\Database\BaseHandler;
 
 class Select extends ConditionalQuery
 {

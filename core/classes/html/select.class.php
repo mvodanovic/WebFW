@@ -2,7 +2,7 @@
 
 namespace WebFW\Core\Classes\HTML;
 
-use \WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Base\BaseFormItem;
 
 class Select extends BaseFormItem
 {

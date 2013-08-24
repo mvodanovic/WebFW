@@ -2,8 +2,8 @@
 
 namespace WebFW\Database\Query;
 
-use \WebFW\Database\BaseHandler;
-use \WebFW\Core\Exception;
+use WebFW\Database\BaseHandler;
+use WebFW\Core\Exception;
 
 class Join
 {

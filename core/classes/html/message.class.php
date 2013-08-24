@@ -2,7 +2,7 @@
 
 namespace WebFW\Core\Classes\HTML;
 
-use \WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
+use WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
 
 class Message extends BaseHTMLItem
 {

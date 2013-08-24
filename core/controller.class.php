@@ -2,10 +2,10 @@
 
 namespace WebFW\Core;
 
-use \WebFW\Externals\PHPTemplate;
-use \WebFW\Core\Framework;
-use \Config\Specifics\Data;
-use \ReflectionMethod;
+use WebFW\Externals\PHPTemplate;
+use WebFW\Core\Framework;
+use Config\Specifics\Data;
+use ReflectionMethod;
 
 abstract class Controller
 {

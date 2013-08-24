@@ -2,13 +2,13 @@
 
 namespace WebFW\CMS\DBLayer\Tables;
 
-use \WebFW\Database\Table;
-use \WebFW\Database\TableColumns\IntegerColumn;
-use \WebFW\Database\TableColumns\VarcharColumn;
-use \WebFW\Database\TableColumns\BooleanColumn;
-use \WebFW\Database\TableConstraints\PrimaryKey;
-use \WebFW\Database\TableConstraints\ForeignKey;
-use \WebFW\Database\TableConstraints\Unique;
+use WebFW\Database\Table;
+use WebFW\Database\TableColumns\IntegerColumn;
+use WebFW\Database\TableColumns\VarcharColumn;
+use WebFW\Database\TableColumns\BooleanColumn;
+use WebFW\Database\TableConstraints\PrimaryKey;
+use WebFW\Database\TableConstraints\ForeignKey;
+use WebFW\Database\TableConstraints\Unique;
 
 class User extends Table
 {

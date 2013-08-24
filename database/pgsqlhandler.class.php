@@ -2,7 +2,7 @@
 
 namespace WebFW\Database;
 
-use \WebFW\Core\Exception;
+use WebFW\Core\Exception;
 
 class PgSQLHandler extends BaseHandler
 {
@@ -124,8 +124,10 @@ class PgSQLHandler extends BaseHandler
     {
         switch($value) {
             case 't':
+            case 1:
                 return true;
             case 'f':
+            case 0:
                 return false;
             default:
                 return null;

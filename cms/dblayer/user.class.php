@@ -2,9 +2,9 @@
 
 namespace WebFW\CMS\DBLayer;
 
-use \WebFW\Core\Exception;
-use \WebFW\Database\TableGateway;
-use \WebFW\CMS\Classes\LoggedUser;
+use WebFW\Core\Exception;
+use WebFW\Database\TableGateway;
+use WebFW\CMS\Classes\LoggedUser;
 
 class User extends TableGateway
 {

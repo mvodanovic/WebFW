@@ -2,9 +2,9 @@
 
 namespace WebFW\CMS\Components;
 
-use \WebFW\Core\Component;
-use \WebFW\CMS\Classes\LoggedUser;
-use \WebFW\Core\Classes\HTML\Message;
+use WebFW\Core\Component;
+use WebFW\CMS\Classes\LoggedUser;
+use WebFW\Core\Classes\HTML\Message;
 
 class UserActions extends Component
 {

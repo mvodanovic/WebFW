@@ -2,15 +2,15 @@
 
 namespace WebFW\Database;
 
-use \WebFW\Database\BaseHandler;
-use \WebFW\Database\Table;
-use \WebFW\Database\Query\Select;
-use \WebFW\Database\Query\Join;
-use \WebFW\Database\Query\Insert;
-use \WebFW\Database\Query\Update;
-use \WebFW\Database\Query\Delete;
-use \WebFW\Core\Exception;
-use \WebFW\Core\ArrayAccess;
+use WebFW\Database\BaseHandler;
+use WebFW\Database\Table;
+use WebFW\Database\Query\Select;
+use WebFW\Database\Query\Join;
+use WebFW\Database\Query\Insert;
+use WebFW\Database\Query\Update;
+use WebFW\Database\Query\Delete;
+use WebFW\Core\Exception;
+use WebFW\Core\ArrayAccess;
 
 abstract class TableGateway extends ArrayAccess
 {

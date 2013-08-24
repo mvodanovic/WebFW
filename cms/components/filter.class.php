@@ -2,10 +2,10 @@
 
 namespace WebFW\CMS\Components;
 
-use \WebFW\Core\Component;
-use \WebFW\Core\Exception;
-use \WebFW\CMS\Controller;
-use \WebFW\Core\Router;
+use WebFW\Core\Component;
+use WebFW\Core\Exception;
+use WebFW\CMS\Controller;
+use WebFW\Core\Router;
 
 class Filter extends Component
 {

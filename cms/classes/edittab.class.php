@@ -2,8 +2,8 @@
 
 namespace WebFW\CMS\Classes;
 
-use \WebFW\Core\Classes\HTML\Base\BaseFormItem;
-use \WebFW\Core\Classes\HTML\Input;
+use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Input;
 
 class EditTab
 {

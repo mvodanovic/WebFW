@@ -2,8 +2,8 @@
 
 namespace WebFW\CMS\Classes;
 
-use \WebFW\Core\Classes\HTML\Link;
-use \WebFW\Core\Route;
+use WebFW\Core\Classes\HTML\Link;
+use WebFW\Core\Route;
 
 class ListRowAction
 {

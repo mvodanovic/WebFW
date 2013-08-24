@@ -2,12 +2,12 @@
 
 namespace WebFW\CMS\DBLayer\Tables;
 
-use \WebFW\Database\Table;
-use \WebFW\Database\TableColumns\IntegerColumn;
-use \WebFW\Database\TableColumns\VarcharColumn;
-use \WebFW\Database\TableColumns\BooleanColumn;
-use \WebFW\Database\TableConstraints\PrimaryKey;
-use \WebFW\Database\TableConstraints\ForeignKey;
+use WebFW\Database\Table;
+use WebFW\Database\TableColumns\IntegerColumn;
+use WebFW\Database\TableColumns\VarcharColumn;
+use WebFW\Database\TableColumns\BooleanColumn;
+use WebFW\Database\TableConstraints\PrimaryKey;
+use WebFW\Database\TableConstraints\ForeignKey;
 
 class Navigation extends Table
 {
@@ -30,15 +30,15 @@ class Navigation extends Table
         $this->getColumn('parent_node_id')->setDefaultValue(null);
         $this->getColumn('order_id')->setDefaultValue(0);
         $this->getColumn('node_level')->setDefaultValue(0);
-        $this->getColumn('caption')->setDefaultValue('');
-        $this->getColumn('controller')->setDefaultValue('');
-        $this->getColumn('namespace')->setDefaultValue('');
-        $this->getColumn('action')->setDefaultValue('');
-        $this->getColumn('params')->setDefaultValue('');
-        $this->getColumn('custom_url')->setDefaultValue('');
+        $this->getColumn('caption')->setDefaultValue(null);
+        $this->getColumn('controller')->setDefaultValue(null);
+        $this->getColumn('namespace')->setDefaultValue(null);
+        $this->getColumn('action')->setDefaultValue(null);
+        $this->getColumn('params')->setDefaultValue(null);
+        $this->getColumn('custom_url')->setDefaultValue(null);
         $this->getColumn('active')->setDefaultValue(true);
 
-        $this->addConstraint(new PrimaryKey('item_id'));
+        $this->addConstraint(new PrimaryKey('node_id'));
         $this->addConstraint(new ForeignKey('parent_node_id', 'cms_navigation.node_id', ForeignKey::ACTION_UPDATE, ForeignKey::ACTION_RESTRICT));
     }
 }

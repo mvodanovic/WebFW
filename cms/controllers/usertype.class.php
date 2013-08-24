@@ -2,11 +2,11 @@
 
 namespace WebFW\CMS\Controllers;
 
-use \WebFW\CMS\Controller;
-use \WebFW\CMS\DBLayer\ListFetchers\UserType as LFUserType;
-use \WebFW\CMS\DBLayer\UserType as TGUserType;
-use \WebFW\Core\Classes\HTML\Input;
-use \WebFW\CMS\Classes\EditTab;
+use WebFW\CMS\Controller;
+use WebFW\CMS\DBLayer\ListFetchers\UserType as LFUserType;
+use WebFW\CMS\DBLayer\UserType as TGUserType;
+use WebFW\Core\Classes\HTML\Input;
+use WebFW\CMS\Classes\EditTab;
 
 class UserType extends Controller
 {

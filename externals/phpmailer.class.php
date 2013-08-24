@@ -2,7 +2,7 @@
 
 namespace WebFW\Externals;
 
-use \WebFW\Core\Exception;
+use WebFW\Core\Exception;
 
 /*~ class.phpmailer.php
 .---------------------------------------------------------------------------.

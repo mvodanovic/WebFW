@@ -2,9 +2,9 @@
 
 namespace WebFW\CMS\Classes;
 
-use \WebFW\Core\Exception;
-use \WebFW\Core\SessionHandler;
-use \WebFW\CMS\DBLayer\User;
+use WebFW\Core\Exception;
+use WebFW\Core\SessionHandler;
+use WebFW\CMS\DBLayer\User;
 
 class LoggedUser
 {

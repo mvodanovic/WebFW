@@ -2,9 +2,9 @@
 
 namespace WebFW\Core;
 
-use \WebFW\Externals\PHPTemplate;
-use \WebFW\Core\Framework;
-use \Config\Specifics\Data;
+use WebFW\Externals\PHPTemplate;
+use WebFW\Core\Framework;
+use Config\Specifics\Data;
 
 abstract class HTMLController extends Controller
 {
