@@ -15,6 +15,8 @@ abstract class Controller
     protected $templateVariables = array();
     protected $action;
     protected $className;
+    protected $ctl;
+    protected $ns;
     protected $output;
 
     const DEFAULT_ACTION_NAME = 'execute';
@@ -37,6 +39,9 @@ abstract class Controller
         }
 
         $this->className = get_class($this);
+        $separator = strrpos($this->className, '\\') + 1;
+        $this->ns = '\\' . substr($this->className, 0, $separator);
+        $this->ctl = substr($this->className, $separator);
 
         if (!method_exists($this, $this->action)) {
             $this->error404('Action not defined: ' . $this->action . ' (in controller ' . $this->className . ')');
@@ -124,5 +129,30 @@ abstract class Controller
     public function getOutput()
     {
         return $this->output;
+    }
+
+    public function getURL($action, $params = array(), $escapeAmps = true, $rawurlencode = true)
+    {
+        return $this->getRoute($action, $params, $escapeAmps, $rawurlencode)->getURL();
+    }
+
+    public function getRoute($action, $params = array(), $escapeAmps = true, $rawurlencode = true)
+    {
+        return new Route($this->ctl, $action, $this->ns, $params, $escapeAmps, $rawurlencode);
+    }
+
+    public function getName()
+    {
+        return $this->ctl;
+    }
+
+    public function getNamespace()
+    {
+        return $this->ns;
+    }
+
+    public function getAction()
+    {
+        return $this->action;
     }
 }

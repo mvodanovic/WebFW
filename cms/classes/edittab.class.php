@@ -12,6 +12,7 @@ class EditTab
     protected $fields = array();
     protected $currentLineIndex = null;
     protected $extendedRowspanFields = array();
+    protected $fieldPrefix = 'edit_';
 
     public function __construct($ID, $name = null)
     {
@@ -28,6 +29,8 @@ class EditTab
         if ($this->currentLineIndex === null) {
             $this->currentLineIndex = $this->getNewLineIndex();
         }
+
+        $formItem->setName($this->fieldPrefix . $formItem->getName());
 
         $this->fields[$this->currentLineIndex][] = array(
             'formItem' => $formItem,
@@ -58,7 +61,7 @@ class EditTab
             foreach ($this->fields as &$fieldRow) {
                 foreach ($fieldRow as &$field) {
                     $formItem = &$field['formItem'];
-                    if ($formItem->getName() === $name) {
+                    if ($formItem->getName() === $this->fieldPrefix . $name) {
                         if ($formItem instanceof Input) {
                             if ($formItem->getType() === 'checkbox' && $value === true) {
                                 $formItem->setChecked();

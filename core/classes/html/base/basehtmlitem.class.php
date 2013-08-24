@@ -76,37 +76,40 @@ abstract class BaseHTMLItem
 
     public function prepareHTMLChunks()
     {
+        $innerHTMLElements = array();
+        $attributes = array();
+        $styles = array();
+
         if ($this->skipInnerHTMLDecoration === true) {
-            $this->innerHTMLElements[] = htmlspecialchars($this->value);
+            $innerHTMLElements[] = htmlspecialchars($this->value);
         } else {
             if ($this->image !== null) {
-                $this->innerHTMLElements[] = '<img src="' . $this->image . '" alt="" />';
+                $innerHTMLElements[] = '<img src="' . $this->image . '" alt="" />';
             }
 
             if ($this->value !== null) {
-                $this->innerHTMLElements[] = '<span>' . htmlspecialchars($this->value) . '</span>';
+                $innerHTMLElements[] = '<span>' . htmlspecialchars($this->value) . '</span>';
             }
         }
 
-        $this->innerHTML = implode('', $this->innerHTMLElements);
+        $this->innerHTML = implode('', $this->innerHTMLElements + $innerHTMLElements);
 
         if ($this->id !== null) {
-            $this->addCustomAttribute('id', $this->id);
+            $this->attributes['id'] = 'id="' . $this->id . '"';
         }
 
-        $styles = array();
         foreach ($this->styles as $key => $value) {
             $styles[$key] = $key . ': ' . $value . ';';
         }
         if (!empty($styles)) {
-            $this->addCustomAttribute('style', implode(' ', $styles));
+            $this->attributes['style'] = 'style="' . implode(' ', $styles) . '"';
         }
 
         if (!empty($this->classes)) {
-            $this->addCustomAttribute('class', implode(' ', $this->classes));
+            $this->attributes['class'] = 'class="' . implode(' ', $this->classes) . '"';
         }
 
-        $this->attributesHTML = ' ' . implode(' ', $this->attributes);
+        $this->attributesHTML = ' ' . implode(' ', $this->attributes + $attributes);
     }
 
     public function parse()

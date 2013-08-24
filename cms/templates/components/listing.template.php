@@ -28,8 +28,8 @@ use \WebFW\Core\ArrayAccess;
 <?php endif; ?>
 
 <div class="right">
-    <?php foreach ($headerButtons as $button): ?>
-    <?=$button; ?>
+    <?php foreach ($listActions as &$action): ?>
+    <?=$action->getHTMLItem()->parse(); ?>
     <?php endforeach; ?>
 </div>
 
@@ -44,7 +44,7 @@ use \WebFW\Core\ArrayAccess;
             <?=htmlspecialchars($column['caption']); ?>
         </th>
         <?php endforeach; ?>
-        <?php if (!empty($rowButtons)): ?>
+        <?php if (!empty($listRowActions)): ?>
         <th class="shrinked">Actions</th>
         <?php endif; ?>
     </tr>
@@ -52,8 +52,8 @@ use \WebFW\Core\ArrayAccess;
     <tfoot>
     <tr>
         <td colspan="<?=$columnCount; ?>">
-            <?php foreach ($footerButtons as $button): ?>
-            <div class="left"><?=$button; ?></div>
+            <?php foreach ($listMassActions as &$action): ?>
+            <div class="left"><?=$action->getButton()->parse(); ?></div>
             <?php endforeach; ?>
             <div class="right"><span>Total items count: <?=$totalCount; ?></span></div>
         </td>
@@ -63,17 +63,17 @@ use \WebFW\Core\ArrayAccess;
     <?php foreach ($listData as &$listRow): ?>
         <tr>
             <?php if ($hasCheckboxes === true): ?>
-            <td class="shrinked"><input type="checkbox" /></td>
+            <td class="shrinked"><?=$component->getRowCheckbox($listRow); ?></td>
             <?php endif; ?>
             <?php foreach ($listColumns as &$column): ?>
             <td<?php if ($column['shrinked'] === true): ?> class="shrinked"<?php endif; ?>>
                 <?=ArrayAccess::keyExists($column['key'], $listRow) ? $listRow[$column['key']] : ''; ?>
             </td>
             <?php endforeach; ?>
-            <?php if (!empty($rowButtons)): ?>
+            <?php if (!empty($listRowActions)): ?>
             <td class="shrinked">
-                <?php foreach ($rowButtons as &$buttonDef): ?>
-                <?=$component->getRowButton($buttonDef['button'], $buttonDef['link'], $listRow); ?>
+                <?php foreach ($listRowActions as &$action): ?>
+                <?=$component->getRowButton($action, $listRow); ?>
                 <?php endforeach; ?>
             </td>
             <?php endif; ?>

@@ -2,7 +2,10 @@
 
 namespace WebFW\CMS\Components;
 
+use WebFW\CMS\Classes\ListAction;
+use WebFW\CMS\Classes\ListRowAction;
 use \WebFW\Core\ArrayAccess;
+use WebFW\Core\Classes\HTML\Input;
 use \WebFW\Core\Component;
 use \WebFW\Core\Route;
 use \WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
@@ -28,36 +31,39 @@ class Listing extends Component
         $namespace = $this->ownerObject->getNamespace();
         $paginatorFilter = $this->ownerObject->getPaginatorFilter();
         $errorMessage = $this->ownerObject->getErrorMessage();
-        $headerButtons = $this->ownerObject->getListHeaderButtons();
-        $rowButtons = $this->ownerObject->getListRowButtons();
-        $footerButtons = $this->ownerObject->getListFooterButtons();
+        //$headerButtons = $this->ownerObject->getListHeaderButtons();
+        //$rowButtons = $this->ownerObject->getListRowButtons();
+        //$footerButtons = $this->ownerObject->getListFooterButtons();
+        $listActions = $this->ownerObject->getListActions();
+        $listRowActions = $this->ownerObject->getListRowActions();
+        $listMassActions = $this->ownerObject->getListMassActions();
         $hasCheckboxes = $this->ownerObject->getListHasCheckboxes();
 
-        foreach ($headerButtons as &$buttonDef) {
-            $link = $buttonDef['link'];
-            if ($link instanceof Route) {
-                $link = $link->getURL();
-            }
-            $button = $buttonDef['button'];
-            if ($button instanceof Link) {
-                $button->addCustomAttribute('href', $link);
-            }
-            $buttonDef = $button->parse();
-        }
+//        foreach ($headerButtons as &$buttonDef) {
+//            $link = $buttonDef['link'];
+//            if ($link instanceof Route) {
+//                $link = $link->getURL();
+//            }
+//            $button = $buttonDef['button'];
+//            if ($button instanceof Link) {
+//                $button->addCustomAttribute('href', $link);
+//            }
+//            $buttonDef = $button->parse();
+//        }
 
-        foreach ($footerButtons as &$buttonDef) {
-            $link = $buttonDef['link'];
-            if ($link instanceof Route) {
-                $link = $link->getURL();
-            }
-            $button = $buttonDef['button'];
-            if ($button instanceof Link) {
-                $button->addCustomAttribute('href', $link);
-            }
-            $buttonDef = $button->parse();
-        }
+//        foreach ($footerButtons as &$buttonDef) {
+//            $link = $buttonDef['link'];
+//            if ($link instanceof Route) {
+//                $link = $link->getURL();
+//            }
+//            $button = $buttonDef['button'];
+//            if ($button instanceof Link) {
+//                $button->addCustomAttribute('href', $link);
+//            }
+//            $buttonDef = $button->parse();
+//        }
 
-        if (!empty($rowButtons)) {
+        if (!empty($listRowActions)) {
             $columnCount++;
         }
 
@@ -79,9 +85,9 @@ class Listing extends Component
         $this->setTplVar('namespace', $namespace);
         $this->setTplVar('paginatorFilter', $paginatorFilter);
         $this->setTplVar('errorMessage', $errorMessage);
-        $this->setTplVar('headerButtons', $headerButtons);
-        $this->setTplVar('rowButtons', $rowButtons);
-        $this->setTplVar('footerButtons', $footerButtons);
+        $this->setTplVar('listActions', $listActions);
+        $this->setTplVar('listRowActions', $listRowActions);
+        $this->setTplVar('listMassActions', $listMassActions);
         $this->setTplVar('hasCheckboxes', $hasCheckboxes);
     }
 
@@ -93,7 +99,7 @@ class Listing extends Component
         $this->setParam('templateDirectory', \WebFW\Config\FW_PATH . '/cms/templates/components/');
     }
 
-    public function getRowButton(BaseHTMLItem $button, $link, &$listRow)
+    public function getRowButton(ListRowAction &$action, &$listRow)
     {
         $params = array();
         if ($listRow !== null) {
@@ -109,16 +115,30 @@ class Listing extends Component
             }
         }
 
-        if ($link instanceof Route) {
-            $link->addParams($params);
-            $link = $link->getURL();
+        return $action->getLink($params)->parse();
+    }
+
+    public function getRowCheckbox(&$listRow)
+    {
+        $params = array();
+        if ($listRow !== null) {
+            $primaryKeyColumns = $this->ownerObject->getPrimaryKeyColumns();
+            if (is_array($primaryKeyColumns)) {
+                foreach ($primaryKeyColumns as $column) {
+                    if (!ArrayAccess::keyExists($column, $listRow)) {
+                        $params = array();
+                        break;
+                    }
+                    $params[$column] = $listRow[$column];
+                }
+            }
         }
 
-        $buttonClone = clone $button;
-        if ($buttonClone instanceof Link) {
-            $buttonClone->addCustomAttribute('href', $link);
+        $checkbox = new Input(null, null, 'checkbox', 'row_selector');
+        foreach ($params as $key => $value) {
+            $checkbox->addCustomAttribute('data-' . $key, $value);
         }
 
-        return $buttonClone->parse();
+        return $checkbox->parse();
     }
 }

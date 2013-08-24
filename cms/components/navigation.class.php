@@ -73,11 +73,14 @@ class Navigation extends Component
         $subitem->setRoute(new Route('User', null, '\\WebFW\\CMS\\Controllers\\'));
         $subitem2 = new Item('CMS User Types');
         $subitem2->setRoute(new Route('UserType', null, '\\WebFW\\CMS\\Controllers\\'));
+        $subitem3 = new Item('CMS Navigation');
+        $subitem3->setRoute(new Route('Navigation', null, '\\WebFW\\CMS\\Controllers\\'));
         $item = new Item('Root');
         $item->setHref('javascript:select_nav_element(\'root\')');
         $item->setHrefIsFull(true);
         $item->addChild('webfw_cms_controllers_user', $subitem);
         $item->addChild('webfw_cms_controllers_usertype', $subitem2);
+        $item->addChild('webfw_cms_controllers_navigation', $subitem3);
         $menu->addChild('root', $item);
 
         return $menu;
