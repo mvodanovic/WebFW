@@ -10,6 +10,7 @@ class EditTab
     protected $ID;
     protected $name;
     protected $fields = array();
+    protected $hiddenFields = array();
     protected $currentLineIndex = null;
     protected $extendedRowspanFields = array();
     protected $fieldPrefix = 'edit_';
@@ -22,6 +23,13 @@ class EditTab
 
     public function addField(BaseFormItem $formItem, $label, $description = null, $newLine = true, $rowspan = 1, $colspan = 1)
     {
+        $formItem->setName($this->fieldPrefix . $formItem->getName());
+
+        if ($formItem instanceof Input && $formItem->getType() === 'hidden') {
+            $this->hiddenFields[] = $formItem;
+            return;
+        }
+
         if ($newLine === true) {
             $this->currentLineIndex = null;
         }
@@ -29,8 +37,6 @@ class EditTab
         if ($this->currentLineIndex === null) {
             $this->currentLineIndex = $this->getNewLineIndex();
         }
-
-        $formItem->setName($this->fieldPrefix . $formItem->getName());
 
         $this->fields[$this->currentLineIndex][] = array(
             'formItem' => $formItem,
@@ -128,5 +134,10 @@ class EditTab
     public function getFields()
     {
         return $this->fields;
+    }
+
+    public function getHiddenFields()
+    {
+        return $this->hiddenFields;
     }
 }

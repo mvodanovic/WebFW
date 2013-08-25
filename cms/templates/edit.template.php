@@ -56,6 +56,11 @@ use WebFW\Core\Classes\HTML\Message;
         </div -->
 
         <?php foreach ($editTabs as $tab): ?>
+        <div class="hidden">
+            <?php foreach ($tab->getHiddenFields() as $formItem): ?>
+                <?=$formItem->parse(); ?>
+            <?php endforeach; ?>
+        </div>
         <div class="body">
             <table>
                 <?php foreach ($tab->getFields() as $fieldRow): ?>
