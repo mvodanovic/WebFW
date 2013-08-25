@@ -30,7 +30,7 @@ class Listing extends Component
         $listActions = $this->ownerObject->getListActions();
         $listRowActions = $this->ownerObject->getListRowActions();
         $listMassActions = $this->ownerObject->getListMassActions();
-        $hasCheckboxes = empty($listMassActions) ? false : true;
+        $hasCheckboxes = empty($listMassActions) ? false : true; //$this->ownerObject->getListHasCheckboxes();
 
         if (!empty($listRowActions)) {
             $columnCount++;
@@ -71,7 +71,11 @@ class Listing extends Component
     public function getRowButton(ListRowAction &$action, &$listRow)
     {
         $params = array();
-        if ($listRow !== null) {
+        $handlerFunction = $action->getHandlerFunction();
+
+        if ($handlerFunction !== null) {
+            $params = $this->ownerObject->$handlerFunction($listRow);
+        } else if ($listRow !== null) {
             $primaryKeyColumns = $this->ownerObject->getPrimaryKeyColumns();
             if (is_array($primaryKeyColumns)) {
                 foreach ($primaryKeyColumns as $column) {
@@ -84,7 +88,11 @@ class Listing extends Component
             }
         }
 
-        return $action->getLink($params)->parse();
+        if ($params !== null) {
+            return $action->getLink($params)->parse();
+        } else {
+            return null;
+        }
     }
 
     public function getRowCheckbox(&$listRow)

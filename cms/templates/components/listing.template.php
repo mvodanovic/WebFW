@@ -5,6 +5,7 @@ use WebFW\Core\Classes\HTML\Message;
 use WebFW\Core\ArrayAccess;
 
 ?>
+
 <?=Framework::runComponent(
     'Paginator',
     '\\WebFW\\Core\\Components\\',

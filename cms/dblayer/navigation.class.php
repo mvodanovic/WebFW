@@ -9,6 +9,7 @@ use WebFW\Database\TreeTableGateway;
 class Navigation extends TreeTableGateway
 {
     protected $childrenNodes = null;
+    protected $childrenNodeCount = null;
 
     public function __construct()
     {
@@ -19,9 +20,9 @@ class Navigation extends TreeTableGateway
         parent::__construct();
     }
 
-    public function getChildrenNodes()
+    public function getChildrenNodes($forceReload = false)
     {
-        if ($this->childrenNodes === null) {
+        if ($forceReload === true || $this->childrenNodes === null) {
             $treeLF = new NavigationLF();
             $this->childrenNodes = $treeLF->getList(
                 array('parent_node_id' => $this->parent_node_id),
@@ -31,6 +32,23 @@ class Navigation extends TreeTableGateway
         }
 
         return $this->childrenNodes;
+    }
+
+    public function getChildrenNodeCount($forceReload = false)
+    {
+        if ($forceReload === true || $this->childrenNodeCount === null) {
+            $treeLF = new NavigationLF();
+            $this->childrenNodeCount = $treeLF->getCount(
+                array('parent_node_id' => $this->node_id)
+            );
+        }
+
+        return $this->childrenNodeCount;
+    }
+
+    public function getCaption()
+    {
+        return $this->caption;
     }
 
     public function beforeSave()

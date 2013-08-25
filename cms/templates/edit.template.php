@@ -4,6 +4,7 @@ use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Classes\HTML\Message;
 
 ?>
+
 <div class="left">
     <?=Message::get('There are errors present'); ?>
 </div>

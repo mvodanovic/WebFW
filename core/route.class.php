@@ -37,7 +37,7 @@ class Route
 
     public function addParams($params)
     {
-        $this->params = array_merge($this->params, $params);
+        $this->params = array_merge(is_array($this->params) ? $this->params : array(), $params);
     }
 
     public function isRawurlencode()

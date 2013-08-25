@@ -2,15 +2,17 @@
 
 namespace WebFW\CMS\Controllers;
 
-use WebFW\CMS\Controller;
 use WebFW\CMS\DBLayer\ListFetchers\Navigation as LFNavigation;
 use WebFW\CMS\DBLayer\Navigation as TGNavigation;
+use WebFW\CMS\TreeController;
 use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Classes\HTML\Textarea;
 use WebFW\Core\Classes\HTML\Select;
 use WebFW\CMS\Classes\EditTab;
+use WebFW\Database\TableGateway;
+use WebFW\Database\TreeTableGateway;
 
-class Navigation extends Controller
+class Navigation extends TreeController
 {
     public function init()
     {
@@ -25,15 +27,12 @@ class Navigation extends Controller
         parent::initList();
 
         $this->sort = array(
-            'node_level' => 'ASC',
             'order_id' => 'ASC',
         );
 
-        $this->addListColumn('node_id', 'Node ID', true);
-        $this->addListColumn('parent_node_id', 'Parent node ID', true);
         $this->addListColumn('caption', 'Caption');
-        $this->addListColumn('strURL', 'URL');
         $this->addListColumn('order_id', 'Order ID', true);
+        $this->addListColumn('strChildrenCount', 'Children', true);
         $this->addListColumn('strActive', 'Active', true);
     }
 
@@ -43,7 +42,9 @@ class Navigation extends Controller
 
         $tab = new EditTab('default');
 
-        $tab->addField(new Input('parent_node_id', null, 'text', null, 'parent_node_id'), 'Parent node');
+        $readonly = new Input('strParentNodeCaption', null, 'text', null, null);
+        $readonly->disable();
+        $tab->addField($readonly, 'Parent node');
         $tab->addField(new Input('order_id', null, 'text', null, 'order_id'), 'Order ID');
         $tab->addField(new Input('caption', null, 'text', null, 'caption'), 'Caption');
         $tab->addField(new Input('controller', null, 'text', null, 'controller'), 'Controller');
@@ -56,16 +57,20 @@ class Navigation extends Controller
         $this->editTabs[] = $tab;
     }
 
-    protected function initListFilters()
-    {
-        $this->addListFilter(new Input('f_parent_node_id', null, null, 'input_small', 'parent_node_id'), 'Parent node');
-    }
-
     public function processList(&$list)
     {
         foreach ($list as &$item) {
-            $item['strURL'] = $item->getURL();
             $item['strActive'] = static::getBooleanPrint($item['active']);
+            $item['strChildrenCount'] = $item->getChildrenNodeCount();
+        }
+    }
+
+    public function processEdit(TableGateway &$item)
+    {
+        $parent = $item->getParentNode();
+
+        if ($parent instanceof TreeTableGateway) {
+            $item['strParentNodeCaption'] = $parent->getCaption();
         }
     }
 }

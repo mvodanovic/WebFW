@@ -49,7 +49,7 @@ abstract class TreeTableGateway extends TableGateway
         return $this->recordData[$this->nodeLevelColumn];
     }
 
-    public function getParentNodeKey($forceKeyArray = false)
+    public function getParentNodeKey()
     {
         $key = array();
 
@@ -57,11 +57,12 @@ abstract class TreeTableGateway extends TableGateway
             $key[$childColumn] = $this->recordData[$parentColumn];
         }
 
-        if (count($key) <= 1 && $forceKeyArray === false) {
-            $key = array_pop($key);
-        }
-
         return $key;
+    }
+
+    public function getParentNodeKeyColumns()
+    {
+        return $this->parentNodeKeyColumns;
     }
 
     public function getMaximumTreeDepth()
@@ -74,7 +75,7 @@ abstract class TreeTableGateway extends TableGateway
         if ($this->parentNode === null) {
             $this->parentNode = new static();
             try {
-                $this->parentNode->loadBy($this->getParentNodeKey(true));
+                $this->parentNode->loadBy($this->getParentNodeKey());
             } catch (Exception $e) {
                 $this->parentNode = null;
             }
@@ -83,5 +84,7 @@ abstract class TreeTableGateway extends TableGateway
         return $this->parentNode;
     }
 
-    abstract public function getChildrenNodes();
+    abstract public function getChildrenNodes($forceReload = false);
+    abstract public function getChildrenNodeCount($forceReload = false);
+    abstract public function getCaption();
 }

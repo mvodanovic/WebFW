@@ -51,6 +51,11 @@ abstract class Component
         return $executeResult;
     }
 
+    public function getOwnerObject()
+    {
+        return $this->ownerObject;
+    }
+
     protected function setTplVar($name, $value)
     {
         $this->templateVariables[$name] = $value;

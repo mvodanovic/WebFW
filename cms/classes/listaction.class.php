@@ -7,7 +7,6 @@ use WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
 class ListAction
 {
     protected $HTMLItem = null;
-    protected $route = null;
 
     public function __construct(BaseHTMLItem $HTMLItem)
     {

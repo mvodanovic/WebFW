@@ -9,6 +9,7 @@ class ListRowAction
 {
     protected $link = null;
     protected $route = null;
+    protected $handlerFunction = null;
 
     public function __construct(Link $link, Route $route)
     {
@@ -16,11 +17,23 @@ class ListRowAction
         $this->route = $route;
     }
 
-    public function getLink($primaryKeyParams)
+    public function getLink($params = null)
     {
-        $this->route->addParams($primaryKeyParams);
-        $this->link->addCustomAttribute('href', $this->route->getURL());
+        if (is_array($params)) {
+            $this->route->addParams($params);
+            $this->link->addCustomAttribute('href', $this->route->getURL());
+        }
 
         return $this->link;
+    }
+
+    public function setHandlerFunction($handlerFunction)
+    {
+        $this->handlerFunction = $handlerFunction;
+    }
+
+    public function getHandlerFunction()
+    {
+        return $this->handlerFunction;
     }
 }

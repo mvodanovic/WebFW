@@ -280,6 +280,20 @@ abstract class TableGateway extends ArrayAccess
         return $this->table->getPrimaryKeyColumns();
     }
 
+    public function getPrimaryKeyValues($usePrefix = true)
+    {
+        $values = array();
+        foreach ($this->getPrimaryKeyColumns() as $column) {
+            $key = $column;
+            if ($usePrefix === true) {
+                $key = 'pk_' . $column;
+            }
+            $values[$key] = $this->$column;
+        }
+
+        return $values;
+    }
+
     protected function beforeLoad() {}
     protected function afterLoad() {}
     protected function beforeSave() {}

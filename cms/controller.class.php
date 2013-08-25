@@ -16,6 +16,7 @@ use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Classes\HTML\Base\BaseFormItem;
 use WebFW\Core\Classes\HTML\Button;
 use WebFW\Core\HTMLController;
+use WebFW\Database\TableGateway;
 
 abstract class Controller extends HTMLController
 {
@@ -64,6 +65,12 @@ abstract class Controller extends HTMLController
     {
         $this->initList();
         $this->checkListFetcher();
+        $this->checkTableGateway();
+
+        $this->initListFilters();
+        $this->initListActions();
+        $this->initListRowActions();
+        $this->initListMassActions();
 
         $listData = $this->listFetcher->getList($this->filter, $this->sort, $this->itemsPerPage, ($this->page - 1) * $this->itemsPerPage);
         $totalCount = $this->listFetcher->getCount($this->filter);
@@ -76,6 +83,7 @@ abstract class Controller extends HTMLController
     public function editItem()
     {
         $this->initEdit();
+        $this->checkTableGateway();
 
         $primaryKeyValues = $this->getPrimaryKeyValues(false);
         if (!empty($primaryKeyValues)) {
@@ -87,8 +95,13 @@ abstract class Controller extends HTMLController
             }
         }
 
-        foreach ($this->editTabs as $tab) {
-            $tab->setValues($this->tableGateway->getValues());
+        $this->processEdit($this->tableGateway);
+
+        $this->initForm();
+        $this->initEditActions();
+
+        foreach ($this->editTabs as &$tab) {
+            $tab->setValues($this->tableGateway->getValues(true));
         }
 
         $this->setTplVar('editTabs', $this->editTabs);
@@ -98,6 +111,7 @@ abstract class Controller extends HTMLController
     public function saveItem()
     {
         $this->init();
+        $this->checkTableGateway();
 
         $primaryKeyValues = $this->getPrimaryKeyValues(false);
 
@@ -117,12 +131,13 @@ abstract class Controller extends HTMLController
 
         $this->tableGateway->save();
 
-        $this->setRedirectUrl($this->getURL('listItems', true, null, false), true);
+        $this->setRedirectUrl($this->getURL(null, true, null, false), true);
     }
 
     public function deleteItem()
     {
         $this->init();
+        $this->checkTableGateway();
 
         $primaryKeyValues = $this->getPrimaryKeyValues(false);
 
@@ -137,12 +152,13 @@ abstract class Controller extends HTMLController
 
         $this->tableGateway->delete();
 
-        $this->setRedirectUrl($this->getURL('listItems', true, null, false), true);
+        $this->setRedirectUrl($this->getURL(null, true, null, false), true);
     }
 
     public function massDeleteItems()
     {
         $this->init();
+        $this->checkTableGateway();
 
         $selectedItems = json_decode(rawurldecode(Request::getInstance()->keys), true);
 
@@ -157,7 +173,7 @@ abstract class Controller extends HTMLController
             }
         }
 
-        $this->setRedirectUrl($this->getURL('listItems', true, null, false), true);
+        $this->setRedirectUrl($this->getURL(null, true, null, false), true);
     }
 
     protected function init()
@@ -168,10 +184,6 @@ abstract class Controller extends HTMLController
     protected function initList()
     {
         $this->init();
-        $this->initListFilters();
-        $this->initListActions();
-        $this->initListRowActions();
-        $this->initListMassActions();
         $this->template = \WebFW\Config\FW_PATH . '/cms/templates/list';
         $this->pageTitle = 'Items List';
         $this->filter += $this->getPaginatorFilter();
@@ -236,8 +248,6 @@ abstract class Controller extends HTMLController
         $this->init();
         $this->template = \WebFW\Config\FW_PATH . '/cms/templates/edit';
         $this->pageTitle = 'Add / Edit Item';
-        $this->initForm();
-        $this->initEditActions();
     }
 
     protected function initForm()
@@ -253,7 +263,7 @@ abstract class Controller extends HTMLController
         $this->registerEditAction($editAction);
 
         /// Cancel
-        $HTMLItem = new Link('Cancel', $this->getURL('listItems', false), Link::IMAGE_CANCEL);
+        $HTMLItem = new Link('Cancel', $this->getURL(null, false), Link::IMAGE_CANCEL);
         $HTMLItem->addCustomAttribute('onclick', "return confirm('Any unsaved changes will be lost.\\nAre you sure?');");
         $editAction = new EditAction($HTMLItem);
         $this->registerEditAction($editAction);
@@ -276,6 +286,13 @@ abstract class Controller extends HTMLController
         }
     }
 
+    protected function checkTableGateway()
+    {
+        if (!($this->tableGateway instanceof TableGateway)) {
+            throw new Exception('Invalid tableGateway set or tableGateway not set');
+        }
+    }
+
     protected function addListColumn($key, $caption, $shrinked = false)
     {
         $this->listColumns[] = array(
@@ -286,6 +303,8 @@ abstract class Controller extends HTMLController
     }
 
     public function processList(&$list) {}
+
+    public function processEdit(TableGateway &$item) {}
 
     public function getListFetcher()
     {
