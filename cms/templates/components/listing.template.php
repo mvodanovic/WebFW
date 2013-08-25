@@ -62,7 +62,7 @@ use WebFW\Core\ArrayAccess;
     </tfoot>
     <tbody>
     <?php foreach ($listData as &$listRow): ?>
-        <tr>
+        <tr<?=$component->getRowMetadata($listRow); ?>>
             <?php if ($hasCheckboxes === true): ?>
             <td class="shrinked"><?=$component->getRowCheckbox($listRow); ?></td>
             <?php endif; ?>

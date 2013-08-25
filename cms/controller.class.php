@@ -28,6 +28,7 @@ abstract class Controller extends HTMLController
     protected $page = 1;
     protected $itemsPerPage = 30;
     protected $listColumns = array();
+    protected $listSortingDef = null;
 
     protected $listFilters = array();
     protected $listActions = array();
@@ -174,6 +175,71 @@ abstract class Controller extends HTMLController
         }
 
         $this->setRedirectUrl($this->getURL(null, true, null, false), true);
+    }
+
+    public function sortItems()
+    {
+        $this->useTemplate = false;
+        $this->simpleOutput = true;
+        header('Content-type: application/json; charset=UTF-8');
+
+        $this->init();
+        $this->checkTableGateway();
+
+        $itemList = Request::getInstance()->itemList;
+        if (!is_array($itemList)) {
+            echo json_encode(array('status' => 'ERR'));
+            return;
+        }
+
+        $orderColumn = Request::getInstance()->orderColumn;
+        if ($orderColumn === null) {
+            echo json_encode(array('status' => 'ERR'));
+            return;
+        }
+
+        /// Each group has it's own order index range.
+        /// For example, multiple users can have tasks, but ordering is important only for a single user.
+        /// This assures tasks are grouped according to their user (owner).
+        $groupColumns = Request::getInstance()->groupColumns;
+        if (!is_array($groupColumns)) {
+            /// If group columns aren't set, a default group is created for storing it's index
+            $groupColumns = array('###');
+        }
+
+        /// Indexes are stored in an array
+        $indexes = array();
+
+        foreach ($itemList as $jsonPrimaryKey) {
+            $primaryKey = json_decode($jsonPrimaryKey, true);
+            if (!is_array($primaryKey)) {
+                continue;
+            }
+            try {
+                $this->tableGateway->loadBy($primaryKey);
+            } catch (Exception $e) {
+                continue;
+            }
+
+            /// Index keys are created by appending all group column values together
+            $indexKey = '';
+            foreach ($groupColumns as $column) {
+                $indexKey .= $this->tableGateway->$column . '###';
+            }
+
+            /// Incrementation of an index for a specific group
+            if (!array_key_exists($indexKey, $indexes)) {
+                $indexes[$indexKey] = 0;
+            } else {
+                $indexes[$indexKey]++;
+            }
+
+            /// Assigning the order index to the specific item
+            $this->tableGateway->$orderColumn = $indexes[$indexKey];
+            $this->tableGateway->save();
+        }
+
+        echo json_encode(array('status' => 'OK'));
     }
 
     protected function init()
@@ -452,6 +518,30 @@ abstract class Controller extends HTMLController
     public function getEditFormHTML()
     {
         return $this->editForm->parse();
+    }
+
+    public function enableListSorting($handlerFunction, $orderColumn, $groupColumns = array())
+    {
+        $this->listSortingDef = array(
+            'url' => $this->getURL($handlerFunction, false, null, false),
+            'orderColumn' => $orderColumn,
+            'groupColumns' => $groupColumns,
+        );
+    }
+
+    public function isSortingEnabled()
+    {
+        return $this->listSortingDef !== null;
+    }
+
+    public function getSortingDef()
+    {
+        return $this->listSortingDef;
+    }
+
+    public function getJSONSortingDef()
+    {
+        return json_encode($this->listSortingDef);
     }
 
     public static function getBooleanPrint($boolean)

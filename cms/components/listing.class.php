@@ -118,4 +118,39 @@ class Listing extends Component
 
         return $checkbox->parse();
     }
+
+    public function getRowMetadata(&$listRow)
+    {
+        $metadata = '';
+
+        if ($this->ownerObject->isSortingEnabled()) {
+            $params = array();
+            if ($listRow !== null) {
+                $primaryKeyColumns = $this->ownerObject->getPrimaryKeyColumns();
+                if (is_array($primaryKeyColumns)) {
+                    foreach ($primaryKeyColumns as $column) {
+                        if (!ArrayAccess::keyExists($column, $listRow)) {
+                            $params = array();
+                            break;
+                        }
+                        $params[$column] = $listRow[$column];
+                    }
+                }
+            }
+            $params = json_encode($params, JSON_FORCE_OBJECT);
+            $metadata .= ' data-key="' . htmlspecialchars($params) . '"';
+
+            $sortingDef = $this->ownerObject->getSortingDef();
+            if (!empty($sortingDef['groupColumns'])) {
+                $group = array();
+                foreach ($sortingDef['groupColumns'] as $column) {
+                    $group[$column] = $listRow[$column];
+                }
+                $group = json_encode($group, JSON_FORCE_OBJECT);
+                $metadata .= ' data-group="' . htmlspecialchars($group) . '"';
+            }
+        }
+
+        return $metadata;
+    }
 }
