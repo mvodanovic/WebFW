@@ -63,6 +63,17 @@ class Navigation extends TreeTableGateway
         }
     }
 
+    public function beforeSaveNew()
+    {
+        $listFetcher = new NavigationLF();
+        $list = $listFetcher->getList(array('parent_node_id' => $this->parent_node_id), array('order_id' => 'DESC'), 1);
+        if (empty($list)) {
+            $this->order_id = 0;
+        } else {
+            $this->order_id = $list[0]['order_id'] + 1;
+        }
+    }
+
     public function getURL()
     {
         if ($this->custom_url !== null) {

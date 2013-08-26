@@ -13,7 +13,8 @@ class EditTab
     protected $hiddenFields = array();
     protected $currentLineIndex = null;
     protected $extendedRowspanFields = array();
-    protected $fieldPrefix = 'edit_';
+
+    const FIELD_PREFIX = 'edit_';
 
     public function __construct($ID, $name = null)
     {
@@ -23,7 +24,7 @@ class EditTab
 
     public function addField(BaseFormItem $formItem, $label, $description = null, $newLine = true, $rowspan = 1, $colspan = 1)
     {
-        $formItem->setName($this->fieldPrefix . $formItem->getName());
+        $formItem->setName(static::FIELD_PREFIX . $formItem->getName());
 
         if ($formItem instanceof Input && $formItem->getType() === 'hidden') {
             $this->hiddenFields[] = $formItem;
@@ -67,7 +68,7 @@ class EditTab
             foreach ($this->fields as &$fieldRow) {
                 foreach ($fieldRow as &$field) {
                     $formItem = &$field['formItem'];
-                    if ($formItem->getName() === $this->fieldPrefix . $name) {
+                    if ($formItem->getName() === static::FIELD_PREFIX . $name) {
                         if ($formItem instanceof Input) {
                             if ($formItem->getType() === 'checkbox' && $value === true) {
                                 $formItem->setChecked();

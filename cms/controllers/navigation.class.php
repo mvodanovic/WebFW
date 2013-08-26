@@ -31,9 +31,10 @@ class Navigation extends TreeController
         );
 
         $this->addListColumn('caption', 'Caption');
-        $this->addListColumn('order_id', 'Order ID', true);
         $this->addListColumn('strChildrenCount', 'Children', true);
         $this->addListColumn('strActive', 'Active', true);
+
+        $this->enableListSorting('sortItems', 'order_id', array('parent_node_id'));
     }
 
     public function initEdit()
@@ -45,7 +46,6 @@ class Navigation extends TreeController
         $readonly = new Input('strParentNodeCaption', null, 'text', null, null);
         $readonly->disable();
         $tab->addField($readonly, 'Parent node');
-        $tab->addField(new Input('order_id', null, 'text', null, 'order_id'), 'Order ID');
         $tab->addField(new Input('caption', null, 'text', null, 'caption'), 'Caption');
         $tab->addField(new Input('controller', null, 'text', null, 'controller'), 'Controller');
         $tab->addField(new Input('namespace', null, 'text', null, 'namespace'), 'Namespace');

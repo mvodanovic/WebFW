@@ -93,6 +93,10 @@ abstract class TableGateway extends ArrayAccess
 
     public function loadBy(array $unique)
     {
+        if (empty($unique)) {
+            throw new Exception('Database select failed, unique filter empty!');
+        }
+
         $this->beforeLoad();
 
         $select = new Select($this->table->getName(), $this->table->getAlias());

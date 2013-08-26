@@ -3,6 +3,7 @@
 namespace WebFW\CMS;
 
 use WebFW\CMS\Classes\EditAction;
+use WebFW\CMS\Classes\EditTab;
 use WebFW\CMS\Classes\ListAction;
 use WebFW\CMS\Classes\ListMassAction;
 use WebFW\CMS\Classes\ListRowAction;
@@ -111,7 +112,7 @@ abstract class Controller extends HTMLController
 
     public function saveItem()
     {
-        $this->init();
+        $this->initEdit();
         $this->checkTableGateway();
 
         $primaryKeyValues = $this->getPrimaryKeyValues(false);
@@ -125,14 +126,22 @@ abstract class Controller extends HTMLController
             }
         }
 
-        $values = $this->getEditRequestValues();
-        foreach ($values as $key => $value) {
-            $this->tableGateway->$key = $value;
+        foreach ($this->editTabs as &$tab) {
+            foreach ($tab->getFields() as $fieldRow) {
+                foreach ($fieldRow as &$field) {
+                    if ($field['formItem'] instanceof BaseFormItem) {
+                        $formItemName = $field['formItem']->getName();
+                        $value = Request::getInstance()->$formItemName;
+                        $formItemName = substr($formItemName, strlen(EditTab::FIELD_PREFIX));
+                        $this->tableGateway->$formItemName = $value;
+                    }
+                }
+            }
         }
 
         $this->tableGateway->save();
 
-        $this->setRedirectUrl($this->getURL(null, true, null, false), true);
+        $this->setRedirectUrl($this->getURL(null, false, null, false), true);
     }
 
     public function deleteItem()
@@ -512,7 +521,7 @@ abstract class Controller extends HTMLController
 
     public function getEditRequestValues()
     {
-        return Request::getInstance()->getValuesWithPrefix('edit_', false);
+        return Request::getInstance()->getValuesWithPrefix(EditTab::FIELD_PREFIX, false);
     }
 
     public function getEditFormHTML()

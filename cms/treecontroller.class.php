@@ -6,6 +6,7 @@ use WebFW\CMS\Classes\EditAction;
 use WebFW\CMS\Classes\EditTab;
 use WebFW\CMS\Classes\ListAction;
 use WebFW\CMS\Classes\ListRowAction;
+use WebFW\Core\Classes\HTML\Base\BaseFormItem;
 use WebFW\Core\Classes\HTML\Button;
 use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Classes\HTML\Link;
@@ -56,10 +57,11 @@ abstract class TreeController extends Controller
         }
 
         $this->treeFilter = $this->getParentNodeValues(false);
+
         if (empty($this->editTabs)) {
             $this->editTabs[] = new EditTab('auto');
         }
-        foreach ($this->treeFilter as $column => $value)
+        foreach ($this->getParentNodeValues() as $column => $value)
         {
             $this->tableGateway->$column = $value;
             reset($this->editTabs)->addField(new Input($column, $value, 'hidden', null, $column), null);
@@ -77,6 +79,46 @@ abstract class TreeController extends Controller
 
         $this->setTplVar('editTabs', $this->editTabs);
         $this->setTplVar('editActions', $this->editActions);
+    }
+
+    public function saveItem()
+    {
+        $this->initEdit();
+        $this->checkTableGateway();
+
+        $primaryKeyValues = $this->getPrimaryKeyValues(false);
+
+        if (!empty($primaryKeyValues)) {
+            try {
+                $this->tableGateway->loadBy($primaryKeyValues);
+            } catch (Exception $e) {
+                /// TODO
+                throw $e;
+            }
+        }
+
+        foreach ($this->getParentNodeValues(false) as $column => $value)
+        {
+            $this->tableGateway->$column = $value;
+        }
+
+        foreach ($this->editTabs as &$tab) {
+            foreach ($tab->getFields() as $fieldRow) {
+                foreach ($fieldRow as &$field) {
+                    if ($field['formItem'] instanceof BaseFormItem) {
+                        $formItemName = $field['formItem']->getName();
+                        $value = Request::getInstance()->$formItemName;
+                        $formItemName = substr($formItemName, strlen(EditTab::FIELD_PREFIX));
+                        $this->tableGateway->$formItemName = $value;
+                        var_dump($formItemName, $value);
+                    }
+                }
+            }
+        }
+
+        $this->tableGateway->save();
+
+        $this->setRedirectUrl($this->getURL(null, false, null, false), true);
     }
 
     public function deleteItem()
@@ -197,6 +239,7 @@ abstract class TreeController extends Controller
         foreach ($this->tableGateway->getParentNodeKeyColumns() as $parentColumn => $childColumn)
         {
             $key = $useChildKeys === true ? $childColumn : $parentColumn;
+            $parentColumn = EditTab::FIELD_PREFIX . $parentColumn;
             $value = Request::getInstance()->$parentColumn;
             if ($value !== null || $includeEmptyValues === true) {
                 $parentNodeValues[$key] = $value;
@@ -214,7 +257,7 @@ abstract class TreeController extends Controller
 
         $params = array();
         foreach ($item->getParentNodeKeyColumns() as $parentColumn => $childColumn) {
-            $params[$parentColumn] = $item->$childColumn;
+            $params[EditTab::FIELD_PREFIX . $parentColumn] = $item->$childColumn;
         }
         return $params;
     }
@@ -232,7 +275,7 @@ abstract class TreeController extends Controller
     {
         $params = array();
         foreach ($item->getParentNodeKeyColumns() as $parentColumn => $childColumn) {
-            $params[$parentColumn] = $item->$childColumn;
+            $params[EditTab::FIELD_PREFIX . $parentColumn] = $item->$childColumn;
         }
 
         return $params;
