@@ -3,6 +3,7 @@
 namespace WebFW\CMS\DBLayer;
 
 use WebFW\CMS\DBLayer\ListFetchers\Navigation as NavigationLF;
+use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Route;
 use WebFW\Database\TreeTableGateway;
 
@@ -20,27 +21,30 @@ class Navigation extends TreeTableGateway
         parent::__construct();
     }
 
-    public function getChildrenNodes($forceReload = false)
+    public function getChildrenNodes($forceReload = false, $onlyActive = false)
     {
         if ($forceReload === true || $this->childrenNodes === null) {
+            $filter = array('parent_node_id' => $this->node_id);
+            if ($onlyActive === true) {
+                $filter['active'] = true;
+            }
+            $sort = array('order_id' => 'ASC');
             $treeLF = new NavigationLF();
-            $this->childrenNodes = $treeLF->getList(
-                array('parent_node_id' => $this->parent_node_id),
-                array('order_id' => 'ASC'),
-                1000
-            );
+            $this->childrenNodes = $treeLF->getList($filter, $sort, 1000);
         }
 
         return $this->childrenNodes;
     }
 
-    public function getChildrenNodeCount($forceReload = false)
+    public function getChildrenNodeCount($forceReload = false, $onlyActive = false)
     {
         if ($forceReload === true || $this->childrenNodeCount === null) {
+            $filter = array('parent_node_id' => $this->node_id);
+            if ($onlyActive === true) {
+                $filter['active'] = true;
+            }
             $treeLF = new NavigationLF();
-            $this->childrenNodeCount = $treeLF->getCount(
-                array('parent_node_id' => $this->node_id)
-            );
+            $this->childrenNodeCount = $treeLF->getCount($filter);
         }
 
         return $this->childrenNodeCount;
@@ -91,7 +95,26 @@ class Navigation extends TreeTableGateway
             $route = new Route($this->controller, $this->action, $this->namespace, $params);
             return $route->getURL();
         } else {
-            return null;
+            return 'javascript:select_nav_element(' . $this->node_id . ')';
         }
+    }
+
+    public function getLink()
+    {
+        return Link::get($this->getCaption(), $this->getURL());
+    }
+
+    public function getTreeIDList()
+    {
+        $parent = $this->getParentNode();
+        if ($parent instanceof static) {
+            $list = $parent->getTreeIDList();
+        } else {
+            $list = array();
+        }
+
+        $list[] = $this->node_id;
+
+        return $list;
     }
 }
