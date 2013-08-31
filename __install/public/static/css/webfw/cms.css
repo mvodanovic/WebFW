@@ -1,0 +1,111 @@
+/* GENERAL STRUCTURE */
+html, body {width: 100%; height: 100%;}
+div.container {position: relative; min-width: 600px; min-height: 100%; margin: 0 auto; background-color: #ffffff;}
+div.content {padding-top: 5px; padding-left: 5px; padding-right: 5px; padding-bottom: 35px; overflow: hidden;}
+input, textarea {background-color: #ffffff; border: 0; padding: 3px 5px; margin: 2px; border-top: 1px solid #848484; border-bottom: 1px solid #e1e1e1; border-left: 1px solid #c1c1c1; border-right: 1px solid #c1c1c1;}
+input:focus, textarea:focus {background-color: #ffff99;}
+
+
+/* GENERAL USAGE CLASSES */
+.clear {clear: both;}
+.left {float: left;}
+.right {float: right;}
+.hidden {width: 0; height: 0; display: none;}
+
+
+/* LINKS */
+a:link, a:visited {text-decoration: none; color: #ff0000;}
+a:hover, a:active {text-decoration: none; color: #00dd00;}
+
+
+/* BUTTONS */
+button, a.button {display: inline-block; height: 28px; border: 1px solid #0033ff; background-color: #6699ff; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px 0; padding: 0;}
+a.button:link, a.button:visited {}
+button:hover, a.button:hover, a.button.active {background-color: #99ccff}
+button img, a.button img {line-height: 26px; margin: 0px; padding: 2px 5px; vertical-align: middle;}
+button span, a.button span {line-height: 26px; color: #333333; vertical-align: middle; white-space: nowrap; padding: 2px 5px; font-weight: bold; letter-spacing: 1px;}
+
+
+/* NOTICES */
+div.notice {display: inline-block; height: 28px; border: 1px solid #fcd700; background-color: #ffff00; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px 0;}
+div.notice img {line-height: 26px; margin: 0px; padding: 2px 5px; vertical-align: middle;}
+div.notice span {line-height: 26px; color: #333333; vertical-align: middle; white-space: nowrap; padding: 2px 5px; font-weight: bold; letter-spacing: 1px;}
+
+
+/* TOOLTIPS */
+span.tooltip {position: relative;}
+span.tooltip span {display: none;}
+span.tooltip img {vertical-align: middle; line-height: 26px; cursor: pointer;}
+span.tooltip:hover span {display:block; line-height: 26px; position:absolute; top:2em; left:2em; width:300px; border:1px solid #ffff00; background-color: #ffff99; padding: 0 5px; border-radius: 15px; -moz-border-radius: 15px; -webkit-border-radius: 15px; overflow: hidden; white-space: pre-line;}
+span.tooltip:hover span.error {border:1px solid #fcd700 !important; background-color: #ffff00 !important;}
+
+
+/* HEADER */
+header {background-color: #6699ff; padding: 5px 10px; overflow: hidden;}
+header div {padding: 0 10px;}
+header div.left {letter-spacing: 2px; font-weight: bold; font-variant: small-caps; font-size: 18px; line-height: 28px; margin: 3px;}
+.greeting {background-color: #99ccff !important; border-color: #0033ff !important;}
+
+
+/* FOOTER */
+footer {position: absolute; width: 100%; bottom: 0; background-color: #6699ff; font-size: 12px; height: 30px; overflow: hidden;}
+footer span {vertical-align: middle; line-height: 30px; height: 30px;}
+footer div {padding: 0 10px;}
+
+
+/* NAVIGATION */
+div.nav {background-color: #99ccff;}
+div.nav ul li {float: left; padding: 0 3px;}
+/*div.nav ul li a.button {background-color: #ffffff;}*/
+div.nav ul li a.button.active {background-color: #99ccff !important;}
+/*div.nav ul li a.button:link, div.container ul.nav li a.button:visited {}*/
+/*div.nav ul li a.button:hover, div.container ul.nav li a.button:active {background-color: #99ccff}*/
+
+
+/* FILTER */
+div.filter {border: 1px solid #0033ff; float: left;  border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px; padding: 3px;}
+div.filter ul li {float: left; padding: 0 3px;}
+div.filter ul li:not(:last-child) {padding-right: 10px;}
+div.filter ul li span.filter {line-height: 32px;}
+
+
+/* PAGINATOR */
+ul.paginator {margin: 0 5px;}
+ul.paginator li {display: inline-block; margin: 0; height: 30px; padding: 3px; line-height: 30px;}
+ul-paginator li span {font-weight: bold;}
+
+
+/* LISTVIEW TABLE */
+table.list {width: 100%; border: 1px solid #0033ff; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;}
+table.list thead tr th {background-color: #0033ff; color: #ffffff; padding: 3px 5px; text-align: left; vertical-align: middle;}
+table.list thead tr th.shrinked {text-align: center; white-space: nowrap;}
+table.list thead tr th:not(:last-child) {border-right: 1px solid #ffffff;}
+table.list tbody tr td {padding: 3px 5px; vertical-align: middle;}
+table.list tbody tr td.shrinked {width: 1px; white-space: nowrap;}
+table.list tbody tr:nth-child(odd) {background-color: #ccccff;}
+table.list tbody tr:hover {background-color: #ffff99;}
+table.list tfoot tr td {background-color: #0033ff; color: #ffffff; padding: 3px 5px; text-align: left; margin: 0 1px; vertical-align: middle;}
+table.list tfoot tr td div {height: 32px;}
+table.list tfoot tr td div.right span {line-height: 32px;}
+
+
+/* EDITOR */
+div.editor {background-color: #99ccff; border: 1px solid #0033ff; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;}
+div.editor div.header {border-bottom: 1px solid #0033ff;}
+div.editor div.footer {border-top: 1px solid #0033ff;}
+div.editor div.header ul li {float: left; padding: 0 3px;}
+div.editor div.header ul li a.active {background-color: #99ccff;}
+div.editor div.body table {width: 100%;}
+div.editor div.body table tr:not(:last-child) {border-bottom: 1px solid #0033ff;}
+div.editor div.body table tr td {padding: 0 5px; vertical-align: middle; line-height: 12px;}
+div.editor div.body table tr td:not(:last-child) {border-right: 1px solid #0033ff;}
+div.editor div.body table tr td.rowspan_fix {border-right: 1px solid #0033ff;}
+div.editor div.body table tr td.shrinked {width: 1px; white-space: nowrap;}
+
+
+/* LOGIN */
+div.login {background-color: #99ccff; width: 350px; height: 173px; margin: auto; position: absolute; top:0; bottom: 0; left: 0; right: 0; border: 1px solid #0033ff; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;}
+div.login p {background-color: #6699ff; padding: 3px 5px; font-size: 16px; font-weight: bold; letter-spacing: 1px; font-variant: small-caps;}
+div.login div.left, div.login div.right {padding: 5px; line-height: 24px;}
+div.login div.message {position: absolute; top: -35px; left: 0;}
+div.login_min_height {height: 220px;}

@@ -15,8 +15,8 @@ class CMSLogin extends HTMLController
     {
         parent::__construct();
 
-        $this->setLinkedCSS('/static/css/reset.css');
-        $this->setLinkedCSS('/static/css/formalize.css');
+        $this->setLinkedCSS('/static/css/webfw/reset.css');
+        $this->setLinkedCSS('/static/css/webfw/formalize.css');
         $this->setLinkedCSS('/static/css/webfw/cms.css');
         $this->setHtmlMeta('Content-Type', 'text/html; charset=UTF-8', 'http-equiv');
     }

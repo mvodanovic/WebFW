@@ -53,12 +53,12 @@ abstract class Controller extends HTMLController
             $this->setRedirectUrl(Router::URL('CMSLogin', null, '\\WebFW\\CMS\\', null, false), true);
         }
 
-        $this->setLinkedCSS('/static/css/reset.css');
-        $this->setLinkedCSS('/static/css/formalize.css');
-        $this->setLinkedCSS('/static/css/jquery-ui-1.9.1.sortable.min.css');
+        $this->setLinkedCSS('/static/css/webfw/reset.css');
+        $this->setLinkedCSS('/static/css/webfw/formalize.css');
+        $this->setLinkedCSS('/static/css/webfw/jquery-ui-1.9.1.sortable.min.css');
         $this->setLinkedCSS('/static/css/webfw/cms.css');
-        $this->setLinkedJavaScript('/static/js/jquery-1.8.2.min.js');
-        $this->setLinkedJavaScript('/static/js/jquery-ui-1.9.1.sortable.min.js');
+        $this->setLinkedJavaScript('/static/js/webfw/jquery-1.8.2.min.js');
+        $this->setLinkedJavaScript('/static/js/webfw/jquery-ui-1.9.1.sortable.min.js');
         $this->setLinkedJavaScript('/static/js/webfw/cms.js');
         $this->setHtmlMeta('Content-Type', 'text/html; charset=UTF-8', 'http-equiv');
     }
