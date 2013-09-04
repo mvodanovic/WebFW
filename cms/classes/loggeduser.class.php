@@ -2,6 +2,7 @@
 
 namespace WebFW\CMS\Classes;
 
+use WebFW\CMS\DBLayer\UserType;
 use WebFW\Core\Exception;
 use WebFW\Core\SessionHandler;
 use WebFW\CMS\DBLayer\User;
@@ -42,6 +43,22 @@ class LoggedUser
     public static function isLoggedIn()
     {
         return static::getInstance()->getLoggedUser() !== null;
+    }
+
+    public static function isRoot()
+    {
+        if (!static::isLoggedIn()) {
+            return false;
+        }
+
+        $userType = new UserType();
+        try {
+            $userType->load(static::getInstance()->user_type_id);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return $userType->is_root;
     }
 
     public function __get($key)

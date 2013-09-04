@@ -8,7 +8,7 @@ use WebFW\Database\TableColumns\VarcharColumn;
 use WebFW\Database\TableConstraints\PrimaryKey;
 use WebFW\Database\TableConstraints\ForeignKey;
 
-class UserType extends Table
+class UserTypeControllerPermissions extends Table
 {
     public function __construct()
     {
@@ -24,7 +24,7 @@ class UserType extends Table
         $this->getColumn('namespace')->setDefaultValue(null);
         $this->getColumn('permissions')->setDefaultValue(0);
 
-        $this->addConstraint(new PrimaryKey('user_type_id'));
+        $this->addConstraint(new PrimaryKey('user_type_id', 'controller', 'namespace'));
         $this->addConstraint(new ForeignKey('user_type_id', 'cms_user_type.user_type_id', ForeignKey::ACTION_UPDATE, ForeignKey::ACTION_CASCADE));
     }
 }
