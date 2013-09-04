@@ -11,6 +11,7 @@ class ForeignKey extends Constraint
     const ACTION_RESTRICT = 3;
     const ACTION_SET_NULL = 4;
     const ACTION_SET_DEFAULT = 5;
+    const ACTION_CASCADE = 6;
 
     protected $references;
     protected $onUpdate;
@@ -55,6 +56,7 @@ class ForeignKey extends Constraint
             case static::ACTION_RESTRICT:
             case static::ACTION_SET_NULL:
             case static::ACTION_SET_DEFAULT:
+            case static::ACTION_CASCADE:
                 return true;
         }
 

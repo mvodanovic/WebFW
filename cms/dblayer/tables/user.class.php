@@ -33,7 +33,7 @@ class User extends Table
         $this->getColumn('address')->setDefaultValue(null);
 
         $this->addConstraint(new PrimaryKey('user_id'));
-        $this->addConstraint(new ForeignKey('user_type_id', 'cms_user_type.type_id', ForeignKey::ACTION_UPDATE, ForeignKey::ACTION_RESTRICT));
+        $this->addConstraint(new ForeignKey('user_type_id', 'cms_user_type.user_type_id', ForeignKey::ACTION_UPDATE, ForeignKey::ACTION_RESTRICT));
         $this->addConstraint(new Unique('username'));
         $this->addConstraint(new Unique('email'));
     }

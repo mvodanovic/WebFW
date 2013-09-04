@@ -6,9 +6,9 @@ use WebFW\CMS\Classes\EditAction;
 use WebFW\CMS\Classes\EditTab;
 use WebFW\CMS\Classes\ListAction;
 use WebFW\CMS\Classes\ListRowAction;
-use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\CMS\Classes\PermissionsHelper;
+use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
 use WebFW\Core\Classes\HTML\Button;
-use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Exception;
 use WebFW\Core\Request;
@@ -16,137 +16,14 @@ use WebFW\Database\TreeTableGateway;
 
 abstract class TreeController extends Controller
 {
-    protected $parentNode = null;
     protected $treeFilter = null;
 
-    public function listItems()
+    protected function afterInit()
     {
-        $this->initList();
-        $this->checkListFetcher();
-        $this->checkTableGateway();
+        parent::afterInit();
 
         $this->treeFilter = $this->getParentNodeValues(false);
         $this->filter += $this->getParentNodeValues();
-
-        $this->initListFilters();
-        $this->initListActions();
-        $this->initListRowActions();
-        $this->initListMassActions();
-
-        $listData = $this->listFetcher->getList($this->filter, $this->sort, $this->itemsPerPage, ($this->page - 1) * $this->itemsPerPage);
-        $totalCount = $this->listFetcher->getCount($this->filter);
-
-        $this->setTplVar('listData', $listData);
-        $this->setTplVar('totalCount', $totalCount);
-        $this->setTplVar('page', $this->page);
-    }
-
-    public function editItem()
-    {
-        $this->initEdit();
-        $this->checkTableGateway();
-
-        $primaryKeyValues = $this->getPrimaryKeyValues(false);
-        if (!empty($primaryKeyValues)) {
-            try {
-                $this->tableGateway->loadBy($primaryKeyValues);
-            } catch (Exception $e) {
-                /// TODO
-                \ConsoleDebug::log($e);
-            }
-        }
-
-        $this->treeFilter = $this->getParentNodeValues(false);
-
-        if (empty($this->editTabs)) {
-            $this->editTabs[] = new EditTab('auto');
-        }
-        foreach ($this->getParentNodeValues() as $column => $value)
-        {
-            $this->tableGateway->$column = $value;
-            reset($this->editTabs)->addField(new Input($column, $value, 'hidden', null, $column), null);
-        }
-
-
-        $this->processEdit($this->tableGateway);
-
-        $this->initForm();
-        $this->initEditActions();
-
-        foreach ($this->editTabs as &$tab) {
-            $tab->setValues($this->tableGateway->getValues(true));
-        }
-
-        $this->setTplVar('editTabs', $this->editTabs);
-        $this->setTplVar('editActions', $this->editActions);
-    }
-
-    public function saveItem()
-    {
-        $this->initEdit();
-        $this->checkTableGateway();
-
-        $primaryKeyValues = $this->getPrimaryKeyValues(false);
-
-        if (!empty($primaryKeyValues)) {
-            try {
-                $this->tableGateway->loadBy($primaryKeyValues);
-            } catch (Exception $e) {
-                /// TODO
-                throw $e;
-            }
-        }
-
-        foreach ($this->getParentNodeValues(false) as $column => $value)
-        {
-            $this->tableGateway->$column = $value;
-        }
-
-        foreach ($this->editTabs as &$tab) {
-            foreach ($tab->getFields() as $fieldRow) {
-                foreach ($fieldRow as &$field) {
-                    if ($field['formItem'] instanceof BaseFormItem) {
-                        $formItemName = $field['formItem']->getName();
-                        $value = Request::getInstance()->$formItemName;
-                        $formItemName = substr($formItemName, strlen(EditTab::FIELD_PREFIX));
-                        $this->tableGateway->$formItemName = $value;
-                        var_dump($formItemName, $value);
-                    }
-                }
-            }
-        }
-
-        $this->tableGateway->save();
-
-        $this->setRedirectUrl($this->getURL(null, false, null, false), true);
-    }
-
-    public function deleteItem()
-    {
-        $this->init();
-        $this->checkTableGateway();
-
-        $primaryKeyValues = $this->getPrimaryKeyValues(false);
-
-        if (!empty($primaryKeyValues)) {
-            try {
-                $this->tableGateway->loadBy($primaryKeyValues);
-            } catch (Exception $e) {
-                /// TODO
-                throw $e;
-            }
-        }
-
-        if ($this->tableGateway->getChildrenNodeCount() === 0) {
-            $this->tableGateway->delete();
-        }
-
-        $this->setRedirectUrl($this->getURL(null, true, null, false), true);
-    }
-
-    public function massDeleteItems()
-    {
-        $this->setRedirectUrl($this->getURL(null, true, null, false), true);
     }
 
     protected function checkTableGateway()
@@ -159,9 +36,11 @@ abstract class TreeController extends Controller
     protected function initListActions()
     {
         /// New
-        $HTMLItem = new Link('Add item', $this->getURL('editItem', false, $this->treeFilter), Link::IMAGE_ADD);
-        $listAction = new ListAction($HTMLItem);
-        $this->registerListAction($listAction);
+        if (PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
+            $HTMLItem = new Link('Add item', $this->getURL('editItem', false, $this->treeFilter), Link::IMAGE_ADD);
+            $listAction = new ListAction($HTMLItem);
+            $this->registerListAction($listAction);
+        }
     }
 
     protected function initListRowActions()
@@ -174,35 +53,47 @@ abstract class TreeController extends Controller
         $this->registerListRowAction($listRowAction);
 
         /// Delete
-        $link = new Link(null, null, Link::IMAGE_DELETE);
-        $link->addCustomAttribute('onclick', "return confirm('Item will be deleted.\\nAre you sure?');");
-        $route = $this->getRoute('deleteItem');
-        $listRowAction = new ListRowAction($link, $route);
-        $listRowAction->setHandlerFunction('listRowHandlerDelete');
-        $this->registerListRowAction($listRowAction);
+        if (PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
+            $link = new Link(null, null, Link::IMAGE_DELETE);
+            $link->addCustomAttribute('onclick', "return confirm('Item will be deleted.\\nAre you sure?');");
+            $route = $this->getRoute('deleteItem');
+            $listRowAction = new ListRowAction($link, $route);
+            $listRowAction->setHandlerFunction('listRowHandlerDelete');
+            $this->registerListRowAction($listRowAction);
+        }
 
         /// Edit
-        $link = new Link(null, null, Link::IMAGE_EDIT);
-        $route = $this->getRoute('editItem');
-        $listRowAction = new ListRowAction($link, $route);
-        $this->registerListRowAction($listRowAction);
+        if (PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
+            $link = new Link(null, null, Link::IMAGE_EDIT);
+            $route = $this->getRoute('editItem');
+            $listRowAction = new ListRowAction($link, $route);
+            $this->registerListRowAction($listRowAction);
+        }
 
         /// Add
-        $link = new Link(null, null, Link::IMAGE_ADD);
-        $route = $this->getRoute('editItem');
-        $listRowAction = new ListRowAction($link, $route);
-        $listRowAction->setHandlerFunction('listRowHandlerAdd');
-        $this->registerListRowAction($listRowAction);
+        if (PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
+            $link = new Link(null, null, Link::IMAGE_ADD);
+            $route = $this->getRoute('editItem');
+            $listRowAction = new ListRowAction($link, $route);
+            $listRowAction->setHandlerFunction('listRowHandlerAdd');
+            $this->registerListRowAction($listRowAction);
+        }
     }
-
-    protected function initListMassActions() {}
 
     protected function initEditActions()
     {
+        $primaryKeyValues = $this->getPrimaryKeyValues();
+
         /// Save
-        $HTMLItem = new Button(null, 'Save', Link::IMAGE_SAVE, 'submit');
-        $editAction = new EditAction($HTMLItem);
-        $this->registerEditAction($editAction);
+        if (empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
+            $HTMLItem = new Button(null, 'Save new', Link::IMAGE_SAVE, 'submit');
+            $editAction = new EditAction($HTMLItem);
+            $this->registerEditAction($editAction);
+        } elseif (PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
+            $HTMLItem = new Button(null, 'Update', Link::IMAGE_SAVE, 'submit');
+            $editAction = new EditAction($HTMLItem);
+            $this->registerEditAction($editAction);
+        }
 
         /// Cancel
         $HTMLItem = new Link('Cancel', $this->getURL(null, false, $this->treeFilter), Link::IMAGE_CANCEL);
@@ -211,8 +102,7 @@ abstract class TreeController extends Controller
         $this->registerEditAction($editAction);
 
         /// Delete
-        $primaryKeyValues = $this->getPrimaryKeyValues(false);
-        if (!empty($primaryKeyValues)) {
+        if (!empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
             if ($this->tableGateway->getChildrenNodeCount() === 0) {
                 $HTMLItem = new Link('Delete', $this->getURL('deleteItem'), Link::IMAGE_DELETE);
                 $HTMLItem->addCustomAttribute('onclick', "return confirm('Item will be deleted.\\nAre you sure?');");
@@ -226,11 +116,6 @@ abstract class TreeController extends Controller
     public function getTreeFilter()
     {
         return $this->treeFilter;
-    }
-
-    public function getTableGateway()
-    {
-        return $this->tableGateway;
     }
 
     public function getParentNodeValues($includeEmptyValues = true, $useChildKeys = false)

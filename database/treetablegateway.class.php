@@ -84,6 +84,13 @@ abstract class TreeTableGateway extends TableGateway
         return $this->parentNode;
     }
 
+    public function delete()
+    {
+        if ($this->getChildrenNodeCount() === 0) {
+            parent::delete();
+        }
+    }
+
     abstract public function getChildrenNodes($forceReload = false);
     abstract public function getChildrenNodeCount($forceReload = false);
     abstract public function getCaption();

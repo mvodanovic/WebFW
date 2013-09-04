@@ -7,6 +7,8 @@ use WebFW\CMS\Classes\EditTab;
 use WebFW\CMS\Classes\ListAction;
 use WebFW\CMS\Classes\ListMassAction;
 use WebFW\CMS\Classes\ListRowAction;
+use WebFW\CMS\Classes\PermissionsHelper;
+use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
 use WebFW\Core\Classes\HTML\FormStart;
 use WebFW\Core\Exception;
 use WebFW\Database\ListFetcher;
@@ -65,14 +67,20 @@ abstract class Controller extends HTMLController
 
     public function listItems()
     {
+        if (!PermissionsHelper::checkForController($this, UTCP::TYPE_SELECT)) {
+            die('Insufficient privileges!');
+        }
+
         $this->initList();
         $this->checkListFetcher();
         $this->checkTableGateway();
+        $this->afterInit();
 
         $this->initListFilters();
         $this->initListActions();
         $this->initListRowActions();
         $this->initListMassActions();
+
 
         $listData = $this->listFetcher->getList($this->filter, $this->sort, $this->itemsPerPage, ($this->page - 1) * $this->itemsPerPage);
         $totalCount = $this->listFetcher->getCount($this->filter);
@@ -84,17 +92,38 @@ abstract class Controller extends HTMLController
 
     public function editItem()
     {
+        if (!PermissionsHelper::checkForController($this, UTCP::TYPE_SELECT)) {
+            die('Insufficient privileges!');
+        }
+
         $this->initEdit();
         $this->checkTableGateway();
+        $this->afterInit();
 
         $primaryKeyValues = $this->getPrimaryKeyValues(false);
         if (!empty($primaryKeyValues)) {
+            if (!PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
+                die('Insufficient privileges!');
+            }
             try {
                 $this->tableGateway->loadBy($primaryKeyValues);
             } catch (Exception $e) {
                 /// TODO
                 \ConsoleDebug::log($e);
             }
+        } else {
+            if (!PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
+                die('Insufficient privileges!');
+            }
+        }
+
+        if (empty($this->editTabs)) {
+            $this->editTabs[] = new EditTab('auto');
+        }
+        foreach ($this->filter as $column => $value)
+        {
+            $this->tableGateway->$column = $value;
+            reset($this->editTabs)->addField(new Input($column, $value, 'hidden', null, $column), null);
         }
 
         $this->processEdit($this->tableGateway);
@@ -114,16 +143,29 @@ abstract class Controller extends HTMLController
     {
         $this->initEdit();
         $this->checkTableGateway();
+        $this->afterInit();
 
         $primaryKeyValues = $this->getPrimaryKeyValues(false);
 
         if (!empty($primaryKeyValues)) {
+            if (!PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
+                die('Insufficient privileges!');
+            }
             try {
                 $this->tableGateway->loadBy($primaryKeyValues);
             } catch (Exception $e) {
                 /// TODO
                 throw $e;
             }
+        } else {
+            if (!PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
+                die('Insufficient privileges!');
+            }
+        }
+
+        foreach ($this->filter as $column => $value)
+        {
+            $this->tableGateway->$column = $value;
         }
 
         foreach ($this->editTabs as &$tab) {
@@ -148,6 +190,11 @@ abstract class Controller extends HTMLController
     {
         $this->init();
         $this->checkTableGateway();
+        $this->afterInit();
+
+        if (!PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
+            die('Insufficient privileges!');
+        }
 
         $primaryKeyValues = $this->getPrimaryKeyValues(false);
 
@@ -169,6 +216,11 @@ abstract class Controller extends HTMLController
     {
         $this->init();
         $this->checkTableGateway();
+        $this->afterInit();
+
+        if (!PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
+            die('Insufficient privileges!');
+        }
 
         $selectedItems = json_decode(rawurldecode(Request::getInstance()->keys), true);
 
@@ -194,6 +246,12 @@ abstract class Controller extends HTMLController
 
         $this->init();
         $this->checkTableGateway();
+        $this->afterInit();
+
+        if (!PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
+            echo json_encode(array('status' => 'Insufficient privileges!'));
+            return;
+        }
 
         $itemList = Request::getInstance()->itemList;
         if (!is_array($itemList)) {
@@ -272,35 +330,43 @@ abstract class Controller extends HTMLController
     protected function initListActions()
     {
         /// New
-        $HTMLItem = new Link('Add item', $this->getURL('editItem', false), Link::IMAGE_ADD);
-        $listAction = new ListAction($HTMLItem);
-        $this->registerListAction($listAction);
+        if (PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
+            $HTMLItem = new Link('Add item', $this->getURL('editItem', false), Link::IMAGE_ADD);
+            $listAction = new ListAction($HTMLItem);
+            $this->registerListAction($listAction);
+        }
     }
 
     protected function initListRowActions()
     {
         /// Delete
-        $link = new Link(null, null, Link::IMAGE_DELETE);
-        $link->addCustomAttribute('onclick', "return confirm('Item will be deleted.\\nAre you sure?');");
-        $route = $this->getRoute('deleteItem');
-        $listRowAction = new ListRowAction($link, $route);
-        $this->registerListRowAction($listRowAction);
+        if (PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
+            $link = new Link(null, null, Link::IMAGE_DELETE);
+            $link->addCustomAttribute('onclick', "return confirm('Item will be deleted.\\nAre you sure?');");
+            $route = $this->getRoute('deleteItem');
+            $listRowAction = new ListRowAction($link, $route);
+            $this->registerListRowAction($listRowAction);
+        }
 
         /// Edit
-        $link = new Link(null, null, Link::IMAGE_EDIT);
-        $route = $this->getRoute('editItem');
-        $listRowAction = new ListRowAction($link, $route);
-        $this->registerListRowAction($listRowAction);
+        if (PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
+            $link = new Link(null, null, Link::IMAGE_EDIT);
+            $route = $this->getRoute('editItem');
+            $listRowAction = new ListRowAction($link, $route);
+            $this->registerListRowAction($listRowAction);
+        }
     }
 
     protected function initListMassActions()
     {
         /// Delete
-        $button = new Button(null, 'Delete', Button::IMAGE_DELETE, 'button', null, 'mass_delete');
-        $button->addCustomAttribute('data-confirm', 'Selected items will be deleted.\\nAre you sure?');
-        $button->addCustomAttribute('data-url', $this->getURL('massDeleteItems', false));
-        $listMassAction = new ListMassAction($button);
-        $this->registerListMassAction($listMassAction);
+        if (PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
+            $button = new Button(null, 'Delete', Button::IMAGE_DELETE, 'button', null, 'mass_delete');
+            $button->addCustomAttribute('data-confirm', 'Selected items will be deleted.\\nAre you sure?');
+            $button->addCustomAttribute('data-url', $this->getURL('massDeleteItems', false));
+            $listMassAction = new ListMassAction($button);
+            $this->registerListMassAction($listMassAction);
+        }
     }
 
     protected function initListFilters() {}
@@ -332,10 +398,18 @@ abstract class Controller extends HTMLController
 
     protected function initEditActions()
     {
+        $primaryKeyValues = $this->getPrimaryKeyValues();
+
         /// Save
-        $HTMLItem = new Button(null, 'Save', Link::IMAGE_SAVE, 'submit');
-        $editAction = new EditAction($HTMLItem);
-        $this->registerEditAction($editAction);
+        if (empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
+            $HTMLItem = new Button(null, 'Save new', Link::IMAGE_SAVE, 'submit');
+            $editAction = new EditAction($HTMLItem);
+            $this->registerEditAction($editAction);
+        } elseif (PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
+            $HTMLItem = new Button(null, 'Update', Link::IMAGE_SAVE, 'submit');
+            $editAction = new EditAction($HTMLItem);
+            $this->registerEditAction($editAction);
+        }
 
         /// Cancel
         $HTMLItem = new Link('Cancel', $this->getURL(null, false), Link::IMAGE_CANCEL);
@@ -344,8 +418,7 @@ abstract class Controller extends HTMLController
         $this->registerEditAction($editAction);
 
         /// Delete
-        $primaryKeyValues = $this->getPrimaryKeyValues();
-        if (!empty($primaryKeyValues)) {
+        if (!empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
             $HTMLItem = new Link('Delete', $this->getURL('deleteItem'), Link::IMAGE_DELETE);
             $HTMLItem->addCustomAttribute('onclick', "return confirm('Item will be deleted.\\nAre you sure?');");
             $editAction = new EditAction($HTMLItem);
@@ -353,6 +426,8 @@ abstract class Controller extends HTMLController
             $this->registerEditAction($editAction);
         }
     }
+
+    protected function afterInit() {}
 
     protected function checkListFetcher()
     {
@@ -366,6 +441,11 @@ abstract class Controller extends HTMLController
         if (!($this->tableGateway instanceof TableGateway)) {
             throw new Exception('Invalid tableGateway set or tableGateway not set');
         }
+    }
+
+    public function getTableGateway()
+    {
+        return $this->tableGateway;
     }
 
     protected function addListColumn($key, $caption, $shrinked = false)
