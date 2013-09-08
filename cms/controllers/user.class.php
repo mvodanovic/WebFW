@@ -47,15 +47,56 @@ class User extends Controller
         $userTypeLf = new LFUserType();
         $userTypes = ListHelper::GetKeyValueList($userTypeLf->getList(null, array('user_type_id' => 'ASC')), 'user_type_id', 'caption');
 
-        $tab->addField(new Input('username', null, 'text', null, 'username'), 'Username');
-        $tab->addField(new Input('email', null, 'text', null, 'email'), 'E-mail', null, false);
-        $tab->addField(new Input('first_name', null, 'text', null, 'first_name'), 'First name');
-        $tab->addField(new Input('last_name', null, 'text', null, 'last_name'), 'Last name', null, false);
-        $tab->addField(new Input('password', null, 'password', null, 'password'), 'Password');
-        $tab->addField(new Input('password2', null, 'password', null, 'password2'), 'Confirm password', null, false);
-        $tab->addField(new Textarea('address', null, null, 'address'), 'Address', null, true, 2, 1);
-        $tab->addField(new Select('user_type_id', null, $userTypes, null, 'user_type_id'), 'User Type');
-        $tab->addField(new Input('active', null, 'checkbox', null, 'active'), 'Active', null, true);
+        $tab->addField(
+            new Input('username', null, 'text', null, 'username'),
+            'Username',
+            'Username, used for login.'
+        );
+        $tab->addField(
+            new Input('email', null, 'text', null, 'email'),
+            'E-mail',
+            'User\'s email, can also be used for login.',
+            false
+        );
+        $tab->addField(
+            new Input('first_name', null, 'text', null, 'first_name'),
+            'First name'
+        );
+        $tab->addField(
+            new Input('last_name', null, 'text', null, 'last_name'),
+            'Last name',
+            null,
+            false
+        );
+        $tab->addField(
+            new Input('password', null, 'password', null, 'password'),
+            'Password',
+            'This field is used only when changing the user\'s password.'
+        );
+        $tab->addField(
+            new Input('password2', null, 'password', null, 'password2'),
+            'Confirm password',
+            'This field must match the Password field.',
+            false
+        );
+        $tab->addField(
+            new Textarea('address', null, null, 'address'),
+            'Address',
+            null,
+            true,
+            2
+        );
+        $tab->addField(
+            new Select('user_type_id', null, $userTypes, null, 'user_type_id'),
+            'User Type',
+            'TODO: Only root users can work with the root user type.'
+        );
+        $tab->addField(
+            new Input('active', null, 'checkbox', null, 'active'),
+            'Active',
+            'Inactive users cannot log in to CMS.',
+            true
+        );
 
         $this->editTabs[] = $tab;
     }

@@ -26,7 +26,7 @@ class Listing extends Component
         $controllerName = $this->ownerObject->getControllerName();
         $namespace = $this->ownerObject->getNamespace();
         $paginatorFilter = $this->ownerObject->getPaginatorFilter();
-        $errorMessage = $this->ownerObject->getErrorMessage();
+        $messages = $this->ownerObject->getMessages();
         $listActions = $this->ownerObject->getListActions();
         $listRowActions = $this->ownerObject->getListRowActions();
         $listMassActions = $this->ownerObject->getListMassActions();
@@ -53,7 +53,7 @@ class Listing extends Component
         $this->setTplVar('controllerName', $controllerName);
         $this->setTplVar('namespace', $namespace);
         $this->setTplVar('paginatorFilter', $paginatorFilter);
-        $this->setTplVar('errorMessage', $errorMessage);
+        $this->setTplVar('messages', $messages);
         $this->setTplVar('listActions', $listActions);
         $this->setTplVar('listRowActions', $listRowActions);
         $this->setTplVar('listMassActions', $listMassActions);

@@ -1,7 +1,6 @@
 <?php
 
 use WebFW\Core\Framework;
-use WebFW\Core\Classes\HTML\Message;
 use WebFW\Core\ArrayAccess;
 
 ?>
@@ -22,11 +21,9 @@ use WebFW\Core\ArrayAccess;
     $component
 ); ?>
 
-<?php if ($errorMessage !== null): ?>
-<div class="left">
-    <?=Message::get($errorMessage); ?>
-</div>
-<?php endif; ?>
+<?php foreach ($messages as &$message): ?>
+    <div class="left"><?=$message->parse(); ?></div>
+<?php endforeach; ?>
 
 <div class="right">
     <?php foreach ($listActions as &$action): ?>

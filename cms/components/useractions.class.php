@@ -2,9 +2,11 @@
 
 namespace WebFW\CMS\Components;
 
+use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Component;
 use WebFW\CMS\Classes\LoggedUser;
 use WebFW\Core\Classes\HTML\Message;
+use WebFW\Core\Router;
 
 class UserActions extends Component
 {
@@ -16,8 +18,10 @@ class UserActions extends Component
         }
 
         $message = new Message('Welcome, ' . LoggedUser::getInstance()->username);
-        $message->addClass('greeting');
+        $button = new Link('Logout', Router::URL('CMSLogin', 'doLogout', '\\WebFW\\CMS\\'), Link::IMAGE_LOGOUT);
+
         $this->setTplVar('loginMessage', $message->parse());
+        $this->setTplVar('logoutButton', $button->parse());
     }
 
     protected function setDefaultParams()

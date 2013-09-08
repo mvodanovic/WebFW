@@ -47,14 +47,54 @@ class UserTypeControllerPermissions extends Controller
         $userTypeLf = new LFUserType();
         $userTypes = ListHelper::GetKeyValueList($userTypeLf->getList(null, array('user_type_id' => 'ASC')), 'user_type_id', 'caption');
 
-        $tab->addField(new Select('user_type_id', null, $userTypes, null, 'user_type_id'), 'User Type', null, true);
-        $tab->addField(new Input('select', null, 'checkbox', null, 'select'), 'Select', null, false);
-        $tab->addField(new Input('controller', null, 'text', null, 'controller'), 'Controller', null, true);
-        $tab->addField(new Input('insert', null, 'checkbox', null, 'insert'), 'Insert', null, false);
-        $tab->addField(new Input('namespace', null, 'text', null, 'namespace'), 'Namespace', null, true);
-        $tab->addField(new Input('update', null, 'checkbox', null, 'update'), 'Update', null, false);
-        $tab->addField(new Input('custom', null, 'checkbox', null, 'custom'), 'Custom', null, true);
-        $tab->addField(new Input('delete', null, 'checkbox', null, 'delete'), 'Delete', null, false);
+        $tab->addField(
+            new Select('user_type_id', null, $userTypes, null, 'user_type_id'),
+            'User Type',
+            'Root user types always have all permissions.',
+            true
+        );
+        $tab->addField(
+            new Input('select', null, 'checkbox', null, 'select'),
+            'Select',
+            'Ability to see controller\'s item list.',
+            false
+        );
+        $tab->addField(
+            new Input('controller', null, 'text', null, 'controller'),
+            'Controller',
+            'Controller name, without the namespace.',
+            true
+        );
+        $tab->addField(
+            new Input('insert', null, 'checkbox', null, 'insert'),
+            'Insert',
+            'Ability to insert new items using the controller.',
+            false
+        );
+        $tab->addField(
+            new Input('namespace', null, 'text', null, 'namespace'),
+            'Namespace',
+            'Full namespace, both starting and ending with a slash.',
+            true
+        );
+        $tab->addField(
+            new Input('update', null, 'checkbox', null, 'update'),
+            'Update',
+            'Ability to update existing items using the controller.',
+            false
+        );
+        $tab->addField(
+            new Input('custom', null, 'checkbox', null, 'custom'),
+            'Custom',
+            'Unused by default, but can be used for custom access rights.',
+            true
+        );
+        $tab->addField(
+            new Input('delete', null, 'checkbox', null, 'delete'),
+            'Delete',
+            'Ability to delete existing items using the controller.',
+            false
+        );
 
         $this->editTabs[] = $tab;
     }

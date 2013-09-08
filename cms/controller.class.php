@@ -10,6 +10,7 @@ use WebFW\CMS\Classes\ListRowAction;
 use WebFW\CMS\Classes\PermissionsHelper;
 use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
 use WebFW\Core\Classes\HTML\FormStart;
+use WebFW\Core\Classes\HTML\Message;
 use WebFW\Core\Exception;
 use WebFW\Database\ListFetcher;
 use WebFW\Core\Router;
@@ -18,7 +19,6 @@ use WebFW\Core\Request;
 use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Classes\HTML\Base\BaseFormItem;
 use WebFW\Core\Classes\HTML\Button;
-use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\HTMLController;
 use WebFW\Database\TableGateway;
 
@@ -43,7 +43,7 @@ abstract class Controller extends HTMLController
     protected $editActions = array();
     protected $editForm = null;
 
-    protected $errorMessage = null;
+    protected $messages = array();
 
     protected $tableGateway = null;
 
@@ -58,10 +58,10 @@ abstract class Controller extends HTMLController
 
         $this->setLinkedCSS('/static/css/webfw/reset.css');
         $this->setLinkedCSS('/static/css/webfw/formalize.css');
-        $this->setLinkedCSS('/static/css/webfw/jquery-ui-1.9.1.sortable.min.css');
+        $this->setLinkedCSS('/static/css/webfw/jquery-ui-1.10.3.custom.min.css');
         $this->setLinkedCSS('/static/css/webfw/cms.css');
-        $this->setLinkedJavaScript('/static/js/webfw/jquery-1.8.2.min.js');
-        $this->setLinkedJavaScript('/static/js/webfw/jquery-ui-1.9.1.sortable.min.js');
+        $this->setLinkedJavaScript('/static/js/webfw/jquery-1.10.2.min.js');
+        $this->setLinkedJavaScript('/static/js/webfw/jquery-ui-1.10.3.custom.min.js');
         $this->setLinkedJavaScript('/static/js/webfw/cms.js');
         $this->setHtmlMeta('Content-Type', 'text/html; charset=UTF-8', 'http-equiv');
     }
@@ -544,9 +544,14 @@ abstract class Controller extends HTMLController
         return Request::getInstance()->getValuesWithPrefix('f_');
     }
 
-    public function getErrorMessage()
+    public function getMessages()
     {
-        return $this->errorMessage;
+        return $this->messages;
+    }
+
+    public function addMessage(Message $message)
+    {
+        $this->messages[] = $message;
     }
 
     public function registerEditAction(EditAction $action)

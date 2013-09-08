@@ -36,8 +36,18 @@ class UserType extends Controller
 
         $tab = new EditTab('default');
 
-        $tab->addField(new Input('caption', null, 'text', null, 'caption'), 'Username', null, false);
-        $tab->addField(new Input('is_root', null, 'checkbox', null, 'is_root'), 'Is Root');
+        $tab->addField(
+            new Input('caption', null, 'text', null, 'caption'),
+            'Type caption',
+            'Caption of the user type.',
+            false
+        );
+        $tab->addField(
+            new Input('is_root', null, 'checkbox', null, 'is_root'),
+            'Is Root',
+            "Is this user type the root type.\n Root types have full access rights.",
+            true
+        );
 
         $this->editTabs[] = $tab;
     }

@@ -43,14 +43,47 @@ class Navigation extends TreeController
 
         $readonly = new Input('strParentNodeCaption', null, 'text', null, null);
         $readonly->disable();
-        $tab->addField($readonly, 'Parent node');
-        $tab->addField(new Input('caption', null, 'text', null, 'caption'), 'Caption');
-        $tab->addField(new Input('controller', null, 'text', null, 'controller'), 'Controller');
-        $tab->addField(new Input('namespace', null, 'text', null, 'namespace'), 'Namespace');
-        $tab->addField(new Input('action', null, 'text', null, 'action'), 'Action');
-        $tab->addField(new Input('params', null, 'text', null, 'params'), 'Params');
-        $tab->addField(new Input('custom_url', null, 'text', null, 'custom_url'), 'Custom URL');
-        $tab->addField(new Input('active', null, 'checkbox', null, 'active'), 'Active', null, true);
+        $tab->addField(
+            $readonly,
+            'Parent node',
+            'Parent node caption.'
+        );
+        $tab->addField(
+            new Input('caption', null, 'text', null, 'caption'),
+            'Caption',
+            'Caption displayed where needed.'
+        );
+        $tab->addField(
+            new Input('controller', null, 'text', null, 'controller'),
+            'Controller',
+            "Controller name without the namespace.\nLeave all route fields blank to use the node as a parent node."
+        );
+        $tab->addField(
+            new Input('namespace', null, 'text', null, 'namespace'),
+            'Namespace',
+            'Full namespace including both the starting and ending slash.'
+        );
+        $tab->addField(
+            new Input('action', null, 'text', null, 'action'),
+            'Action',
+            'Can be left blank for default action.'
+        );
+        $tab->addField(
+            new Input('params', null, 'text', null, 'params'),
+            'URL Parameters',
+            "URL GET syntax.\nBlank for no additional parameters."
+        );
+        $tab->addField(
+            new Input('custom_url', null, 'text', null, 'custom_url'),
+            'Custom URL',
+            "Overrides routing parameters.\nCan be used to link to anything, including external links."
+        );
+        $tab->addField(
+            new Input('active', null, 'checkbox', null, 'active'),
+            'Active',
+            'If inactive, won\'t be visible as well as all it\'s children.',
+            true
+        );
 
         $this->editTabs[] = $tab;
     }

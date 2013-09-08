@@ -9,6 +9,12 @@ use WebFW\Core\Framework;
 <head>
     <title><?php echo htmlspecialchars($pageTitle); ?> - WebFW CMS</title>
     <?php echo $htmlHead; ?>
+
+    <script type="text/javascript">
+        // <![CDATA[
+        var sortingDef = <?=$controller->isSortingEnabled() ? $controller->getJSONSortingDef() : 'null'; ?>;
+        // ]]>
+    </script>
 </head>
 <body>
     <div class="container">

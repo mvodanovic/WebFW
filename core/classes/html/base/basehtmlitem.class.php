@@ -2,6 +2,8 @@
 
 namespace WebFW\Core\Classes\HTML\Base;
 
+use WebFW\Core\Classes\HTML\Tooltip;
+
 abstract class BaseHTMLItem
 {
     protected $id = null;

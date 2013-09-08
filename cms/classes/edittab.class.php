@@ -40,6 +40,10 @@ class EditTab
             $this->currentLineIndex = $this->getNewLineIndex();
         }
 
+        if ($description !== null) {
+            $description = Tooltip::get($description, Tooltip::TYPE_NOTICE);
+        }
+
         $this->fields[$this->currentLineIndex][] = array(
             'formItem' => $formItem,
             'label' => $label,

@@ -88,6 +88,18 @@ $(document).ready(function() {
         executeMassAction(this);
     });
 
+    $('.tooltip').tooltip({
+        content: function() {
+            return $(this).data('text');
+        },
+        items: ".tooltip",
+        show: true,
+        hide: true
+    });
+    $('.tooltip').each(function() {
+        $(this).tooltip("option", "tooltipClass", $(this).data('class'));
+    });
+
     if (sortingDef !== null) {
         var fixHelper = function(e, ui) {
             ui.children().each(function() {
