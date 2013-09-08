@@ -9,6 +9,7 @@ use WebFW\CMS\Classes\ListRowAction;
 use WebFW\CMS\Classes\PermissionsHelper;
 use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
 use WebFW\Core\Classes\HTML\Button;
+use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Exception;
 use WebFW\Core\Request;
@@ -35,9 +36,14 @@ abstract class TreeController extends Controller
 
     protected function initListActions()
     {
+        $buttonFilter = array();
+        foreach ($this->treeFilter as $key => $value) {
+            $buttonFilter[EditTab::FIELD_PREFIX . $key] = $value;
+        }
+
         /// New
         if (PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
-            $HTMLItem = new Link('Add item', $this->getURL('editItem', false, $this->treeFilter), Link::IMAGE_ADD);
+            $HTMLItem = new Link('Add item', $this->getURL('editItem', false, $buttonFilter), Link::IMAGE_ADD);
             $listAction = new ListAction($HTMLItem);
             $this->registerListAction($listAction);
         }
@@ -164,5 +170,18 @@ abstract class TreeController extends Controller
         }
 
         return $params;
+    }
+
+    protected function initForm()
+    {
+        parent::initForm();
+
+        foreach ($this->treeFilter as $column => $value)
+        {
+            reset($this->editTabs)->addField(
+                new Input($column, $this->tableGateway->$column, 'hidden', null, $column),
+                null
+            );
+        }
     }
 }

@@ -106,27 +106,25 @@ abstract class Controller extends HTMLController
             if (!PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
                 die('Insufficient privileges!');
             }
+            $this->beforeLoad();
             try {
-                $this->beforeLoad();
                 $this->tableGateway->loadBy($primaryKeyValues);
-                $this->afterLoad();
             } catch (Exception $e) {
                 /// TODO
                 \ConsoleDebug::log($e);
             }
+            $this->afterLoad();
         } else {
             if (!PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
                 die('Insufficient privileges!');
             }
         }
+        foreach ($this->getEditRequestValues() as $key => $value) {
+            $this->tableGateway->$key = $value;
+        }
 
         if (empty($this->editTabs)) {
             $this->editTabs[] = new EditTab('auto');
-        }
-        foreach ($this->filter as $column => $value)
-        {
-            $this->tableGateway->$column = $value;
-            reset($this->editTabs)->addField(new Input($column, $value, 'hidden', null, $column), null);
         }
 
         $this->processEdit($this->tableGateway);
@@ -372,7 +370,7 @@ abstract class Controller extends HTMLController
         /// Delete
         if (PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
             $button = new Button(null, 'Delete', Button::IMAGE_DELETE, 'button', null, 'mass_delete');
-            $button->addCustomAttribute('data-confirm', 'Selected items will be deleted.\\nAre you sure?');
+            $button->addCustomAttribute('data-confirm', "Selected items will be deleted.\nAre you sure?");
             $button->addCustomAttribute('data-url', $this->getURL('massDeleteItems', false));
             $listMassAction = new ListMassAction($button);
             $this->registerListMassAction($listMassAction);

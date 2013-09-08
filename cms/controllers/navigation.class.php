@@ -6,8 +6,6 @@ use WebFW\CMS\DBLayer\ListFetchers\Navigation as LFNavigation;
 use WebFW\CMS\DBLayer\Navigation as TGNavigation;
 use WebFW\CMS\TreeController;
 use WebFW\Core\Classes\HTML\Input;
-use WebFW\Core\Classes\HTML\Textarea;
-use WebFW\Core\Classes\HTML\Select;
 use WebFW\CMS\Classes\EditTab;
 use WebFW\Database\TableGateway;
 use WebFW\Database\TreeTableGateway;

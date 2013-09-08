@@ -2,6 +2,7 @@
 
 namespace WebFW\CMS\Components;
 
+use WebFW\CMS\Classes\EditTab;
 use WebFW\CMS\TreeController;
 use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Component;
@@ -34,7 +35,7 @@ class TreeBreadcrumbs extends Component
         while ($node instanceof TreeTableGateway) {
             $key = array();
             foreach ($node->getParentNodeKeyColumns() as $parentColumn => $childColumn) {
-                $key[$parentColumn] = $node->$childColumn;
+                $key[EditTab::FIELD_PREFIX . $parentColumn] = $node->$childColumn;
             }
             $url = $this->ownerObject->getURL(null, false, $key);
             $link = new Link($node->getCaption(), $url);
