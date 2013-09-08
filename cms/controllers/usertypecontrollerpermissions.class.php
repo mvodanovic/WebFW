@@ -10,7 +10,6 @@ use WebFW\Core\Classes\HTML\Input;
 use WebFW\CMS\Classes\EditTab;
 use WebFW\Core\Classes\HTML\Select;
 use WebFW\CMS\DBLayer\ListFetchers\UserType as LFUserType;
-use WebFW\Core\Request;
 
 class UserTypeControllerPermissions extends Controller
 {

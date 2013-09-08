@@ -1,3 +1,16 @@
+function switchEditTab(button)
+{
+    var id = $(button).data('id');
+    if (id == null) {
+        return;
+    }
+
+    $('.editor .body').hide();
+    $('.editor .header button').removeClass('active');
+    $('.editor .body[data-tab-id=' + id + ']').show();
+    $(button).addClass('active');
+}
+
 function executeMassAction(button)
 {
     var buttonData = $(button).data();

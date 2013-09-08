@@ -13,14 +13,16 @@ use WebFW\Core\Classes\HTML\Message;
 <?=$controller->getEditFormHTML(); ?>
     <div class="editor">
 
-        <div class="header">
-            <ul class="tabs">
-                <li><?=Link::get('Tab 1', null, null, 'active'); ?></li>
-                <li><?=Link::get('Tab 2'); ?></li>
-                <li><?=Link::get('Tab 3'); ?></li>
-            </ul>
-            <div class="clear"></div>
-        </div>
+        <?php if (count($editTabs) > 1): ?>
+            <div class="header">
+                <ul class="tabs">
+                    <?php foreach ($editTabs as $i => &$tab): ?>
+                    <li><?=$tab->getButton($i === 0); ?></li>
+                    <?php endforeach; ?>
+                </ul>
+                <div class="clear"></div>
+            </div>
+        <?php endif; ?>
 
         <!-- div class="body">
             <table>
@@ -55,32 +57,37 @@ use WebFW\Core\Classes\HTML\Message;
             </table>
         </div -->
 
-        <?php foreach ($editTabs as $tab): ?>
-        <div class="hidden">
-            <?php foreach ($tab->getHiddenFields() as $formItem): ?>
-                <?=$formItem->parse(); ?>
-            <?php endforeach; ?>
-        </div>
-        <div class="body">
-            <table>
-                <?php foreach ($tab->getFields() as $fieldRow): ?>
-                <tr>
-                    <?php foreach ($fieldRow as &$field): ?>
-                        <td
-                            <?php if ($field['colspan'] > 1): ?> colspan="<?=$field['colspan']; ?>"<?php endif; ?>
-                            <?php if ($field['rowspan'] > 1): ?> rowspan="<?=$field['rowspan']; ?>"<?php endif; ?>
-                            <?php if ($field['rowspanFix'] === true): ?> class="rowspan_fix"<?php endif; ?>
-                        >
-                            <label<?php if($field['formItem']->getID() !== null): ?> for="<?=$field['formItem']->getID(); ?>"<?php endif; ?>>
-                                <?=htmlspecialchars($field['label']); ?>:
-                            </label><br \>
-                            <?=$field['formItem']->parse(); ?>
-                        </td>
+        <?php foreach ($editTabs as &$tab): ?>
+            <?php if ($tab->getHiddenFieldCount() > 0): ?>
+                <div class="hidden">
+                    <?php foreach ($tab->getHiddenFields() as $formItem): ?>
+                        <?=$formItem->parse(); ?>
                     <?php endforeach; ?>
-                </tr>
-                <?php endforeach; ?>
-            </table>
-        </div>
+                </div>
+            <?php endif; ?>
+
+            <div class="body" data-tab-id=<?=htmlspecialchars($tab->getID()); ?>>
+                <?php if ($tab->getFieldCount() > 0): ?>
+                    <table>
+                        <?php foreach ($tab->getFields() as $fieldRow): ?>
+                        <tr>
+                            <?php foreach ($fieldRow as &$field): ?>
+                                <td
+                                    <?php if ($field['colspan'] > 1): ?> colspan="<?=$field['colspan']; ?>"<?php endif; ?>
+                                    <?php if ($field['rowspan'] > 1): ?> rowspan="<?=$field['rowspan']; ?>"<?php endif; ?>
+                                    <?php if ($field['rowspanFix'] === true): ?> class="rowspan_fix"<?php endif; ?>
+                                >
+                                    <label<?php if($field['formItem']->getID() !== null): ?> for="<?=$field['formItem']->getID(); ?>"<?php endif; ?>>
+                                        <?=htmlspecialchars($field['label']); ?>:
+                                    </label><br \>
+                                    <?=$field['formItem']->parse(); ?>
+                                </td>
+                            <?php endforeach; ?>
+                        </tr>
+                        <?php endforeach; ?>
+                    </table>
+                <?php endif; ?>
+            </div>
         <?php endforeach; ?>
 
         <div class="footer">

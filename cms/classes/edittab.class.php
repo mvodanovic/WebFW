@@ -3,6 +3,7 @@
 namespace WebFW\CMS\Classes;
 
 use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Button;
 use WebFW\Core\Classes\HTML\Input;
 
 class EditTab
@@ -132,13 +133,35 @@ class EditTab
         return $this->name;
     }
 
+    public function getFieldCount()
+    {
+        return count($this->fields);
+    }
+
     public function getFields()
     {
         return $this->fields;
     }
 
+    public function getHiddenFieldCount()
+    {
+        return count($this->hiddenFields);
+    }
+
     public function getHiddenFields()
     {
         return $this->hiddenFields;
+    }
+
+    public function getButton($isActive = false)
+    {
+        $class = $isActive ? 'button active' : 'button';
+
+        $button = new Button(null, $this->getName(), null, 'button', $class);
+        $button->setID('btn_tab_' . $this->getID());
+        $button->addCustomAttribute('data-id', $this->getID());
+        $button->addCustomAttribute('onclick', 'switchEditTab(this);');
+
+        return $button->parse();
     }
 }
