@@ -18,6 +18,7 @@ use WebFW\Core\Request;
 use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Classes\HTML\Base\BaseFormItem;
 use WebFW\Core\Classes\HTML\Button;
+use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\HTMLController;
 use WebFW\Database\TableGateway;
 
@@ -106,7 +107,9 @@ abstract class Controller extends HTMLController
                 die('Insufficient privileges!');
             }
             try {
+                $this->beforeLoad();
                 $this->tableGateway->loadBy($primaryKeyValues);
+                $this->afterLoad();
             } catch (Exception $e) {
                 /// TODO
                 \ConsoleDebug::log($e);
@@ -181,7 +184,9 @@ abstract class Controller extends HTMLController
             }
         }
 
+        $this->beforeSave();
         $this->tableGateway->save();
+        $this->afterSave();
 
         $this->setRedirectUrl($this->getURL(null, false, null, false), true);
     }
@@ -207,7 +212,9 @@ abstract class Controller extends HTMLController
             }
         }
 
+        $this->beforeDelete();
         $this->tableGateway->delete();
+        $this->afterDelete();
 
         $this->setRedirectUrl($this->getURL(null, true, null, false), true);
     }
@@ -231,7 +238,10 @@ abstract class Controller extends HTMLController
                 } catch (Exception $e) {
                     continue;
                 }
+
+                $this->beforeDelete();
                 $this->tableGateway->delete();
+                $this->afterDelete();
             }
         }
 
@@ -650,4 +660,11 @@ abstract class Controller extends HTMLController
                 return 'n/a';
         }
     }
+
+    protected function beforeLoad() {}
+    protected function afterLoad () {}
+    protected function beforeSave() {}
+    protected function afterSave() {}
+    protected function beforeDelete() {}
+    protected function afterDelete() {}
 }

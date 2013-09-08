@@ -2,6 +2,8 @@
 
 namespace WebFW\CMS\Classes;
 
+use WebFW\Core\ArrayAccess;
+
 class ListHelper
 {
 
@@ -21,11 +23,11 @@ class ListHelper
 
         $newList = array();
         foreach ($list as &$listItem) {
-            if (!is_array($listItem)) {
+            if (!ArrayAccess::isArray($listItem)) {
                 continue;
             }
 
-            if (!array_key_exists($keyColumn, $listItem) || !array_key_exists($valueColumn, $listItem)) {
+            if (!ArrayAccess::keyExists($keyColumn, $listItem) || !ArrayAccess::keyExists($valueColumn, $listItem)) {
                 continue;
             }
 

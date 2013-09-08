@@ -53,6 +53,8 @@ abstract class TableGateway extends ArrayAccess
     {
         if (array_key_exists($key, $this->recordData)) {
             return $this->recordData[$key];
+        } elseif (array_key_exists($key, $this->additionalData)) {
+            return $this->additionalData[$key];
         }
 
         return null;
@@ -61,7 +63,20 @@ abstract class TableGateway extends ArrayAccess
     public function __set($key, $value) {
         if (array_key_exists($key, $this->recordData)) {
             $this->recordData[$key] = Table::castValueToType($value, $this->table->getColumn($key)->getType());
+        } else {
+            $this->additionalData[$key] = $value;
         }
+    }
+
+    public function __unset($key)
+    {
+        if (array_key_exists($key, $this->recordData)) {
+            return true;
+        } elseif (array_key_exists($key, $this->additionalData)) {
+            return true;
+        }
+
+        return false;
     }
 
     public function loadWithArray(array $values)
@@ -330,7 +345,7 @@ abstract class TableGateway extends ArrayAccess
     public function offsetSet($offset, $value)
     {
         if (array_key_exists($offset, $this->recordData)) {
-            $this->recordData[$offset] = $value;
+            $this->recordData[$offset] = Table::castValueToType($value, $this->table->getColumn($offset)->getType());
         } elseif (is_null($offset)) {
             $this->additionalData[] = $value;
         } else {

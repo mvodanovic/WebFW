@@ -17,5 +17,16 @@ abstract class ArrayAccess implements \ArrayAccess
         }
     }
 
+    public static function isArray($object)
+    {
+        if (is_array($object)) {
+            return true;
+        } elseif ($object instanceof ArrayAccess) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     abstract function getValues();
 }
