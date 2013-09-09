@@ -2,6 +2,7 @@
 
 namespace WebFW\Database;
 
+use WebFW\Core\Interfaces\iValidate;
 use WebFW\Database\BaseHandler;
 use WebFW\Database\Table;
 use WebFW\Database\Query\Select;
@@ -12,13 +13,14 @@ use WebFW\Database\Query\Delete;
 use WebFW\Core\Exception;
 use WebFW\Core\ArrayAccess;
 
-abstract class TableGateway extends ArrayAccess
+abstract class TableGateway extends ArrayAccess implements iValidate
 {
     protected $table = null;
     protected $recordData = array();
     protected $oldValues = array();
     protected $recordSetIsNew = true;
     protected $additionalData = array();
+    protected $validationErrors = array();
 
     public function __construct()
     {
@@ -51,32 +53,22 @@ abstract class TableGateway extends ArrayAccess
 
     public function __get($key)
     {
-        if (array_key_exists($key, $this->recordData)) {
-            return $this->recordData[$key];
-        } elseif (array_key_exists($key, $this->additionalData)) {
-            return $this->additionalData[$key];
-        }
-
-        return null;
+        return $this->offsetGet($key);
     }
 
-    public function __set($key, $value) {
-        if (array_key_exists($key, $this->recordData)) {
-            $this->recordData[$key] = Table::castValueToType($value, $this->table->getColumn($key)->getType());
-        } else {
-            $this->additionalData[$key] = $value;
-        }
+    public function __set($key, $value)
+    {
+        $this->offsetSet($key, $value);
+    }
+
+    public function __isset($key)
+    {
+        return $this->offsetExists($key);
     }
 
     public function __unset($key)
     {
-        if (array_key_exists($key, $this->recordData)) {
-            return true;
-        } elseif (array_key_exists($key, $this->additionalData)) {
-            return true;
-        }
-
-        return false;
+        $this->offsetUnset($key);
     }
 
     public function loadWithArray(array $values)
@@ -152,6 +144,11 @@ abstract class TableGateway extends ArrayAccess
     public function save()
     {
         $this->beforeSave();
+
+        $this->validateData();
+        if ($this->hasValidationErrors()) {
+            return;
+        }
 
         if ($this->recordSetIsNew === true) {
             $this->saveNew();
@@ -362,5 +359,39 @@ abstract class TableGateway extends ArrayAccess
         if (array_key_exists($offset, $this->additionalData)) {
             unset($this->additionalData[$offset]);
         }
+    }
+
+    public function validateData() {}
+
+    public function addValidationError($field, $error)
+    {
+        if (!array_key_exists($field, $this->validationErrors)) {
+            $this->validationErrors[$field] = array();
+        }
+
+        $this->validationErrors[$field][] = $error;
+    }
+
+    public function hasValidationErrors()
+    {
+        return !empty($this->validationErrors);
+    }
+
+    public function getValidationErrors($field = null)
+    {
+        if ($field === null) {
+            return $this->validationErrors;
+        }
+
+        if (array_key_exists($field, $this->validationErrors)) {
+            return $this->validationErrors[$field];
+        }
+
+        return array();
+    }
+
+    public function clearValidationErrors()
+    {
+        $this->validationErrors = array();
     }
 }

@@ -12,6 +12,8 @@ use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
 use WebFW\Core\Classes\HTML\FormStart;
 use WebFW\Core\Classes\HTML\Message;
 use WebFW\Core\Exception;
+use WebFW\Core\Interfaces\iValidate;
+use WebFW\Core\SessionHandler;
 use WebFW\Database\ListFetcher;
 use WebFW\Core\Router;
 use WebFW\CMS\Classes\LoggedUser;
@@ -22,7 +24,7 @@ use WebFW\Core\Classes\HTML\Button;
 use WebFW\Core\HTMLController;
 use WebFW\Database\TableGateway;
 
-abstract class Controller extends HTMLController
+abstract class Controller extends HTMLController implements iValidate
 {
     const DEFAULT_ACTION_NAME = 'listItems';
 
@@ -123,6 +125,16 @@ abstract class Controller extends HTMLController
             $this->tableGateway->$key = $value;
         }
 
+        $validationErrors = $this->retrieveValidationErrors();
+        foreach ($validationErrors as $field => $errors) {
+            foreach ($errors as $error) {
+                $this->addValidationError($field, $error);
+            }
+        }
+        if ($this->hasValidationErrors()) {
+            $this->addMessage(new Message('Input errors present!', Message::TYPE_ERROR));
+        }
+
         if (empty($this->editTabs)) {
             $this->editTabs[] = new EditTab('auto');
         }
@@ -134,6 +146,7 @@ abstract class Controller extends HTMLController
 
         foreach ($this->editTabs as &$tab) {
             $tab->setValues($this->tableGateway->getValues(true));
+            $tab->setErrors($this->tableGateway);
         }
 
         $this->setTplVar('editTabs', $this->editTabs);
@@ -183,7 +196,12 @@ abstract class Controller extends HTMLController
         }
 
         $this->beforeSave();
+        $this->validateData();
         $this->tableGateway->save();
+        if ($this->hasValidationErrors()) {
+            $this->storeValidationErrors($this->getValidationErrors());
+            $this->setRedirectUrl($this->getURL('editItem', true, null, false), true);
+        }
         $this->afterSave();
 
         $this->setRedirectUrl($this->getURL(null, false, null, false), true);
@@ -670,4 +688,56 @@ abstract class Controller extends HTMLController
     protected function afterSave() {}
     protected function beforeDelete() {}
     protected function afterDelete() {}
+
+    public function validateData()
+    {
+    }
+
+    public function addValidationError($field, $error)
+    {
+        if ($this->tableGateway instanceof iValidate) {
+            $this->tableGateway->addValidationError($field, $error);
+        }
+    }
+
+    public function hasValidationErrors()
+    {
+        if ($this->tableGateway instanceof iValidate) {
+            return $this->tableGateway->hasValidationErrors();
+        }
+    }
+
+    public function getValidationErrors($field = null)
+    {
+        if ($this->tableGateway instanceof iValidate) {
+            return $this->tableGateway->getValidationErrors($field);
+        }
+    }
+
+    public function clearValidationErrors()
+    {
+        if ($this->tableGateway instanceof iValidate) {
+            $this->tableGateway->clearValidationErrors();
+        }
+    }
+
+    protected function storeValidationErrors($errors)
+    {
+        SessionHandler::set($this->getSessionKey('validate'), $errors);
+    }
+
+    protected function retrieveValidationErrors()
+    {
+        $errors = SessionHandler::get($this->getSessionKey('validate'));
+        SessionHandler::kill($this->getSessionKey('validate'));
+        if (!is_array($errors)) {
+            $errors = array();
+        }
+        return $errors;
+    }
+
+    protected function getSessionKey($operation)
+    {
+        return 'webfw-' . $operation . '-' . $this->ns . $this->ctl;
+    }
 }

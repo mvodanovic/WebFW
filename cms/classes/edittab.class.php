@@ -5,6 +5,7 @@ namespace WebFW\CMS\Classes;
 use WebFW\Core\Classes\HTML\Base\BaseFormItem;
 use WebFW\Core\Classes\HTML\Button;
 use WebFW\Core\Classes\HTML\Input;
+use WebFW\Database\TableGateway;
 
 class EditTab
 {
@@ -88,6 +89,23 @@ class EditTab
                             $formItem->setValue($value);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    public function setErrors(TableGateway $tableGateway)
+    {
+        foreach ($this->fields as &$fieldRow) {
+            foreach ($fieldRow as &$field) {
+                $formItem = &$field['formItem'];
+                $fieldName = substr($formItem->getName(), strlen(static::FIELD_PREFIX));
+                $errors = $tableGateway->getValidationErrors($fieldName);
+                if (!empty($errors)) {
+                    $field['error'] = '';
+                }
+                foreach ($errors as $error) {
+                    $field['error'] .= Tooltip::get($error, Tooltip::TYPE_ERROR);
                 }
             }
         }
