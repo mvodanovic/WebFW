@@ -19,6 +19,9 @@
 
 <script type="text/javascript">
 // <![CDATA[
+    $('div.nav ul').hide();
+    $('div.nav ul li a').removeClass('active');
+    $('div.nav ul[data-parent-id=0]').show();
     select_nav_element_by_name('<?=$component->getSelectedMenuItem(); ?>');
 // ]]>
 </script>
