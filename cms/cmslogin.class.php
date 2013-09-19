@@ -15,10 +15,10 @@ class CMSLogin extends HTMLController
     {
         parent::__construct();
 
-        $this->setLinkedCSS('/static/css/webfw/reset.css');
-        $this->setLinkedCSS('/static/css/webfw/formalize.css');
-        $this->setLinkedCSS('/static/css/webfw/cms.css');
-        $this->setHtmlMeta('Content-Type', 'text/html; charset=UTF-8', 'http-equiv');
+        $this->addLinkedCSS('/static/css/webfw/reset.css');
+        $this->addLinkedCSS('/static/css/webfw/formalize.css');
+        $this->addLinkedCSS('/static/css/webfw/cms.css');
+        $this->addHeadMeta('Content-Type', 'text/html; charset=UTF-8', 'http-equiv');
     }
 
     public function execute()
@@ -31,7 +31,7 @@ class CMSLogin extends HTMLController
 
         $this->baseTemplate = \WebFW\Config\FW_PATH . '/cms/templates/base';
         $this->template = \WebFW\Config\FW_PATH . '/cms/templates/login';
-        $this->pageTitle = 'CMS Login';
+        $this->pageTitle = 'CMS Login' . Controller::TITLE_SUFFIX;
         $this->setTplVar('errorMessage', null);
         $this->setTplVar('login', null);
     }
@@ -69,4 +69,5 @@ class CMSLogin extends HTMLController
         LoggedUser::getInstance()->doLogout();
         $this->setRedirectUrl(Router::URL('CMSLogin', null, '\\WebFW\\CMS\\', null, false));
     }
+
 }

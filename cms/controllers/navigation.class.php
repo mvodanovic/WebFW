@@ -14,6 +14,8 @@ class Navigation extends TreeController
 {
     public function init()
     {
+        $this->pageTitle = 'CMS Navigation';
+
         parent::init();
 
         $this->listFetcher = new LFNavigation();

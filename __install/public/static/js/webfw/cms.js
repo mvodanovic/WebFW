@@ -100,7 +100,7 @@ $(document).ready(function() {
         $(this).tooltip("option", "tooltipClass", $(this).data('class'));
     });
 
-    if (sortingDef !== null) {
+    if (typeof sortingDef !== 'undefined' && sortingDef !== null) {
         var fixHelper = function(e, ui) {
             ui.children().each(function() {
                 $(this).width($(this).width());

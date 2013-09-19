@@ -2,6 +2,7 @@
 
 namespace WebFW\CMS\Components;
 
+use WebFW\CMS\CMSLogin;
 use WebFW\Core\Component;
 use WebFW\CMS\Classes\LoggedUser;
 use WebFw\CMS\DBLayer\Navigation as TGNavigation;
@@ -13,6 +14,11 @@ class Navigation extends Component
 
     public function execute()
     {
+        if ($this->ownerObject instanceof CMSLogin) {
+            $this->useTemplate = false;
+            return;
+        }
+
         $lfNavigation = new LFNavigation();
 
         $filter = array(

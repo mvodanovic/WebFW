@@ -7,14 +7,7 @@ use WebFW\Core\Framework;
 
 <html>
 <head>
-    <title><?php echo htmlspecialchars($pageTitle); ?> - WebFW CMS</title>
     <?php echo $htmlHead; ?>
-
-    <script type="text/javascript">
-        // <![CDATA[
-        var sortingDef = <?=$controller->isSortingEnabled() ? $controller->getJSONSortingDef() : 'null'; ?>;
-        // ]]>
-    </script>
 </head>
 <body>
     <div class="container">

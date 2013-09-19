@@ -27,6 +27,7 @@ use WebFW\Database\TableGateway;
 abstract class Controller extends HTMLController implements iValidate
 {
     const DEFAULT_ACTION_NAME = 'listItems';
+    const TITLE_SUFFIX = ' - WebFW CMS';
 
     protected $listFetcher = null;
     protected $filter = array();
@@ -58,14 +59,14 @@ abstract class Controller extends HTMLController implements iValidate
             $this->setRedirectUrl(Router::URL('CMSLogin', null, '\\WebFW\\CMS\\', null, false), true);
         }
 
-        $this->setLinkedCSS('/static/css/webfw/reset.css');
-        $this->setLinkedCSS('/static/css/webfw/formalize.css');
-        $this->setLinkedCSS('/static/css/webfw/jquery-ui-1.10.3.custom.min.css');
-        $this->setLinkedCSS('/static/css/webfw/cms.css');
-        $this->setLinkedJavaScript('/static/js/webfw/jquery-1.10.2.min.js');
-        $this->setLinkedJavaScript('/static/js/webfw/jquery-ui-1.10.3.custom.min.js');
-        $this->setLinkedJavaScript('/static/js/webfw/cms.js');
-        $this->setHtmlMeta('Content-Type', 'text/html; charset=UTF-8', 'http-equiv');
+        $this->addLinkedCSS('/static/css/webfw/reset.css');
+        $this->addLinkedCSS('/static/css/webfw/formalize.css');
+        $this->addLinkedCSS('/static/css/webfw/jquery-ui-1.10.3.custom.min.css');
+        $this->addLinkedCSS('/static/css/webfw/cms.css');
+        $this->addLinkedJS('/static/js/webfw/jquery-1.10.2.min.js');
+        $this->addLinkedJS('/static/js/webfw/jquery-ui-1.10.3.custom.min.js');
+        $this->addLinkedJS('/static/js/webfw/cms.js');
+        $this->addHeadMeta('Content-Type', 'text/html; charset=UTF-8', 'http-equiv');
     }
 
     public function listItems()
@@ -85,9 +86,15 @@ abstract class Controller extends HTMLController implements iValidate
         $this->initListMassActions();
 
 
-        $listData = $this->listFetcher->getList($this->filter, $this->sort, $this->itemsPerPage, ($this->page - 1) * $this->itemsPerPage);
+        $listData = $this->listFetcher->getList(
+            $this->filter,
+            $this->sort,
+            $this->itemsPerPage,
+            ($this->page - 1) * $this->itemsPerPage
+        );
         $totalCount = $this->listFetcher->getCount($this->filter);
 
+        $this->addHeadJS('var sortingDef = ' . ($this->isSortingEnabled() ? $this->getJSONSortingDef() : 'null') . ';');
         $this->setTplVar('listData', $listData);
         $this->setTplVar('totalCount', $totalCount);
         $this->setTplVar('page', $this->page);
@@ -338,13 +345,13 @@ abstract class Controller extends HTMLController implements iValidate
     protected function init()
     {
         $this->baseTemplate = \WebFW\Config\FW_PATH . '/cms/templates/base';
+        $this->setPageTitle();
     }
 
     protected function initList()
     {
         $this->init();
         $this->template = \WebFW\Config\FW_PATH . '/cms/templates/list';
-        $this->pageTitle = 'Items List';
         $this->filter += $this->getPaginatorFilter();
 
         $page = Request::getInstance()->p;
@@ -414,7 +421,6 @@ abstract class Controller extends HTMLController implements iValidate
     {
         $this->init();
         $this->template = \WebFW\Config\FW_PATH . '/cms/templates/edit';
-        $this->pageTitle = 'Add / Edit Item';
     }
 
     protected function initForm()
@@ -739,5 +745,21 @@ abstract class Controller extends HTMLController implements iValidate
     protected function getSessionKey($operation)
     {
         return 'webfw-' . $operation . '-' . $this->ns . $this->ctl;
+    }
+
+    protected function setPageTitle()
+    {
+        $actionName = '';
+        switch ($this->action) {
+            case 'listItems':
+                $actionName = 'Items List - ';
+                break;
+            case 'editItem':
+                $actionName = 'Item Editor - ';
+                break;
+        }
+
+        $this->pageTitle = ($this->pageTitle === '') ? ($this->ns . $this->ctl) : $this->pageTitle;
+        $this->pageTitle = $actionName . $this->pageTitle . static::TITLE_SUFFIX;
     }
 }

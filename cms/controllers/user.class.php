@@ -16,6 +16,8 @@ class User extends Controller
 {
     public function init()
     {
+        $this->pageTitle = 'CMS Users';
+
         parent::init();
 
         $this->listFetcher = new LFUser();

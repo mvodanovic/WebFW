@@ -15,6 +15,8 @@ class UserTypeControllerPermissions extends Controller
 {
     protected function init()
     {
+        $this->pageTitle = 'CMS Controller Permissions for User Types';
+
         parent::init();
 
         $this->listFetcher = new LFUTCP();

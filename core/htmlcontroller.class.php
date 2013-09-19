@@ -11,10 +11,9 @@ abstract class HTMLController extends Controller
     protected $baseTemplate = 'default';
     protected $pageTitle = '';
     protected $simpleOutput = false;
-    protected $urlJS = array();
-    protected $urlCSS = array();
-    protected $htmlMeta = array();
-    protected $customHtmlHead = '';
+    protected $headHTML = array();
+    protected $headJS = array();
+    protected $headCSS = array();
 
     public function __construct()
     {
@@ -35,44 +34,31 @@ abstract class HTMLController extends Controller
     {
         parent::processOutput();
 
-        $htmlHead = $this->customHtmlHead;
-
-        foreach ($this->urlJS as &$url) {
-            $htmlHead .= '<script type="text/javascript" src="' . $url . '"></script>' . "\n";
-        }
-
-        foreach ($this->urlCSS as &$data) {
-            switch ($data['xhtml']) {
-                case true:
-                    $htmlHead .= '<link rel="stylesheet" type="text/css" href="' . $data['url'] . '" />' . "\n";
-                    break;
-                default:
-                    $htmlHead .= '<link rel="stylesheet" type="text/css" href="' . $data['url'] . '">' . "\n";
-                    break;
-            }
-        }
-
-        /// key, content, keyType=name, scheme='', xhtml=true
-        foreach ($this->htmlMeta as &$data) {
-            if ($data['keyType'] !== 'name' && $data['keyType'] !== 'http-equiv') {
-                continue;
-            }
-
-            if ($data['scheme'] !== '') {
-                $data['scheme'] = ' scheme="' . $data['scheme'] . '"';
-            }
-
-            switch ($data['xhtml']) {
-                case true:
-                    $htmlHead .= '<meta ' . $data['keyType'] . '="' . $data['key'] . '" content="' . $data['content'] . '"' . $data['scheme'] . ' />' . "\n";
-                    break;
-                default:
-                    $htmlHead .= '<meta ' . $data['keyType'] . '="' . $data['key'] . '" content="' . $data['content'] . '"' . $data['scheme'] . '>' . "\n";
-                    break;
-            }
-        }
-
         if ($this->simpleOutput === false) {
+            if ($this->pageTitle !== '') {
+                $this->addHeadHTML('<title>' . $this->pageTitle . '</title>');
+            }
+
+            if (!empty($this->headCSS)) {
+                $this->addHeadHTML(
+                    "<style type=\"text/css\">\n"
+                    . "/* <![CDATA[\n */"
+                    . implode("\n", $this->headCSS) , "\n"
+                    . "/* ]]> */\n"
+                    . "</style>"
+                );
+            }
+
+            if (!empty($this->headJS)) {
+                $this->addHeadHTML(
+                    "<script type=\"text/javascript\">\n"
+                    . "// <![CDATA[\n"
+                    . implode("\n", $this->headJS) . "\n"
+                    . "// ]]>\n"
+                    . "</script>"
+                );
+            }
+
             $templateDir = \WebFW\Config\BASE_TEMPLATE_PATH . DIRECTORY_SEPARATOR;
 
             try {
@@ -84,40 +70,48 @@ abstract class HTMLController extends Controller
                 $template->set($name, $value);
             }
             $template->set('htmlBody', $this->output);
-            $template->set('htmlHead', $htmlHead);
-            $template->set('pageTitle', $this->pageTitle);
+            $template->set('htmlHead', implode("\n", $this->headHTML));
             $template->set('controller', $this);
 
             $this->output = $template->fetch();
         }
     }
 
-    protected function setLinkedJavaScript($url)
+    protected function addHeadHTML($html)
     {
-        $this->urlJS[] = $url;
+        $this->headHTML[] = $html;
     }
 
-    protected function setLinkedCSS($url, $xhtml = true)
+    protected function addLinkedJS($url)
     {
-        $this->urlCSS[] = array(
-            'url'    => $url,
-            'xhtml'  => $xhtml === true ? true : false
-        );
+        $url = htmlspecialchars($url);
+        $this->addHeadHTML('<script type="text/javascript" src="' . $url . '"></script>');
     }
 
-    protected function setHtmlMeta($key, $content, $keyType = 'name', $scheme = '', $xhtml = true)
+    protected function addHeadJS($js)
     {
-        $this->htmlMeta[] = array(
-            'key'       => $key,
-            'content'   => $content,
-            'keyType'   => strtolower($keyType) === 'name' ? 'name' : 'http-equiv',
-            'scheme'    => $scheme,
-            'xhtml'     => $xhtml === true ? true : false
-        );
+        $this->headJS[] = $js;
     }
 
-    protected function setCustomHtmlHead($html)
+    protected function addLinkedCSS($url, $xhtml = true)
     {
-        $this->customHtmlHead = $html;
+        $url = htmlspecialchars($url);
+        $closingTag = ($xhtml === true) ? '" />' : '">';
+        $this->addHeadHTML('<link rel="stylesheet" type="text/css" href="' . $url . $closingTag);
+    }
+
+    protected function addHeadCSS($css)
+    {
+        $this->headCSS[] = $css;
+    }
+
+    protected function addHeadMeta($key, $content, $keyType = 'name', $scheme = '', $xhtml = true)
+    {
+        $keyType = htmlspecialchars($keyType);
+        $key = htmlspecialchars($key);
+        $content = htmlspecialchars($content);
+        $scheme = ($scheme !== '') ? ' scheme="' . htmlspecialchars($scheme) . '"' : '';
+        $closingTag = ($xhtml === true) ? ' />' : '>';
+        $this->addHeadHTML('<meta ' . $keyType . '="' . $key . '" content="' . $content . '"' . $scheme . $closingTag);
     }
 }

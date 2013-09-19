@@ -12,6 +12,8 @@ class UserType extends Controller
 {
     public function init()
     {
+        $this->pageTitle = 'CMS User Types';
+
         parent::init();
 
         $this->listFetcher = new LFUserType();
