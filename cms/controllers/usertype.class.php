@@ -10,7 +10,7 @@ use WebFW\CMS\Classes\EditTab;
 
 class UserType extends Controller
 {
-    public function init()
+    protected function init()
     {
         $this->pageTitle = 'CMS User Types';
 
@@ -20,7 +20,7 @@ class UserType extends Controller
         $this->tableGateway = new TGUserType();
     }
 
-    public function initList()
+    protected function initList()
     {
         parent::initList();
 
@@ -32,7 +32,7 @@ class UserType extends Controller
         $this->addListColumn('strIsRoot', 'Is Root', true);
     }
 
-    public function initEdit()
+    protected function initEdit()
     {
         parent::initEdit();
 

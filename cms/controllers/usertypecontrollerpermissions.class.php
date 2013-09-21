@@ -23,7 +23,7 @@ class UserTypeControllerPermissions extends Controller
         $this->tableGateway = new TGUTCP();
     }
 
-    public function initList()
+    protected function initList()
     {
         parent::initList();
 
@@ -40,7 +40,7 @@ class UserTypeControllerPermissions extends Controller
         $this->addListColumn('strCustom', 'C', true);
     }
 
-    public function initEdit()
+    protected function initEdit()
     {
         parent::initEdit();
 

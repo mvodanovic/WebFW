@@ -14,7 +14,7 @@ use WebFW\CMS\Classes\ListHelper;
 
 class User extends Controller
 {
-    public function init()
+    protected function init()
     {
         $this->pageTitle = 'CMS Users';
 
@@ -24,7 +24,7 @@ class User extends Controller
         $this->tableGateway = new TGUser();
     }
 
-    public function initList()
+    protected function initList()
     {
         parent::initList();
 
@@ -40,7 +40,7 @@ class User extends Controller
         $this->addListColumn('strActive', 'Active', true);
     }
 
-    public function initEdit()
+    protected function initEdit()
     {
         parent::initEdit();
 

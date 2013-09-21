@@ -12,7 +12,7 @@ use WebFW\Database\TreeTableGateway;
 
 class Navigation extends TreeController
 {
-    public function init()
+    protected function init()
     {
         $this->pageTitle = 'CMS Navigation';
 
@@ -22,7 +22,7 @@ class Navigation extends TreeController
         $this->tableGateway = new TGNavigation();
     }
 
-    public function initList()
+    protected function initList()
     {
         parent::initList();
 
@@ -37,7 +37,7 @@ class Navigation extends TreeController
         $this->enableListSorting('sortItems', 'order_id', array('parent_node_id'));
     }
 
-    public function initEdit()
+    protected function initEdit()
     {
         parent::initEdit();
 
