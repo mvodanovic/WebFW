@@ -101,6 +101,20 @@ class UserTypeControllerPermissions extends ListController
         $this->editTabs[] = $tab;
     }
 
+    protected function initListFilters()
+    {
+        $userTypeLf = new LFUserType();
+        $userTypes = array('' => '') + ListHelper::GetKeyValueList(
+                $userTypeLf->getList(null, array('user_type_id' => 'ASC')),
+                'user_type_id',
+                'caption'
+            );
+
+        $this->addListFilter(new Select('user_type_id', null, $userTypes, null, 'user_type_id'), 'User Type');
+        $this->addListFilter(new Input('namespace', null, 'text', null, 'namespace'), 'Namespace');
+        $this->addListFilter(new Input('controller', null, 'text', null, 'controller'), 'Controller');
+    }
+
     public function processList(&$list)
     {
         foreach ($list as &$item) {

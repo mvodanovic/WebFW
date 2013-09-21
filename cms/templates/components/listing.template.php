@@ -16,7 +16,7 @@ use WebFW\Core\ArrayAccess;
         'itemsPerPage' => $itemsPerPage,
         'ctl' => $controllerName,
         'ns' => $namespace,
-        'params' => $paginatorFilter,
+        'params' => $filterValues,
     ),
     $component
 ); ?>

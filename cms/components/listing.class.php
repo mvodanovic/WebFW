@@ -25,7 +25,7 @@ class Listing extends Component
         $columnCount = count($listColumns);
         $controllerName = $this->ownerObject->getName();
         $namespace = $this->ownerObject->getNamespace();
-        $paginatorFilter = $this->ownerObject->getPaginatorFilter();
+        $filterValues = $this->ownerObject->getFilterValues();
         $messages = $this->ownerObject->getMessages();
         $listActions = $this->ownerObject->getListActions();
         $listRowActions = $this->ownerObject->getListRowActions();
@@ -52,7 +52,7 @@ class Listing extends Component
         $this->setTplVar('itemsPerPage', $itemsPerPage);
         $this->setTplVar('controllerName', $controllerName);
         $this->setTplVar('namespace', $namespace);
-        $this->setTplVar('paginatorFilter', $paginatorFilter);
+        $this->setTplVar('filterValues', $filterValues);
         $this->setTplVar('messages', $messages);
         $this->setTplVar('listActions', $listActions);
         $this->setTplVar('listRowActions', $listRowActions);

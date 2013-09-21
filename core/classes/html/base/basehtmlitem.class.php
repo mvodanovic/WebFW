@@ -53,7 +53,7 @@ abstract class BaseHTMLItem
 
     public function setValue($value)
     {
-        $this->value = $value;
+        $this->value = $value === null ? null : (string) $value;
     }
 
     public function getValue()

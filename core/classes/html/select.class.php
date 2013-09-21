@@ -22,9 +22,12 @@ class Select extends BaseFormItem
 
     public function prepareHTMLChunks()
     {
+        $this->innerHTMLElements = array();
         $this->innerHTMLElements[] = $this->generateOptionsHTML();
+        $value = $this->value;
         $this->value = null;
         parent::prepareHTMLChunks();
+        $this->value = $value;
     }
 
     public static function get($name = null, $value = null, $class = null, $id = null)
@@ -37,6 +40,7 @@ class Select extends BaseFormItem
     {
         $optionsHTML = '';
         foreach ($this->options as $value => $caption) {
+            $value = (string) $value;
             $selected = false;
             if (is_array($this->value) && in_array($value, $this->value)) {
                 $selected = true;

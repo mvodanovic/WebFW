@@ -25,6 +25,7 @@ use WebFW\Database\TableGateway;
 abstract class ListController extends Controller implements iValidate
 {
     const DEFAULT_ACTION_NAME = 'listItems';
+    const LIST_FILTER_PREFIX = 'f_';
 
     protected $listFetcher = null;
     protected $filter = array();
@@ -60,7 +61,6 @@ abstract class ListController extends Controller implements iValidate
         $this->initListActions();
         $this->initListRowActions();
         $this->initListMassActions();
-
 
         $listData = $this->listFetcher->getList(
             $this->filter,
@@ -322,7 +322,7 @@ abstract class ListController extends Controller implements iValidate
     {
         $this->init();
         $this->template = \WebFW\Config\FW_PATH . '/cms/templates/list';
-        $this->filter += $this->getPaginatorFilter();
+        $this->filter += $this->getFilterValues();
 
         $page = Request::getInstance()->p;
         if ($page !== null) {
@@ -377,9 +377,15 @@ abstract class ListController extends Controller implements iValidate
     protected function addListFilter(BaseFormItem $formItem, $label = null)
     {
         $name = $formItem->getName();
+        if ($name !== null) {
+            $name = static::LIST_FILTER_PREFIX . $name;
+            $formItem->setName($name);
+        }
+
         if (Request::getInstance()->$name !== null) {
             $formItem->setValue(Request::getInstance()->$name);
         }
+
         $this->listFilters[] = array(
             'formItem' => $formItem->parse(),
             'label' => $label,
@@ -516,9 +522,9 @@ abstract class ListController extends Controller implements iValidate
         return $this->tableGateway->getTable()->getPrimaryKeyColumns();
     }
 
-    public function getPaginatorFilter()
+    public function getFilterValues()
     {
-        return Request::getInstance()->getValuesWithPrefix('f_');
+        return Request::getInstance()->getValuesWithPrefix(static::LIST_FILTER_PREFIX, false);
     }
 
     public function registerEditAction(EditAction $action)

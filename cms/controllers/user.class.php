@@ -32,11 +32,10 @@ class User extends ListController
             'user_id' => 'ASC',
         );
 
-        $this->addListColumn('user_id', 'User ID', true);
-        $this->addListColumn('strUserType', 'User type');
         $this->addListColumn('username', 'Username');
         $this->addListColumn('email', 'E-mail');
         $this->addListColumn('strFullName', 'Name');
+        $this->addListColumn('strUserType', 'User type');
         $this->addListColumn('strActive', 'Active', true);
     }
 
@@ -47,7 +46,11 @@ class User extends ListController
         $tab = new EditTab('default');
 
         $userTypeLf = new LFUserType();
-        $userTypes = ListHelper::GetKeyValueList($userTypeLf->getList(null, array('user_type_id' => 'ASC')), 'user_type_id', 'caption');
+        $userTypes = ListHelper::GetKeyValueList(
+            $userTypeLf->getList(null, array('user_type_id' => 'ASC')),
+            'user_type_id',
+            'caption'
+        );
 
         $tab->addField(
             new Input('username', null, 'text', null, 'username'),
@@ -105,7 +108,16 @@ class User extends ListController
 
     protected function initListFilters()
     {
-        $this->addListFilter(new Input('f_user_id', null, null, 'input_small', 'user_id'), 'ID');
+        $userTypeLf = new LFUserType();
+        $userTypes = array('' => '') + ListHelper::GetKeyValueList(
+            $userTypeLf->getList(null, array('user_type_id' => 'ASC')),
+            'user_type_id',
+            'caption'
+        );
+
+        $this->addListFilter(new Select('user_type_id', null, $userTypes, null, 'user_type_id'), 'User Type');
+        $this->addListFilter(new Input('username', null, 'text', null, 'username'), 'Username');
+        $this->addListFilter(new Input('email', null, 'email', null, 'email'), 'Email');
     }
 
     public function processList(&$list)
