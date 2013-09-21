@@ -15,7 +15,7 @@ use WebFW\Core\Exception;
 use WebFW\Core\Request;
 use WebFW\Database\TreeTableGateway;
 
-abstract class TreeController extends Controller
+abstract class TreeController extends ListController
 {
     protected $treeFilter = null;
 

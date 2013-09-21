@@ -3,7 +3,7 @@
 namespace WebFW\CMS\Controllers;
 
 use WebFW\CMS\Classes\ListHelper;
-use WebFW\CMS\Controller;
+use WebFW\CMS\ListController;
 use WebFW\CMS\DBLayer\ListFetchers\UserTypeControllerPermissions as LFUTCP;
 use WebFW\CMS\DBLayer\UserTypeControllerPermissions as TGUTCP;
 use WebFW\Core\Classes\HTML\Input;
@@ -11,7 +11,7 @@ use WebFW\CMS\Classes\EditTab;
 use WebFW\Core\Classes\HTML\Select;
 use WebFW\CMS\DBLayer\ListFetchers\UserType as LFUserType;
 
-class UserTypeControllerPermissions extends Controller
+class UserTypeControllerPermissions extends ListController
 {
     protected function init()
     {

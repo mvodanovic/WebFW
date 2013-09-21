@@ -19,7 +19,7 @@ class PermissionsHelper
 
         $primaryKey = array(
             'user_type_id' => LoggedUser::getInstance()->user_type_id,
-            'controller' => $controller->getControllerName(),
+            'controller' => $controller->getName(),
             'namespace' => $controller->getNamespace(),
         );
         $utcp = new UTCP();

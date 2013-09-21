@@ -23,7 +23,7 @@ class Listing extends Component
         $itemsPerPage = $this->ownerObject->getItemsPerPage();
         $listColumns = $this->ownerObject->getListColumns();
         $columnCount = count($listColumns);
-        $controllerName = $this->ownerObject->getControllerName();
+        $controllerName = $this->ownerObject->getName();
         $namespace = $this->ownerObject->getNamespace();
         $paginatorFilter = $this->ownerObject->getPaginatorFilter();
         $messages = $this->ownerObject->getMessages();

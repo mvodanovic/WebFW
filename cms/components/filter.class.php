@@ -16,7 +16,7 @@ class Filter extends Component
         }
 
         $filters = $this->ownerObject->getListFilters();
-        $ctl = $this->ownerObject->getControllerName();
+        $ctl = $this->ownerObject->getName();
         $ns = $this->ownerObject->getNamespace();
 
         if (empty($filters)) {
