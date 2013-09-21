@@ -78,7 +78,7 @@ ul-paginator li span {font-weight: bold;}
 /* LISTVIEW TABLE */
 table.list {width: 100%; border: 1px solid #0033ff; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;}
 table.list thead tr th {background-color: #0033ff; color: #ffffff; padding: 3px 5px; text-align: left; vertical-align: middle;}
-table.list thead tr th.shrinked {text-align: center; white-space: nowrap;}
+table.list thead tr th.shrinked {width: 1px; white-space: nowrap; text-align: center;}
 table.list thead tr th:not(:last-child) {border-right: 1px solid #ffffff;}
 table.list tbody tr td {padding: 3px 5px; vertical-align: middle;}
 table.list tbody tr td.shrinked {width: 1px; white-space: nowrap;}

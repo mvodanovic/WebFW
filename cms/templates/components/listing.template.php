@@ -31,6 +31,7 @@ use WebFW\Core\ArrayAccess;
     <?php endforeach; ?>
 </div>
 
+<?php if ($totalCount > 0): ?>
 <table class="list">
     <thead>
     <tr>
@@ -79,3 +80,4 @@ use WebFW\Core\ArrayAccess;
     <?php endforeach; ?>
     </tbody>
 </table>
+<?php endif; ?>

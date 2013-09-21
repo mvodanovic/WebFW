@@ -77,10 +77,10 @@ function select_nav_element_by_name(name)
 
 $(document).ready(function() {
     $('table.list thead th input[type=checkbox]').change(function() {
-        if ($(this).attr('checked') === 'checked') {
-            $('table.list tbody td input[type=checkbox]').attr('checked', 'checked');
+        if ($(this).is(':checked')) {
+            $('table.list tbody td input.row_selector[type=checkbox]').prop('checked', 'checked');
         } else {
-            $('table.list tbody td input[type=checkbox]').attr('checked', null);
+            $('table.list tbody td input.row_selector[type=checkbox]').prop('checked', null);
         }
     });
 
