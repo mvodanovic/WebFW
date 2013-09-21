@@ -9,7 +9,7 @@ class ListHelper
 
     protected function __construct() {}
 
-    public static function GetKeyValueList($list, $keyColumn, $valueColumn)
+    public static function GetKeyValueList($list, $keyColumn, $valueColumn, $prefixWithEmptyEntry = false)
     {
         if (!is_array($list)) {
             /// TODO: proper error handling
@@ -34,6 +34,34 @@ class ListHelper
             $newList[$listItem[$keyColumn]] = $listItem[$valueColumn];
         }
 
+        if ($prefixWithEmptyEntry) {
+            $newList = static::prefixWithEmptyEntry($newList);
+        }
+
         return $newList;
+    }
+
+    public static function prefixWithEmptyEntry($list)
+    {
+        if (!is_array($list)) {
+            /// TODO: proper error handling
+            $list = array();
+        }
+
+        return array(''  => '') + $list;
+    }
+
+    public static function getBooleanList($prefixWithEmptyEntry = false)
+    {
+        $list = array(
+            '1' => 'Yes',
+            '0' => 'No',
+        );
+
+        if ($prefixWithEmptyEntry) {
+            $list = static::prefixWithEmptyEntry($list);
+        }
+
+        return $list;
     }
 }

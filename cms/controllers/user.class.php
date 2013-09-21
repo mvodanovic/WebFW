@@ -58,7 +58,7 @@ class User extends ListController
             'Username, used for login.'
         );
         $tab->addField(
-            new Input('email', null, 'text', null, 'email'),
+            new Input('email', null, 'email', null, 'email'),
             'E-mail',
             'User\'s email, can also be used for login.',
             false
@@ -109,15 +109,17 @@ class User extends ListController
     protected function initListFilters()
     {
         $userTypeLf = new LFUserType();
-        $userTypes = array('' => '') + ListHelper::GetKeyValueList(
+        $userTypes = ListHelper::GetKeyValueList(
             $userTypeLf->getList(null, array('user_type_id' => 'ASC')),
             'user_type_id',
-            'caption'
+            'caption',
+            true
         );
 
         $this->addListFilter(new Select('user_type_id', null, $userTypes, null, 'user_type_id'), 'User Type');
         $this->addListFilter(new Input('username', null, 'text', null, 'username'), 'Username');
         $this->addListFilter(new Input('email', null, 'email', null, 'email'), 'Email');
+        $this->addListFilter(new Select('active', null, ListHelper::getBooleanList(true), null, 'active'), 'Active');
     }
 
     public function processList(&$list)

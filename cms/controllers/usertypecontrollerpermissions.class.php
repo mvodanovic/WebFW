@@ -104,10 +104,11 @@ class UserTypeControllerPermissions extends ListController
     protected function initListFilters()
     {
         $userTypeLf = new LFUserType();
-        $userTypes = array('' => '') + ListHelper::GetKeyValueList(
+        $userTypes = ListHelper::GetKeyValueList(
                 $userTypeLf->getList(null, array('user_type_id' => 'ASC')),
                 'user_type_id',
-                'caption'
+                'caption',
+                true
             );
 
         $this->addListFilter(new Select('user_type_id', null, $userTypes, null, 'user_type_id'), 'User Type');

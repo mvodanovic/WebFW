@@ -76,7 +76,7 @@ class Navigation extends TreeController
             "URL GET syntax.\nBlank for no additional parameters."
         );
         $tab->addField(
-            new Input('custom_url', null, 'text', null, 'custom_url'),
+            new Input('custom_url', null, 'url', null, 'custom_url'),
             'Custom URL',
             "Overrides routing parameters.\nCan be used to link to anything, including external links."
         );
