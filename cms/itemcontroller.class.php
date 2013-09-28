@@ -28,6 +28,7 @@ abstract class ItemController extends Controller implements iValidate
     protected $editForm = null;
 
     protected $tableGateway = null;
+    protected $unsavedChangesExistMessage = 'Unsaved changes exist. Are you sure you want to leave?';
 
     public function editItem()
     {
@@ -159,9 +160,21 @@ abstract class ItemController extends Controller implements iValidate
         $this->template = \WebFW\Config\FW_PATH . '/cms/templates/edit';
     }
 
+    protected function afterInitEdit()
+    {
+        parent::afterInitEdit();
+
+        if ($this->unsavedChangesExistMessage !== null) {
+            $this->addHeadJS(
+                'var unsavedChangesExistMessage = "' . htmlspecialchars($this->unsavedChangesExistMessage) . '";'
+            );
+        }
+    }
+
     protected function initForm()
     {
         $this->editForm = new FormStart('post', $this->getRoute('saveItem', $this->getPrimaryKeyValues()));
+        $this->editForm->addCustomAttribute('onsubmit', 'return beforeSubmitEdit();');
     }
 
     protected function initEditActions()
@@ -181,7 +194,6 @@ abstract class ItemController extends Controller implements iValidate
 
         /// Cancel
         $HTMLItem = new Link('Cancel', $this->getURL(null, false), Link::IMAGE_CANCEL);
-        $HTMLItem->addCustomAttribute('onclick', "return confirm('Any unsaved changes will be lost.\\nAre you sure?');");
         $editAction = new EditAction($HTMLItem);
         $this->registerEditAction($editAction);
     }

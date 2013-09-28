@@ -75,6 +75,25 @@ function select_nav_element_by_name(name)
     select_nav_element(element.data('id'));
 }
 
+var contentHasChanged = false;
+var contentChangedConfirmSkipped = false;
+
+function beforeSubmitEdit()
+{
+    contentChangedConfirmSkipped = true;
+    return true;
+}
+
+function beforeDelete(message)
+{
+    contentChangedConfirmSkipped = true;
+    var doAction = confirm(message);
+    if (!doAction) {
+        contentChangedConfirmSkipped = false;
+    }
+    return doAction;
+}
+
 $(document).ready(function() {
     $('table.list thead th input[type=checkbox]').change(function() {
         if ($(this).is(':checked')) {
@@ -123,7 +142,6 @@ $(document).ready(function() {
                     groupColumns: sortingDef.groupColumns,
                     itemList: itemList
                 };
-                console.log(data);
                 $.ajax(
                 {
                     url: sortingDef.url,
@@ -133,4 +151,18 @@ $(document).ready(function() {
             }
         });
     }
+
+    $(window).bind('beforeunload', function() {
+        if (typeof unsavedChangesExistMessage !== 'undefined' && unsavedChangesExistMessage !== null) {
+            if (contentHasChanged === true && contentChangedConfirmSkipped !== true) {
+                return unsavedChangesExistMessage;
+            }
+        }
+
+        contentChangedConfirmSkipped = false;
+    });
+
+    $(".editor input,select,textarea").change(function() {
+        contentHasChanged = true;
+    });
 });

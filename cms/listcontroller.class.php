@@ -278,7 +278,7 @@ abstract class ListController extends ItemController
         /// Delete
         if (!empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
             $HTMLItem = new Link('Delete', $this->getURL('deleteItem'), Link::IMAGE_DELETE);
-            $HTMLItem->addCustomAttribute('onclick', "return confirm('Item will be deleted.\\nAre you sure?');");
+            $HTMLItem->addCustomAttribute('onclick', "return beforeDelete('Item will be deleted.\\nAre you sure?');");
             $editAction = new EditAction($HTMLItem);
             $editAction->makeRightAligned();
             $this->registerEditAction($editAction);
