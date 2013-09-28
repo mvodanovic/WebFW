@@ -10,6 +10,11 @@ class PermissionsHelper
 {
     public static function checkForController(Controller $controller, $actionType)
     {
+        return static::checkForControllerByName($controller->getName(), $controller->getNamespace(), $actionType);
+    }
+
+    public static function checkForControllerByName($ctl, $ns, $actionType)
+    {
         $isOk = LoggedUser::isLoggedIn();
 
         /// Root users have all access rights
@@ -19,8 +24,8 @@ class PermissionsHelper
 
         $primaryKey = array(
             'user_type_id' => LoggedUser::getInstance()->user_type_id,
-            'controller' => $controller->getName(),
-            'namespace' => $controller->getNamespace(),
+            'controller' => $ctl,
+            'namespace' => $ns,
         );
         $utcp = new UTCP();
         try {

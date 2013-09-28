@@ -14,7 +14,7 @@ use WebFW\Core\Framework;
 
         <header>
             <div class="left">WebFW CMS</div>
-            <?=Framework::runComponent('UserActions', '\\WebFW\\CMS\\Components\\'); ?>
+            <?=Framework::runComponent('UserActions', '\\WebFW\\CMS\\Components\\', null, $controller); ?>
         </header>
 
         <?=Framework::runComponent('Navigation', '\\WebFW\\CMS\\Components\\', null, $controller); ?>

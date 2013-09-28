@@ -2,6 +2,8 @@
 
 namespace WebFW\CMS\Components;
 
+use WebFW\CMS\Classes\PermissionsHelper;
+use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
 use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Component;
 use WebFW\CMS\Classes\LoggedUser;
@@ -17,7 +19,29 @@ class UserActions extends Component
             return;
         }
 
-        $message = new Message('Welcome, ' . LoggedUser::getInstance()->username);
+        $messageText = 'Welcome, ' . LoggedUser::getInstance()->username;
+
+        /// If the user has permissions to access LoggedUser controller, give him a link.
+        if (PermissionsHelper::checkForControllerByName(
+            'LoggedUser',
+            '\\WebFW\\CMS\\Controllers\\',
+            UTCP::TYPE_UPDATE
+        )) {
+            $message = new Link($messageText, Router::URL('LoggedUser', null, '\\WebFW\\CMS\\Controllers\\'));
+
+            /// If LoggedUser is the current controller, activate the button.
+            if (
+                $this->ownerObject->getName() === 'LoggedUser'
+                && $this->ownerObject->getNamespace() === '\\WebFW\\CMS\\Controllers\\'
+            ) {
+                $message->addClass('active');
+            }
+        }
+
+        /// Else give him only a message.
+        else {
+            $message = new Message($messageText);
+        }
         $button = new Link('Logout', Router::URL('CMSLogin', 'doLogout', '\\WebFW\\CMS\\'), Link::IMAGE_LOGOUT);
 
         $this->setTplVar('loginMessage', $message->parse());
