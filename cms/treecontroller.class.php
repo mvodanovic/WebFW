@@ -24,7 +24,35 @@ abstract class TreeController extends ListController
         parent::afterInit();
 
         $this->treeFilter = $this->getParentNodeValues(false);
+    }
+
+    protected function afterInitList()
+    {
+        parent::afterInitList();
+
         $this->filter += $this->getParentNodeValues();
+    }
+
+    protected function afterInitEdit()
+    {
+        parent::afterInitEdit();
+
+        foreach ($this->tableGateway->getParentNodeKeyColumns() as $parentColumn => $childColumn)
+        {
+            $firstEditTab = reset($this->editTabs);
+
+            $fieldAlreadyDefined = false;
+            foreach ($this->editTabs as $editTab) {
+                if ($editTab->hasField($parentColumn)) {
+                    $fieldAlreadyDefined = true;
+                    break;
+                }
+            }
+
+            if (!$fieldAlreadyDefined) {
+                $firstEditTab->addField(new Input($parentColumn, null, 'hidden', null, $parentColumn), null);
+            }
+        }
     }
 
     protected function checkTableGateway()
@@ -140,6 +168,13 @@ abstract class TreeController extends ListController
         return $parentNodeValues;
     }
 
+    public function getEditRequestValues()
+    {
+        $values = parent::getEditRequestValues();
+        $values = array_merge($values, $this->treeFilter);
+        return $values;
+    }
+
     public function listRowHandlerChildren(TreeTableGateway $item)
     {
         if ($item->getChildrenNodeCount() === 0) {
@@ -170,18 +205,5 @@ abstract class TreeController extends ListController
         }
 
         return $params;
-    }
-
-    protected function initForm()
-    {
-        parent::initForm();
-
-        foreach ($this->treeFilter as $column => $value)
-        {
-            reset($this->editTabs)->addField(
-                new Input($column, $this->tableGateway->$column, 'hidden', null, $column),
-                null
-            );
-        }
     }
 }

@@ -67,6 +67,11 @@ class Column
 
     public function isNullable()
     {
-        return $this->isNullable();
+        return $this->nullable;
+    }
+
+    public function getPrecision()
+    {
+        return $this->precision;
     }
 }

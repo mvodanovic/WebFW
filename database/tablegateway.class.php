@@ -5,6 +5,7 @@ namespace WebFW\Database;
 use WebFW\Core\Interfaces\iValidate;
 use WebFW\Database\BaseHandler;
 use WebFW\Database\Table;
+use WebFW\Database\TableColumns\Column;
 use WebFW\Database\Query\Select;
 use WebFW\Database\Query\Join;
 use WebFW\Database\Query\Insert;
@@ -146,6 +147,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         $this->beforeSave();
 
         $this->validateData();
+        $this->validateDataUsingTableDefinition();
         if ($this->hasValidationErrors()) {
             return;
         }
@@ -362,6 +364,96 @@ abstract class TableGateway extends ArrayAccess implements iValidate
     }
 
     public function validateData() {}
+
+    protected function validateDataUsingTableDefinition()
+    {
+        foreach ($this->getValues() as $columnName => $value) {
+            $column = $this->getTable()->getColumn($columnName);
+
+            if ($value === null) {
+                if (!$column->isNullable()) {
+                    $this->addValidationError($columnName, 'Field can\'t be empty');
+                }
+                continue;
+            }
+
+            switch ($column->getType())
+            {
+                case Column::TYPE_BOOLEAN:
+                    if (!is_bool($value)) {
+                        $this->addValidationError($columnName, 'Value must be true or false');
+                    }
+                    break;
+                case Column::TYPE_INTEGER:
+                case Column::TYPE_SMALLINT:
+                    if (!is_int($value)) {
+                        $this->addValidationError($columnName, 'Value must be an integer');
+                    }
+                    break;
+                case Column::TYPE_FLOAT:
+                case Column::TYPE_REAL:
+                case Column::TYPE_DOUBLE:
+                    if (!is_float($value) && !is_int($value)) {
+                        $this->addValidationError($columnName, 'Value must be a number');
+                    }
+                    break;
+                case Column::TYPE_NUMERIC:
+                case Column::TYPE_DECIMAL:
+                    if (!is_float($value) && !is_int($value)) {
+                        $this->addValidationError($columnName, 'Value must be a number');
+                    } else {
+                        $precision = explode(',', $column->getPrecision());
+                        if ($precision[0] === '') {
+                            $precision[0] = '18';
+                        }
+                        if (count($precision) <= 1) {
+                            $precision[] = '0';
+                        }
+
+                        if ($value < 0) {
+                            $value *= -1;
+                        }
+                        $valueArray = explode('.', (string) $value);
+                        if (count($valueArray) <= 1) {
+                            $valueArray[] = '';
+                        }
+
+                        if (strlen($valueArray[0]) + strlen($valueArray[1]) > (int) $precision[0]) {
+                            $this->addValidationError(
+                                $columnName,
+                                "The number can have a maximum of {$precision[0]} digits"
+                            );
+                        }
+
+                        if (strlen($valueArray[1]) > (int) $precision[1]) {
+                            $this->addValidationError(
+                                $columnName,
+                                "The number can have a maximum of {$precision[1]} decimal digits"
+                            );
+                        }
+                    }
+                    break;
+                case Column::TYPE_CHAR:
+                case Column::TYPE_VARCHAR:
+                case Column::TYPE_NCHAR:
+                case Column::TYPE_NVARCHAR:
+                    if (!is_string($value)) {
+                        $this->addValidationError($columnName, 'Value must be a string');
+                    } else {
+                        $maxLength = $column->getPrecision();
+                        $currentLength = mb_strlen($value);
+                        if ($currentLength > $maxLength) {
+                            $this->addValidationError(
+                                $columnName,
+                                "Maximum allowed length is {$maxLength}, currently it is {$currentLength}"
+                            );
+                        }
+                    }
+                    break;
+            }
+
+        }
+    }
 
     public function addValidationError($field, $error)
     {

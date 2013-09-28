@@ -39,6 +39,11 @@ class Navigation extends Table
         $this->getColumn('active')->setDefaultValue(true);
 
         $this->addConstraint(new PrimaryKey('node_id'));
-        $this->addConstraint(new ForeignKey('parent_node_id', 'cms_navigation.node_id', ForeignKey::ACTION_UPDATE, ForeignKey::ACTION_RESTRICT));
+        $this->addConstraint(new ForeignKey(
+            'parent_node_id',
+            'cms_navigation.node_id',
+            ForeignKey::ACTION_UPDATE,
+            ForeignKey::ACTION_RESTRICT
+        ));
     }
 }

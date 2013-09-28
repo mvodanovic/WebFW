@@ -78,6 +78,35 @@ class Navigation extends TreeTableGateway
         }
     }
 
+    public function validateData()
+    {
+        /// TODO: move to automatic foreign key check?
+        if ($this->parent_node_id !== null) {
+            if ($this->getParentNode() === null) {
+                $this->addValidationError('parent_node_id', 'Parent node doesn\'t exist');
+            }
+        }
+
+        if ($this->controller === null && $this->namespace !== null) {
+            $this->addValidationError('namespace', 'A namespace can\'t be defined without a controller');
+        }
+
+        if ($this->controller !== null && $this->namespace === null) {
+            $this->addValidationError('controller', 'A controller can\'t be defined without a namespace');
+        }
+
+        if ($this->controller === null || $this->namespace === null) {
+            if ($this->action !== null) {
+                $this->addValidationError('action', 'An action needs both controller and namespace defined');
+            }
+
+            if ($this->params !== null) {
+                $this->addValidationError('params', 'URL parameters need both controller and namespace defined');
+            }
+
+        }
+    }
+
     public function getURL()
     {
         if ($this->custom_url !== null) {

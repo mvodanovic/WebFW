@@ -39,6 +39,8 @@ abstract class Controller extends HTMLController
     }
 
     protected function afterInit() {}
+    protected function afterInitList() {}
+    protected function afterInitEdit() {}
 
     public function getSelectedMenuItem()
     {

@@ -10,6 +10,7 @@ use WebFW\CMS\Classes\ListRowAction;
 use WebFW\CMS\Classes\PermissionsHelper;
 use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
 use WebFW\Core\Classes\HTML\FormStart;
+use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Classes\HTML\Message;
 use WebFW\Core\Exception;
 use WebFW\Core\Interfaces\iValidate;
@@ -56,6 +57,7 @@ abstract class ListController extends Controller implements iValidate
         $this->checkListFetcher();
         $this->checkTableGateway();
         $this->afterInit();
+        $this->afterInitList();
 
         $this->initListFilters();
         $this->initListActions();
@@ -85,6 +87,7 @@ abstract class ListController extends Controller implements iValidate
         $this->initEdit();
         $this->checkTableGateway();
         $this->afterInit();
+        $this->afterInitEdit();
 
         $primaryKeyValues = $this->getPrimaryKeyValues(false);
         if (!empty($primaryKeyValues)) {
@@ -141,6 +144,7 @@ abstract class ListController extends Controller implements iValidate
         $this->initEdit();
         $this->checkTableGateway();
         $this->afterInit();
+        $this->afterInitEdit();
 
         $primaryKeyValues = $this->getPrimaryKeyValues(false);
 
@@ -172,6 +176,14 @@ abstract class ListController extends Controller implements iValidate
                         $formItemName = $field['formItem']->getName();
                         $value = Request::getInstance()->$formItemName;
                         $formItemName = substr($formItemName, strlen(EditTab::FIELD_PREFIX));
+                        /// If checkbox is left empty, it's value is FALSE, and not NULL.
+                        if (
+                            $value === null
+                            && $field['formItem'] instanceof Input
+                            && $field['formItem']->getType() == 'checkbox'
+                        ) {
+                            $value = false;
+                        }
                         $this->tableGateway->$formItemName = $value;
                     }
                 }
@@ -183,6 +195,7 @@ abstract class ListController extends Controller implements iValidate
         $this->tableGateway->save();
         if ($this->hasValidationErrors()) {
             $this->storeValidationErrors($this->getValidationErrors());
+            $this->storeFieldValues(Request::getInstance()->getValuesWithPrefix(EditTab::FIELD_PREFIX, false));
             $this->setRedirectUrl($this->getURL('editItem', true, null, false), true);
         }
         $this->afterSave();
@@ -569,7 +582,12 @@ abstract class ListController extends Controller implements iValidate
 
     public function getEditRequestValues()
     {
-        return Request::getInstance()->getValuesWithPrefix(EditTab::FIELD_PREFIX, false);
+        $values = $this->retrieveFieldValues();
+        if ($values === null) {
+            $values = Request::getInstance()->getValuesWithPrefix(EditTab::FIELD_PREFIX, false);
+        }
+
+        return $values;
     }
 
     public function getEditFormHTML()
@@ -671,6 +689,26 @@ abstract class ListController extends Controller implements iValidate
             $errors = array();
         }
         return $errors;
+    }
+
+    protected function storeFieldValues($values)
+    {
+        SessionHandler::set($this->getSessionKey('fields'), $values);
+    }
+
+    protected function retrieveFieldValues()
+    {
+        $values = SessionHandler::get($this->getSessionKey('fields'));
+
+        if (is_array($values)) {
+            SessionHandler::kill($this->getSessionKey('fields'));
+            foreach ($this->tableGateway->getValues() as $key => $value) {
+                if (!array_key_exists($key, $values)) {
+                    $values[$key] = null;
+                }
+            }
+        }
+        return $values;
     }
 
     protected function getSessionKey($operation)

@@ -13,6 +13,7 @@ class EditTab
     protected $name;
     protected $fields = array();
     protected $hiddenFields = array();
+    protected $fieldNames = array();
     protected $currentLineIndex = null;
     protected $extendedRowspanFields = array();
 
@@ -26,6 +27,10 @@ class EditTab
 
     public function addField(BaseFormItem $formItem, $label, $description = null, $newLine = true, $rowspan = 1, $colspan = 1)
     {
+        if (!in_array($formItem->getName(), $this->fieldNames)) {
+            $this->fieldNames[] = $formItem->getName();
+        }
+
         $formItem->setName(static::FIELD_PREFIX . $formItem->getName());
 
         if ($formItem instanceof Input && $formItem->getType() === 'hidden') {
@@ -68,6 +73,11 @@ class EditTab
         }
     }
 
+    public function hasField($fieldName)
+    {
+        return in_array($fieldName, $this->fieldNames);
+    }
+
     public function setValues($values)
     {
         foreach ($values as $name => $value) {
@@ -88,6 +98,24 @@ class EditTab
                         } else {
                             $formItem->setValue($value);
                         }
+                    }
+                }
+            }
+
+            foreach ($this->hiddenFields as &$formItem) {
+                if ($formItem->getName() === static::FIELD_PREFIX . $name) {
+                    if ($formItem instanceof Input) {
+                        if ($formItem->getType() === 'checkbox' && $value === true) {
+                            $formItem->setChecked();
+                        } elseif ($formItem->getType() === 'radio') {
+                            if ($value === $formItem->getValue()) {
+                                $formItem->setChecked();
+                            }
+                        } else {
+                            $formItem->setValue($value);
+                        }
+                    } else {
+                        $formItem->setValue($value);
                     }
                 }
             }
