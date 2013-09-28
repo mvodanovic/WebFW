@@ -16,6 +16,8 @@ use WebFW\Core\ArrayAccess;
 
 abstract class TableGateway extends ArrayAccess implements iValidate
 {
+    const PRIMARY_KEY_PREFIX = 'pk_';
+
     protected $table = null;
     protected $recordData = array();
     protected $oldValues = array();
@@ -304,7 +306,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         foreach ($this->getPrimaryKeyColumns() as $column) {
             $key = $column;
             if ($usePrefix === true) {
-                $key = 'pk_' . $column;
+                $key = static::PRIMARY_KEY_PREFIX . $column;
             }
             $values[$key] = $this->$column;
         }
