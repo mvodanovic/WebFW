@@ -173,7 +173,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         $primaryKeyColumns = $this->table->getPrimaryKeyColumns();
         foreach ($this->table->getColumns() as $column) {
             $columnName = $column->getName();
-            if (!in_array($columnName, $primaryKeyColumns)) {
+            if ($this->$columnName !== $column->getDefaultValue()) {
                 $columns[] = $columnName;
                 $values[] = $this->$columnName;
             }

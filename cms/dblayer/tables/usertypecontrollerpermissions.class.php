@@ -24,7 +24,7 @@ class UserTypeControllerPermissions extends Table
         $this->getColumn('namespace')->setDefaultValue(null);
         $this->getColumn('permissions')->setDefaultValue(0);
 
-        $this->addConstraint(new PrimaryKey('user_type_id', 'controller', 'namespace'));
+        $this->addConstraint(new PrimaryKey(array('user_type_id', 'controller', 'namespace')));
         $this->addConstraint(new ForeignKey('user_type_id', 'cms_user_type.user_type_id', ForeignKey::ACTION_UPDATE, ForeignKey::ACTION_CASCADE));
     }
 }
