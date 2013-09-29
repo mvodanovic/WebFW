@@ -9,12 +9,20 @@
         </div>
 <?php if (\Config\Specifics\Data::GetItem('SHOW_DEBUG_INFO') === true): ?>
         <div style="white-space: nowrap; font-family: 'Courier New', monospace; overflow-x: auto; border: 3px solid #9E9E9E; background-color: #DEDEDE; padding: 10px; margin-top: 20px; -moz-border-radius: 15px; border-radius: 15px;">
-            <h3 style="margin-bottom: 20px;"><?php echo htmlspecialchars($this->message); ?></h3>
-            <div>File: <?php echo htmlspecialchars($this->file); ?></div>
-            <div>Line: <?php echo $this->line; ?></div>
-            <div style="white-space: pre;">
-<?php debug_print_backtrace(); ?>
-            </div>
+            <h3 style="margin-bottom: 20px;"><?php echo get_class($this); ?></h3>
+            <div><span style="font-weight: bold;">At:</span> <?php echo htmlspecialchars($this->file), ':', $this->line; ?></div>
+            <div><span style="font-weight: bold;">Message:</span></div>
+            <div style="white-space: pre; margin-bottom: 10px;"><?php echo htmlspecialchars($this->message); ?></div>
+
+<?php if ($this instanceof \WebFW\Core\Exception): ?>
+
+        <h5 style="margin-bottom: 5px;">Debug backtrace:</h5>
+        <div style="white-space: pre; font-size: 0.8em;"><?=implode("\n", $this->getDebugBacktrace()); ?></div>
+
+        <h5 style="margin-bottom: 5px;">Exceptions thrown:</h5>
+        <div style="white-space: pre; font-size: 0.8em;"><?=implode("\n", $this->getChainedExceptions()); ?></div>
+<?php endif; ?>
+
         </div>
 <?php endif; ?>
     </body>
