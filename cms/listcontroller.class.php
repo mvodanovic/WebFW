@@ -8,6 +8,8 @@ use WebFW\CMS\Classes\ListMassAction;
 use WebFW\CMS\Classes\ListRowAction;
 use WebFW\CMS\Classes\PermissionsHelper;
 use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
+use WebFW\Core\Exceptions\NotFoundException;
+use WebFW\Core\Exceptions\BadRequestException;
 use WebFW\Core\Exception;
 use WebFW\Database\ListFetcher;
 use WebFW\CMS\Classes\LoggedUser;
@@ -38,7 +40,7 @@ abstract class ListController extends ItemController
     public function listItems()
     {
         if (!PermissionsHelper::checkForController($this, UTCP::TYPE_SELECT)) {
-            die('Insufficient privileges!');
+            //die('Insufficient privileges!');
         }
 
         $this->initList();
@@ -81,9 +83,9 @@ abstract class ListController extends ItemController
         if (!empty($primaryKeyValues)) {
             try {
                 $this->tableGateway->loadBy($primaryKeyValues);
-            } catch (Exception $e) {
-                /// TODO
-                throw $e;
+            } catch (NotFoundException $e) {
+                $key = json_encode($primaryKeyValues);
+                throw new BadRequestException('No data to delete with the following key: ' . $key, $e);
             }
         }
 
@@ -110,7 +112,7 @@ abstract class ListController extends ItemController
             foreach ($selectedItems as &$primaryKeyValues) {
                 try {
                     $this->tableGateway->loadBy($primaryKeyValues);
-                } catch (Exception $e) {
+                } catch (NotFoundException $e) {
                     continue;
                 }
 
@@ -169,7 +171,7 @@ abstract class ListController extends ItemController
             }
             try {
                 $this->tableGateway->loadBy($primaryKey);
-            } catch (Exception $e) {
+            } catch (NotFoundException $e) {
                 continue;
             }
 

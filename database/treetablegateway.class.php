@@ -3,6 +3,7 @@
 namespace WebFW\Database;
 
 use WebFW\Core\Exception;
+use WebFW\Core\Exceptions\NotFoundException;
 
 abstract class TreeTableGateway extends TableGateway
 {
@@ -76,7 +77,7 @@ abstract class TreeTableGateway extends TableGateway
             $this->parentNode = new static();
             try {
                 $this->parentNode->loadBy($this->getParentNodeKey());
-            } catch (Exception $e) {
+            } catch (NotFoundException $e) {
                 $this->parentNode = null;
             }
         }

@@ -12,6 +12,7 @@ use WebFW\Database\Query\Insert;
 use WebFW\Database\Query\Update;
 use WebFW\Database\Query\Delete;
 use WebFW\Core\Exceptions\DBException;
+use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Core\Exception;
 use WebFW\Core\ArrayAccess;
 
@@ -100,6 +101,8 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 
         try {
             $this->loadBy(array($primaryKey[0] => $primaryKeyValue));
+        } catch (NotFoundException $e) {
+            throw $e;
         } catch (Exception $e) {
             throw new DBException('Error while trying to read data from the database.', $e);
         }
@@ -135,7 +138,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 
         $row = BaseHandler::getInstance()->fetchAssoc($result);
         if ($row === false) {
-            throw new DBException(BaseHandler::getInstance()->getLastError());
+            throw new NotFoundException('No records found for query: ' . $sql);
         }
 
         foreach ($row as $key => $value) {

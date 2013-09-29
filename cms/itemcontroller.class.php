@@ -9,6 +9,7 @@ use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
 use WebFW\Core\Classes\HTML\FormStart;
 use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Classes\HTML\Message;
+use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Core\Exception;
 use WebFW\Core\Interfaces\iValidate;
 use WebFW\Core\SessionHandler;
@@ -49,7 +50,7 @@ abstract class ItemController extends Controller implements iValidate
             $this->beforeLoad();
             try {
                 $this->tableGateway->loadBy($primaryKeyValues);
-            } catch (Exception $e) {
+            } catch (NotFoundException $e) {
                 /// TODO
             }
             $this->afterLoad();
@@ -105,7 +106,7 @@ abstract class ItemController extends Controller implements iValidate
             }
             try {
                 $this->tableGateway->loadBy($primaryKeyValues);
-            } catch (Exception $e) {
+            } catch (NotFoundException $e) {
                 /// TODO
                 throw $e;
             }

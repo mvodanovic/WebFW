@@ -3,7 +3,7 @@
 namespace WebFW\CMS;
 
 use WebFW\Core\HTMLController;
-use WebFW\Core\Exception;
+use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Core\Request;
 use WebFW\Core\SessionHandler;
 use WebFW\Core\Router;
@@ -50,7 +50,7 @@ class CMSLogin extends HTMLController
 
         try {
             LoggedUser::getInstance()->doLogin($login, $password, $remember);
-        } catch (Exception $e) {
+        } catch (NotFoundException $e) {
             $this->execute();
             $this->setTplVar('errorMessage', 'Invalid credentials supplied!');
             $this->setTplVar('login', $login);

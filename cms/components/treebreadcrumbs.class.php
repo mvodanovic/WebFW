@@ -6,7 +6,7 @@ use WebFW\CMS\Classes\EditTab;
 use WebFW\CMS\TreeController;
 use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Component;
-use WebFW\Core\Exception;
+use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Database\TreeTableGateway;
 
 class TreeBreadcrumbs extends Component
@@ -20,14 +20,14 @@ class TreeBreadcrumbs extends Component
 
         $node = $this->ownerObject->getTableGateway();
         $nodeColumns = $node->getParentNodeKeyColumns();
-        $treeFilter = $this->ownerObject->getTreeFilter();
+        $treeFilter = $this->ownerObject->getParentNodeValues();
         $parentNodeKey = array();
         foreach ($treeFilter as $parentColumn => $value) {
             $parentNodeKey[$nodeColumns[$parentColumn]] = $value;
         }
         try {
             $node->loadBy($parentNodeKey);
-        } catch (Exception $e) {
+        } catch (NotFoundException $e) {
             $node = null;
         }
 

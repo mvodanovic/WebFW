@@ -3,6 +3,7 @@
 namespace WebFW\CMS\Classes;
 
 use WebFW\CMS\DBLayer\UserType;
+use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Core\Exception;
 use WebFW\Core\SessionHandler;
 use WebFW\CMS\DBLayer\User;
@@ -54,7 +55,7 @@ class LoggedUser
         $userType = new UserType();
         try {
             $userType->load(static::getInstance()->user_type_id);
-        } catch (Exception $e) {
+        } catch (NotFoundException $e) {
             return false;
         }
 
@@ -94,12 +95,12 @@ class LoggedUser
             $user->loadBy(array('email' => $login));
             $seed = 'email';
             $passwordField = 'password_email';
-        } catch (Exception $e) {
+        } catch (NotFoundException $e) {
             try {
                 $user->loadBy(array('username' => $login));
                 $seed = 'username';
                 $passwordField = 'password_username';
-            } catch (Exception $e) {
+            } catch (NotFoundException $e) {
                 throw new Exception($this->exception[static::EXC_INVALID_CREDENTIALS], static::EXC_INVALID_CREDENTIALS);
             }
         }
@@ -150,7 +151,7 @@ class LoggedUser
         try {
             $user->loadBy(array('username' => $cookie[0], 'password_username' => $cookie[1]));
             $this->doLoginByUser($user);
-        } catch (Exception $e) {
+        } catch (NotFoundException $e) {
             $this->deleteAutologinCookie();
         }
     }

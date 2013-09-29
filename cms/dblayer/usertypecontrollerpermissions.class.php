@@ -2,7 +2,7 @@
 
 namespace WebFW\CMS\DBLayer;
 
-use WebFW\Core\Exception;
+use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Database\TableGateway;
 
 class UserTypeControllerPermissions extends TableGateway
@@ -30,7 +30,7 @@ class UserTypeControllerPermissions extends TableGateway
             $userType = new UserType();
             try {
                 $userType->load($this->user_type_id);
-            } catch (Exception $e) {}
+            } catch (NotFoundException $e) {}
             $this->userTypeCaption = $userType->caption;
         }
 

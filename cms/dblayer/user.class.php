@@ -2,7 +2,7 @@
 
 namespace WebFW\CMS\DBLayer;
 
-use WebFW\Core\Exception;
+use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Database\TableGateway;
 use WebFW\CMS\Classes\LoggedUser;
 
@@ -29,7 +29,7 @@ class User extends TableGateway
             try {
                 $userType->load($this->user_type_id);
                 $this->userType = $userType->caption;
-            } catch (Exception $e) {}
+            } catch (NotFoundException $e) {}
         }
 
         return $this->userType;

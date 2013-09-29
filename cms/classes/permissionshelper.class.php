@@ -4,7 +4,7 @@ namespace WebFW\CMS\Classes;
 
 use WebFW\CMS\Controller;
 use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
-use WebFW\Core\Exception;
+use WebFW\Core\Exceptions\NotFoundException;
 
 class PermissionsHelper
 {
@@ -30,7 +30,7 @@ class PermissionsHelper
         $utcp = new UTCP();
         try {
             $utcp->loadBy($primaryKey);
-        } catch (Exception $e) {
+        } catch (NotFoundException $e) {
             $isOk = false;
         }
 

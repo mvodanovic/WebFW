@@ -21,12 +21,18 @@ class Exception extends \Exception
     public function ErrorMessage()
     {
         switch ($this->code) {
+            case 400:
+                header('HTTP/1.1 400 Bad Request');
+                $caption = '400 Bad Request';
+                break;
             case 404:
-                header("HTTP/1.1 404 Not Found");
+                header('HTTP/1.1 404 Not Found');
+                $caption = '404 Not Found';
                 break;
             case 500:
             default:
-                header("HTTP/1.1 500 Internal Server Error");
+                header('HTTP/1.1 500 Internal Server Error');
+                $caption = '500 Internal Server Error';
                 trigger_error($this->getFile() . ': ' . $this->getLine() . ': ' .  $this->getMessage());
                 break;
         }
@@ -64,7 +70,7 @@ class Exception extends \Exception
             $args = array();
             if (array_key_exists('args', $traceItem)) {
                 foreach ($traceItem['args'] as $arg) {
-                    $arg = json_encode($arg);
+                    $arg = json_encode($arg, JSON_UNESCAPED_SLASHES);
                     $args[] = sprintf(
                         $argsFormat,
                         $escapeStrings ? htmlspecialchars($arg) : $arg
