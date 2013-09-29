@@ -100,6 +100,7 @@ abstract class BaseHandler
         return static::getInstance()->fetchAll($resource);
     }
 
+    abstract public function getLastError();
     abstract public function escapeIdentifier($identifier);
     abstract public function escapeLiteral($literal);
     abstract public function fetchAssoc($queryResource = false, $row = null);

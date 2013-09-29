@@ -2,7 +2,7 @@
 
 namespace WebFW\Database;
 
-use WebFW\Core\Exception;
+use WebFW\Core\Exceptions\DBException;
 
 class PgSQLHandler extends BaseHandler
 {
@@ -31,7 +31,7 @@ class PgSQLHandler extends BaseHandler
         $this->connectionResource = pg_connect($this->connectionString);
 
         if ($this->connectionResource === false) {
-            throw new Exception('Cannot connect to database!');
+            throw new DBException('Cannot connect to database.');
         }
     }
 
@@ -67,8 +67,28 @@ class PgSQLHandler extends BaseHandler
     public function query($query)
     {
         parent::query($query);
-        $this->lastQueryResource = pg_query($this->connectionResource, $query);
+        $ok = pg_send_query($this->connectionResource, $query);
+        if (!$ok) {
+            return false;
+        }
+        $this->lastQueryResource = pg_get_result($this->connectionResource);
+        $resultError = pg_result_error($this->lastQueryResource);
+        if ($resultError === false || $resultError === '') {
+            $resultError = pg_last_error($this->connectionResource);
+        }
+        if ($resultError !== false && $resultError !== '') {
+            return false;
+        }
         return $this->lastQueryResource;
+    }
+
+    public function getLastError()
+    {
+        if ($this->lastQueryResource === null) {
+            return null;
+        }
+
+        return pg_result_error($this->lastQueryResource);
     }
 
     public function fetchAssoc($queryResource = false, $row = null)

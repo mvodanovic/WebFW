@@ -2,7 +2,8 @@
 
 namespace WebFW\Core\Database;
 
-use WebFW\Core\Exception;
+use WebFW\Core\Exceptions\DBException;
+use WebFW\Database\BaseHandler;
 
 class MySQLHandler extends BaseHandler
 {
@@ -16,8 +17,9 @@ class MySQLHandler extends BaseHandler
         $this->connectionResource = new mysqli($host, $username, $password, $dbName, $port);
 
         if ($this->connectionResource->connect_error) {
+            $connectError = $this->connectionResource->connect_error;
             $this->connectionResource = false;
-            throw new Exception('Cannot connect to database!');
+            throw new DBException('Cannot connect to database.', new DBException($connectError));
         }
     }
 
@@ -36,6 +38,11 @@ class MySQLHandler extends BaseHandler
         parent::query($query);
         $this->lastQueryResource = $this->connectionResource->query($query);
         return $this->lastQueryResource;
+    }
+
+    public function getLastError()
+    {
+        return $this->lastQueryResource->error;
     }
 
     public function fetchAssoc($queryResource = false, $row = null)

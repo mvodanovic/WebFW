@@ -3,6 +3,7 @@
 namespace WebFW\Database;
 
 use WebFW\Core\Exception;
+use WebFW\Core\Exceptions\DBException;
 use WebFW\Database\BaseHandler;
 use WebFW\Database\Table;
 use WebFW\Database\Query\Select;
@@ -21,9 +22,9 @@ abstract class ListFetcher
     public function __construct()
     {
         if ($this->table === null) {
-            throw new Exception('Table not set!');
+            throw new Exception('Table not set in list fetcher ' . get_class($this));
         } elseif (!($this->table instanceof Table)) {
-            throw new Exception('Set table not instance of \\WebFW\\Database\\Table');
+            throw new Exception('Table not an instance of WebFW\\Database\\Table: ' . $this->table);
         }
 
         foreach ($this->table->getPrimaryKeyColumns() as $column) {
@@ -35,10 +36,6 @@ abstract class ListFetcher
     {
         $table = $namespace . $table;
         $this->table = new $table;
-
-        if (!($this->table instanceof Table)) {
-            throw new Exception("Class {$able} is not derived from \\WebFW\\Database\\Table");
-        }
     }
 
     protected function setTableGateway($tableGateway, $namespace = '\\Application\\DBLayer\\')
@@ -84,7 +81,10 @@ abstract class ListFetcher
 
         $result = BaseHandler::getInstance()->query($sql);
         if ($result === false) {
-            throw new Exception('Database query error!');
+            throw new DBException(
+                'Error while trying to read data from the database.',
+                new DBException(BaseHandler::getInstance()->getLastError())
+            );
         }
 
         $list = BaseHandler::getInstance()->fetchAll($result);
@@ -95,7 +95,7 @@ abstract class ListFetcher
                 $object = new $this->tableGateway;
                 if (!($object instanceof TableGateway)) {
                     throw new Exception(
-                        "Class {$this->tableGateway} is not derived from WebFW\\Database\\TableGateway"
+                        'Table gateway not an instance of WebFW\\Database\\TableGateway: ' . $this->tableGateway
                     );
                 }
                 $object->loadWithArray($row);
@@ -127,12 +127,18 @@ abstract class ListFetcher
 
         $result = BaseHandler::getInstance()->query($sql);
         if ($result === false) {
-            throw new Exception('Database query error!');
+            throw new DBException(
+                'Error while trying to read data from the database.',
+                new DBException(BaseHandler::getInstance()->getLastError())
+            );
         }
 
         $row = BaseHandler::getInstance()->fetchAssoc($result);
         if ($row === false) {
-            throw new Exception('Database query error!');
+            throw new DBException(
+                'Error while trying to read data from the database.',
+                new DBException(BaseHandler::getInstance()->getLastError())
+            );
         }
 
         return (int) $row['cnt'];

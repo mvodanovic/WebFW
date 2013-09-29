@@ -11,6 +11,7 @@ use WebFW\Database\Query\Join;
 use WebFW\Database\Query\Insert;
 use WebFW\Database\Query\Update;
 use WebFW\Database\Query\Delete;
+use WebFW\Core\Exceptions\DBException;
 use WebFW\Core\Exception;
 use WebFW\Core\ArrayAccess;
 
@@ -28,9 +29,9 @@ abstract class TableGateway extends ArrayAccess implements iValidate
     public function __construct()
     {
         if ($this->table === null) {
-            throw new Exception('Table not set');
+            throw new Exception('Table not set in table gateway ' . get_class($this));
         } elseif (!($this->table instanceof Table)) {
-            throw new Exception('Set table not instance of \\WebFW\\Database\\Table');
+            throw new Exception('Table not an instance of WebFW\\Database\\Table: ' . $this->table);
         }
 
         foreach ($this->table->getColumns() as $key => $column) {
@@ -42,11 +43,10 @@ abstract class TableGateway extends ArrayAccess implements iValidate
     protected function setTable($table, $namespace = '\\Application\\DBLayer\\Tables\\')
     {
         $table = $namespace . $table;
-        $this->table = new $table;
-
-        if (!($this->table instanceof Table)) {
-            throw new Exception('Invalid database table: ' . $namespace . $table);
+        if (!class_exists($table)) {
+            throw new Exception('Cannot instantiate table: ' . $table);
         }
+        $this->table = new $table();
     }
 
     public function getTable()
@@ -98,13 +98,17 @@ abstract class TableGateway extends ArrayAccess implements iValidate
             throw new Exception('Primary key not simple.');
         }
 
-        $this->loadBy(array($primaryKey[0] => $primaryKeyValue));
+        try {
+            $this->loadBy(array($primaryKey[0] => $primaryKeyValue));
+        } catch (Exception $e) {
+            throw new DBException('Error while trying to read data from the database.', $e);
+        }
     }
 
     public function loadBy(array $unique)
     {
         if (empty($unique)) {
-            throw new Exception('Database select failed, unique filter empty!');
+            throw new Exception('Unique filter is empty.');
         }
 
         $this->beforeLoad();
@@ -126,12 +130,12 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 
         $result = BaseHandler::getInstance()->query($sql);
         if ($result === false) {
-            throw new Exception('Database select failed!');
+            throw new DBException(BaseHandler::getInstance()->getLastError());
         }
 
         $row = BaseHandler::getInstance()->fetchAssoc($result);
         if ($row === false) {
-            throw new Exception('Database select failed!');
+            throw new DBException(BaseHandler::getInstance()->getLastError());
         }
 
         foreach ($row as $key => $value) {
@@ -155,9 +159,17 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         }
 
         if ($this->recordSetIsNew === true) {
-            $this->saveNew();
+            try {
+                $this->saveNew();
+            } catch (Exception $e) {
+                throw new DBException('Error while trying to insert new data in the database.', $e);
+            }
         } else {
-            $this->saveExisting();
+            try {
+                $this->saveExisting();
+            } catch (Exception $e) {
+                throw new DBException('Error while trying to update data in the database.', $e);
+            }
         }
 
         $this->afterSave();
@@ -188,16 +200,16 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 
         $result = BaseHandler::getInstance()->query($sql);
         if ($result === false) {
-            throw new Exception('Database insert failed!');
+            throw new DBException(BaseHandler::getInstance()->getLastError());
         }
 
         if (BaseHandler::getInstance()->getAffectedRows($result) === 0) {
-            throw new Exception('Database insert failed!');
+            throw new DBException(BaseHandler::getInstance()->getLastError());
         }
 
         $row = BaseHandler::getInstance()->fetchAssoc($result);
         if ($row === false) {
-            throw new Exception('Database insert failed!');
+            throw new DBException(BaseHandler::getInstance()->getLastError());
         }
 
         foreach ($row as $key => $value) {
@@ -237,11 +249,11 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 
         $result = BaseHandler::getInstance()->query($sql);
         if ($result === false) {
-            throw new Exception('Database update failed!');
+            throw new DBException(BaseHandler::getInstance()->getLastError());
         }
 
         if (BaseHandler::getInstance()->getAffectedRows($result) === 0) {
-            throw new Exception('Database update failed!');
+            throw new DBException(BaseHandler::getInstance()->getLastError());
         }
 
         $this->oldValues = $this->recordData;
@@ -268,13 +280,17 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         $sql = $delete->getSQL();
         unset($delete);
 
-        $result = BaseHandler::getInstance()->query($sql);
-        if ($result === false) {
-            throw new Exception('Database delete failed!');
-        }
+        try {
+            $result = BaseHandler::getInstance()->query($sql);
+            if ($result === false) {
+                throw new DBException(BaseHandler::getInstance()->getLastError());
+            }
 
-        if (BaseHandler::getInstance()->getAffectedRows($result) === 0) {
-            throw new Exception('Database delete failed!');
+            if (BaseHandler::getInstance()->getAffectedRows($result) === 0) {
+                throw new DBException(BaseHandler::getInstance()->getLastError());
+            }
+        } catch (Exception $e) {
+            throw new DBException('Error while trying to delete data from the database.', $e);
         }
 
         foreach ($this->oldValues as &$value) {
