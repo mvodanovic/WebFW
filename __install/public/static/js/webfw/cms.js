@@ -165,4 +165,16 @@ $(document).ready(function() {
     $(".editor input,select,textarea").change(function() {
         contentHasChanged = true;
     });
+
+    $('.datepicker').each(function() {
+        $(this).datepicker($(this).data('settings'));
+    });
+
+    $('.datetimepicker').each(function() {
+        $(this).datetimepicker($(this).data('settings'));
+    });
+
+    $('.timepicker').each(function() {
+        $(this).timepicker($(this).data('settings'));
+    });
 });

@@ -73,7 +73,7 @@ abstract class BaseHTMLItem
 
     public function addCustomAttribute($key, $value)
     {
-        $this->attributes[$key] = $key . '="' . $value . '"';
+        $this->attributes[$key] = htmlspecialchars($key) . '="' . htmlspecialchars($value) . '"';
     }
 
     public function prepareHTMLChunks()

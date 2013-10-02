@@ -25,9 +25,11 @@ abstract class Controller extends HTMLController
         $this->addLinkedCSS('/static/css/webfw/reset.css');
         $this->addLinkedCSS('/static/css/webfw/formalize.css');
         $this->addLinkedCSS('/static/css/webfw/jquery-ui-1.10.3.custom.min.css');
+        $this->addLinkedCSS('/static/css/webfw/jquery-ui-timepicker-addon.min.css');
         $this->addLinkedCSS('/static/css/webfw/cms.css');
         $this->addLinkedJS('/static/js/webfw/jquery-1.10.2.min.js');
         $this->addLinkedJS('/static/js/webfw/jquery-ui-1.10.3.custom.min.js');
+        $this->addLinkedJS('/static/js/webfw/jquery-ui-timepicker-addon.min.js');
         $this->addLinkedJS('/static/js/webfw/cms.js');
         $this->addHeadMeta('Content-Type', 'text/html; charset=UTF-8', 'http-equiv');
     }
