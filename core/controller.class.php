@@ -133,12 +133,12 @@ abstract class Controller
 
     public function getURL($action, $params = array(), $escapeAmps = true, $rawurlencode = true)
     {
-        return $this->getRoute($action, $params, $escapeAmps, $rawurlencode)->getURL();
+        return $this->getRoute($action, $params)->getURL($escapeAmps, $rawurlencode);
     }
 
-    public function getRoute($action, $params = array(), $escapeAmps = true, $rawurlencode = true)
+    public function getRoute($action, $params = array())
     {
-        return new Route($this->ctl, $action, $this->ns, $params, $escapeAmps, $rawurlencode);
+        return new Route($this->ctl, $action, $this->ns, $params);
     }
 
     public function getName()

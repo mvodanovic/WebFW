@@ -8,17 +8,13 @@ class Route
     protected $action;
     protected $namespace;
     protected $params;
-    protected $escapeAmps;
-    protected $rawurlencode;
 
-    public function __construct($controller, $action = null, $namespace = null, $params = array(), $escapeAmps = true, $rawurlencode = true)
+    public function __construct($controller, $action = null, $namespace = null, $params = array())
     {
         $this->controller = $controller;
         $this->action = $action;
         $this->namespace = $namespace;
         $this->params = $params;
-        $this->escapeAmps = $escapeAmps;
-        $this->rawurlencode = $rawurlencode;
     }
 
     public function __get($property)
@@ -30,18 +26,13 @@ class Route
         return null;
     }
 
-    public function getURL()
+    public function getURL($escapeAmps = true, $rawurlencode = true)
     {
-        return Router::URLFromRoute($this);
+        return Router::URLFromRoute($this, $escapeAmps, $rawurlencode);
     }
 
     public function addParams($params)
     {
         $this->params = array_merge(is_array($this->params) ? $this->params : array(), $params);
-    }
-
-    public function isRawurlencode()
-    {
-        return $this->rawurlencode;
     }
 }

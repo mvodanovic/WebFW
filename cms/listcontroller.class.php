@@ -212,7 +212,7 @@ abstract class ListController extends ItemController
     {
         /// New
         if (PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
-            $HTMLItem = new Link('Add item', $this->getURL('editItem', false), Link::IMAGE_ADD);
+            $HTMLItem = new Link('Add item', $this->getURL('editItem', false, null, false), Link::IMAGE_ADD);
             $listAction = new ListAction($HTMLItem);
             $this->registerListAction($listAction);
         }
@@ -244,7 +244,7 @@ abstract class ListController extends ItemController
         if (PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
             $button = new Button(null, 'Delete', Button::IMAGE_DELETE, 'button', null, 'mass_delete');
             $button->addCustomAttribute('data-confirm', "Selected items will be deleted.\nAre you sure?");
-            $button->addCustomAttribute('data-url', $this->getURL('massDeleteItems', false));
+            $button->addCustomAttribute('data-url', $this->getURL('massDeleteItems', false, null, false));
             $listMassAction = new ListMassAction($button);
             $this->registerListMassAction($listMassAction);
         }
@@ -279,7 +279,7 @@ abstract class ListController extends ItemController
 
         /// Delete
         if (!empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
-            $HTMLItem = new Link('Delete', $this->getURL('deleteItem'), Link::IMAGE_DELETE);
+            $HTMLItem = new Link('Delete', $this->getURL('deleteItem', true, null, false), Link::IMAGE_DELETE);
             $HTMLItem->addCustomAttribute('onclick', "return beforeDelete('Item will be deleted.\\nAre you sure?');");
             $editAction = new EditAction($HTMLItem);
             $editAction->makeRightAligned();

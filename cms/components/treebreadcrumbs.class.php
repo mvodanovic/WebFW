@@ -37,13 +37,13 @@ class TreeBreadcrumbs extends Component
             foreach ($node->getParentNodeKeyColumns() as $parentColumn => $childColumn) {
                 $key[EditTab::FIELD_PREFIX . $parentColumn] = $node->$childColumn;
             }
-            $url = $this->ownerObject->getURL(null, false, $key);
+            $url = $this->ownerObject->getURL(null, false, $key, false);
             $link = new Link($node->getCaption(), $url);
             $breadcrumbs[] = $link;
 
             $node = $node->getParentNode();
         }
-        $link = new Link('Home', $this->ownerObject->getURL(null, false));
+        $link = new Link('Home', $this->ownerObject->getURL(null, false, null, false));
         $breadcrumbs[] = $link;
         $breadcrumbs[0]->addClass('active');
         $breadcrumbs = array_reverse($breadcrumbs);

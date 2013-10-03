@@ -75,15 +75,15 @@ class Router
         return $url;
     }
 
-    public static function URLFromRoute(Route $route)
+    public static function URLFromRoute(Route $route, $escapeAmps = true, $rawurlencode = true)
     {
         return static::URL(
             $route->controller,
             $route->action,
             $route->namespace,
             $route->params,
-            $route->escapeAmps,
-            $route->rawurlencode
+            $escapeAmps,
+            $rawurlencode
         );
     }
 

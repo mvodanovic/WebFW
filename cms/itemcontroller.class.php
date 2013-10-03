@@ -194,7 +194,7 @@ abstract class ItemController extends Controller implements iValidate
         }
 
         /// Cancel
-        $HTMLItem = new Link('Cancel', $this->getURL(null, false), Link::IMAGE_CANCEL);
+        $HTMLItem = new Link('Cancel', $this->getURL(null, false, null, false), Link::IMAGE_CANCEL);
         $editAction = new EditAction($HTMLItem);
         $this->registerEditAction($editAction);
     }

@@ -21,7 +21,7 @@ class ListRowAction
     {
         if (is_array($params)) {
             $this->route->addParams($params);
-            $this->link->addCustomAttribute('href', $this->route->getURL());
+            $this->link->addCustomAttribute('href', $this->route->getURL(false));
         }
 
         return $this->link;

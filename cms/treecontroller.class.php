@@ -71,7 +71,7 @@ abstract class TreeController extends ListController
 
         /// New
         if (PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
-            $HTMLItem = new Link('Add item', $this->getURL('editItem', false, $buttonFilter), Link::IMAGE_ADD);
+            $HTMLItem = new Link('Add item', $this->getURL('editItem', false, $buttonFilter, false), Link::IMAGE_ADD);
             $listAction = new ListAction($HTMLItem);
             $this->registerListAction($listAction);
         }
@@ -130,7 +130,7 @@ abstract class TreeController extends ListController
         }
 
         /// Cancel
-        $HTMLItem = new Link('Cancel', $this->getURL(null, false, $this->treeFilter), Link::IMAGE_CANCEL);
+        $HTMLItem = new Link('Cancel', $this->getURL(null, false, $this->treeFilter, false), Link::IMAGE_CANCEL);
         $HTMLItem->addCustomAttribute('onclick', "return confirm('Any unsaved changes will be lost.\\nAre you sure?');");
         $editAction = new EditAction($HTMLItem);
         $this->registerEditAction($editAction);
@@ -138,7 +138,7 @@ abstract class TreeController extends ListController
         /// Delete
         if (!empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
             if ($this->tableGateway->getChildrenNodeCount() === 0) {
-                $HTMLItem = new Link('Delete', $this->getURL('deleteItem'), Link::IMAGE_DELETE);
+                $HTMLItem = new Link('Delete', $this->getURL('deleteItem', true, null, false), Link::IMAGE_DELETE);
                 $HTMLItem->addCustomAttribute('onclick', "return confirm('Item will be deleted.\\nAre you sure?');");
                 $editAction = new EditAction($HTMLItem);
                 $editAction->makeRightAligned();

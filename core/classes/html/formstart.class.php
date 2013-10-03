@@ -23,30 +23,18 @@ class FormStart extends BaseHTMLItem
     public function prepareHTMLChunks()
     {
         if (strtolower($this->method) === 'post') {
-            $decodeFunction = null;
             if ($this->action instanceof Route) {
-                if ($this->action->isRawurlencode()) {
-                    $decodeFunction = 'rawurldecode';
-                } else {
-                    $decodeFunction = 'urldecode';
-                }
-                $this->action = $this->action->getURL();
+                $this->action = $this->action->getURL(false);
             }
             $actionSplit = explode('?', $this->action, 2);
             $this->action = $actionSplit[0];
             if (array_key_exists(1, $actionSplit)) {
-                if (strpos($actionSplit[1], '&amp;')) {
-                    $params = explode('&amp;', $actionSplit[1]);
-                } else {
-                    $params = explode('&', $actionSplit[1]);
-                }
+                $params = explode('&', $actionSplit[1]);
                 $hiddenDiv = '';
                 foreach ($params as $paramPair) {
                     $paramPair = explode('=', $paramPair);
-                    if ($decodeFunction !== null) {
-                        $paramPair[0] = $decodeFunction($paramPair[0]);
-                        $paramPair[1] = $decodeFunction($paramPair[1]);
-                    }
+                    $paramPair[0] = rawurldecode($paramPair[0]);
+                    $paramPair[1] = rawurldecode($paramPair[1]);
                     $hidden = new Input($paramPair[0], $paramPair[1], 'hidden');
                     $hiddenDiv .= $hidden->parse();
                 }
