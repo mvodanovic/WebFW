@@ -27,6 +27,7 @@ class User extends Table
         $this->addColumn(new VarcharColumn('address', true, 200));
         $this->addColumn(new BooleanColumn('active', false));
 
+        $this->getColumn('user_id')->setDefaultValue(null, true);
         $this->getColumn('active')->setDefaultValue(false);
         $this->getColumn('first_name')->setDefaultValue(null);
         $this->getColumn('last_name')->setDefaultValue(null);

@@ -30,6 +30,7 @@ class Column
     protected $nullable;
     protected $defaultValue = null;
     protected $defaultValueIsSet = false;
+    protected $hasAutoIncrement = false;
 
     public function __construct($name, $type, $nullable = true, $precision = null)
     {
@@ -39,9 +40,10 @@ class Column
         $this->nullable = $nullable;
     }
 
-    public function setDefaultValue($value)
+    public function setDefaultValue($value, $hasAutoIncrement = false)
     {
         $this->defaultValue = $value;
+        $this->hasAutoIncrement = (boolean) $hasAutoIncrement;
         $this->defaultValueIsSet = true;
     }
 
@@ -73,5 +75,10 @@ class Column
     public function getPrecision()
     {
         return $this->precision;
+    }
+
+    public function hasAutoIncrement()
+    {
+        return $this->hasAutoIncrement;
     }
 }

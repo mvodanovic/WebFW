@@ -27,6 +27,7 @@ class Navigation extends Table
         $this->addColumn(new VarcharColumn('custom_url', true, 500));
         $this->addColumn(new BooleanColumn('active', false));
 
+        $this->getColumn('node_id')->setDefaultValue(null, true);
         $this->getColumn('parent_node_id')->setDefaultValue(null);
         $this->getColumn('order_id')->setDefaultValue(0);
         $this->getColumn('node_level')->setDefaultValue(0);

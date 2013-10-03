@@ -19,6 +19,8 @@ class UserType extends Table
         $this->addColumn(new VarcharColumn('caption', false, 100));
         $this->addColumn(new BooleanColumn('is_root', false));
 
+        $this->getColumn('user_type_id')->setDefaultValue(null, true);
+
         $this->addConstraint(new PrimaryKey('user_type_id'));
         $this->addConstraint(new Unique('caption'));
     }

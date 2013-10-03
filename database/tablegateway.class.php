@@ -392,7 +392,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
             $column = $this->getTable()->getColumn($columnName);
 
             if ($value === null) {
-                if (!$column->isNullable()) {
+                if (!$column->isNullable() && !$column->hasAutoIncrement()) {
                     $this->addValidationError($columnName, 'Field can\'t be empty');
                 }
                 continue;
