@@ -2,6 +2,8 @@
 
 namespace WebFW\CMS;
 
+use WebFW\CMS\DBLayer\ListFetchers\Navigation;
+use WebFW\Core\Exception;
 use WebFW\Core\HTMLController;
 use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Core\Request;
@@ -25,8 +27,11 @@ class CMSLogin extends HTMLController
     {
         LoggedUser::getInstance()->doLoginByAutoloadCookie();
         if (LoggedUser::isLoggedIn()) {
-            $this->setRedirectUrl(Router::URL('CMSTest', null, null, null, false));
-            return;
+            $url = $this->getDefaultURL();
+            if ($url === null) {
+                throw new Exception('Cannot find any CMS controllers to redirect to');
+            }
+            $this->setRedirectUrl($url, true);
         }
 
         $this->baseTemplate = \WebFW\Config\FW_PATH . '/cms/templates/base';
@@ -40,8 +45,11 @@ class CMSLogin extends HTMLController
     {
         LoggedUser::getInstance()->doLoginByAutoloadCookie();
         if (LoggedUser::isLoggedIn()) {
-            $this->setRedirectUrl(Router::URL('CMSTest', null, null, null, false));
-            return;
+            $url = $this->getDefaultURL();
+            if ($url === null) {
+                throw new Exception('Cannot find any CMS controllers to redirect to');
+            }
+            $this->setRedirectUrl($url, true);
         }
 
         $login = Request::getInstance()->login;
@@ -59,15 +67,46 @@ class CMSLogin extends HTMLController
 
         $returnUrl = SessionHandler::get('returnUrl');
         if ($returnUrl === null) {
-            $returnUrl = Router::URL('CMSTest', null, null, null, false);
+            $returnUrl = $this->getDefaultURL();
+            if ($returnUrl === null) {
+                throw new Exception('Cannot find any CMS controllers to redirect to');
+            }
         }
-        $this->setRedirectUrl($returnUrl);
+        $this->setRedirectUrl($returnUrl, true);
     }
 
     public function doLogout()
     {
         LoggedUser::getInstance()->doLogout();
         $this->setRedirectUrl(Router::URL('CMSLogin', null, '\\WebFW\\CMS\\', null, false));
+    }
+
+    protected function getDefaultURL($parentNodeID = null, Navigation $listFetcher = null)
+    {
+        $filter = array(
+            'parent_node_id' => $parentNodeID,
+            'active' => true,
+        );
+        $sort = array(
+            'order_id' => 'ASC',
+        );
+
+        if ($listFetcher === null) {
+            $listFetcher = new Navigation();
+        }
+
+        foreach ($listFetcher->getList($filter, $sort) as $node) {
+            if ($node->controller !== null && class_exists($node->namespace . $node->controller)) {
+                return $node->getURL();
+            }
+
+            $url = $this->getDefaultURL($node->node_id, $listFetcher);
+            if ($url !== null) {
+                return $url;
+            }
+        }
+
+        return null;
     }
 
 }
