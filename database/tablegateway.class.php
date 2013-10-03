@@ -133,7 +133,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 
         $result = BaseHandler::getInstance()->query($sql);
         if ($result === false) {
-            throw new DBException(BaseHandler::getInstance()->getLastError());
+            throw new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql));
         }
 
         $row = BaseHandler::getInstance()->fetchAssoc($result);
@@ -203,16 +203,16 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 
         $result = BaseHandler::getInstance()->query($sql);
         if ($result === false) {
-            throw new DBException(BaseHandler::getInstance()->getLastError());
+            throw new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql));
         }
 
         if (BaseHandler::getInstance()->getAffectedRows($result) === 0) {
-            throw new DBException(BaseHandler::getInstance()->getLastError());
+            throw new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql));
         }
 
         $row = BaseHandler::getInstance()->fetchAssoc($result);
         if ($row === false) {
-            throw new DBException(BaseHandler::getInstance()->getLastError());
+            throw new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql));
         }
 
         foreach ($row as $key => $value) {
@@ -252,11 +252,11 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 
         $result = BaseHandler::getInstance()->query($sql);
         if ($result === false) {
-            throw new DBException(BaseHandler::getInstance()->getLastError());
+            throw new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql));
         }
 
         if (BaseHandler::getInstance()->getAffectedRows($result) === 0) {
-            throw new DBException(BaseHandler::getInstance()->getLastError());
+            throw new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql));
         }
 
         $this->oldValues = $this->recordData;
@@ -286,11 +286,11 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         try {
             $result = BaseHandler::getInstance()->query($sql);
             if ($result === false) {
-                throw new DBException(BaseHandler::getInstance()->getLastError());
+                throw new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql));
             }
 
             if (BaseHandler::getInstance()->getAffectedRows($result) === 0) {
-                throw new DBException(BaseHandler::getInstance()->getLastError());
+                throw new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql));
             }
         } catch (Exception $e) {
             throw new DBException('Error while trying to delete data from the database.', $e);
@@ -423,7 +423,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
                     if (!is_float($value) && !is_int($value)) {
                         $this->addValidationError($columnName, 'Value must be a number');
                     } else {
-                        $precision = explode(',', $column->getPrecision());
+                        $precision = $column->getPrecision();
                         if ($precision[0] === '') {
                             $precision[0] = '18';
                         }
