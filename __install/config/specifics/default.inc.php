@@ -11,6 +11,7 @@ final class Data
         'DISPLAY_ERRORS' => true,
         'ERROR_REPORTING' => -1,
         'DEFAULT_CTL' => null,
+        'DEFAULT_CTL_NS' => null,
         'DB_USERNAME' => 'todo',
         'DB_PASSWORD' => 'todopwd',
         'DB_NAME' => 'todo',

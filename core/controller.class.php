@@ -20,22 +20,15 @@ abstract class Controller
     protected $output;
 
     const DEFAULT_ACTION_NAME = 'execute';
+    const DEFAULT_TEMPLATE_NAME = 'default';
 
     public function __construct()
     {
-        $this->action = static::getDefaultActionName();
-
-        $value = '';
         if (array_key_exists('action', $_REQUEST)) {
-            $value = trim($_REQUEST['action']);
+            $this->action = trim($_REQUEST['action']);
         }
-        if ($value !== null && $value !== '') {
-            $this->action = $value;
-        }
-
-        $value = Data::GetItem('DEFAULT_CTL_TEMPLATE');
-        if ($value !== null) {
-            $this->template = $value;
+        if ($this->action === null || $this->action === '') {
+            $this->action = static::DEFAULT_ACTION_NAME;
         }
 
         $this->className = get_class($this);
@@ -56,8 +49,10 @@ abstract class Controller
             $this->error404('Action declared as static: ' . $this->action . ' (in controller ' . $this->className . ')');
         }
 
-        if ($this->action !== static::getDefaultActionName()) {
+        if ($this->action !== static::DEFAULT_ACTION_NAME) {
             $this->template = strtolower($this->action);
+        } else {
+            $this->template = static::DEFAULT_TEMPLATE_NAME;
         }
     }
 
@@ -109,16 +104,6 @@ abstract class Controller
         }
 
         $this->redirectUrl = $url;
-    }
-
-    public static function getDefaultActionName()
-    {
-        $action = Data::GetItem('DEFAULT_CTL_ACTION');
-        if ($action === null || $action === '') {
-            $action = static::DEFAULT_ACTION_NAME;
-        }
-
-        return $action;
     }
 
     public function executeAction()

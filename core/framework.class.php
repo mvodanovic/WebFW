@@ -65,13 +65,21 @@ final class Framework
             require_once \WebFW\Config\FW_PATH . '/templates/helloworld.template.php';
             return;
         }
-        $namespace = static::$_ctlPath;
+
+        $namespace = '';
         if (array_key_exists('ns', $_REQUEST) && $_REQUEST['ns'] !== '') {
             $namespace = $_REQUEST['ns'];
+        }
+        if ($namespace === '') {
+            $namespace = Data::GetItem('DEFAULT_CTL_NS');
+        }
+        if ($name === null || $name === '') {
+            $namespace = static::$_ctlPath;
         }
         if (substr($namespace, -1) !== '\\') {
             $namespace .= '\\';
         }
+
         if (!class_exists($namespace . $name)) {
             self::Error404('Controller missing: ' . $name);
         }

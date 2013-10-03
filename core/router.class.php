@@ -39,13 +39,14 @@ class Router
         $url = '';
 
         if ($action === null) {
-            $action = Controller::getDefaultActionName();
+            $action = Controller::DEFAULT_ACTION_NAME;
         }
 
         if (Data::GetItem('APP_REWRITE_ACTIVE') === true) {
         } elseif (
             $controller === Data::GetItem('DEFAULT_CTL')
-            && $action === Controller::getDefaultActionName()
+            && $namespace === Data::GetItem('DEFAULT_CTL_NS')
+            && $action === Controller::DEFAULT_ACTION_NAME
         ) {
             $url = Data::GetItem('APP_REWRITE_BASE');
         } else {
