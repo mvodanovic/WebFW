@@ -2,11 +2,14 @@
 
 namespace WebFW\CMS\Components;
 
+use WebFW\CMS\Classes\PermissionsHelper as PH;
 use WebFW\CMS\CMSLogin;
-use WebFW\Core\Component;
 use WebFW\CMS\Classes\LoggedUser;
+use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
+use WebFW\Core\Component;
 use WebFw\CMS\DBLayer\Navigation as TGNavigation;
 use WebFW\CMS\DBLayer\ListFetchers\Navigation as LFNavigation;
+use \WebFW\CMS\DBLayer\Navigation as Node;
 
 class Navigation extends Component
 {
@@ -19,27 +22,66 @@ class Navigation extends Component
             return;
         }
 
-        $lfNavigation = new LFNavigation();
-
-        $filter = array(
-            'parent_node_id' => null,
-            'node_level' => 0,
-            'active' => true,
-        );
-        $sort = array(
-            'order_id' => 'ASC',
-        );
-        $this->navList[] = $nodesToProcess = $lfNavigation->getList($filter, $sort, 1000);
-
-        while (!empty($nodesToProcess)) {
-            $node = array_shift($nodesToProcess);
-
-            $children = $node->getChildrenNodes(false, true);
-            $this->navList[] = $children;
-            $nodesToProcess = array_merge($nodesToProcess, $children);
-        }
+        $this->navList = $this->buildNavList();
 
         $this->setTplVar('navList', $this->navList);
+    }
+
+    protected function buildNavList(Node $node = null)
+    {
+        $navList = array();
+
+        /// Top level, root nodes are fetched from the database
+        if ($node === null) {
+            $lfNavigation = new LFNavigation();
+            $filter = array(
+                'parent_node_id' => null,
+                'node_level' => 0,
+                'active' => true,
+            );
+            $sort = array(
+                'order_id' => 'ASC',
+            );
+            $nodesToProcess = $lfNavigation->getList($filter, $sort, 1000);
+        }
+
+        /// Lower levels, children nodes are fetched from the current one
+        else {
+            $nodesToProcess = $node->getChildrenNodes(false, true);
+        }
+
+        /// List of nodes in the current level which is to be prepended to the tree
+        $currentNavList = array();
+
+        foreach ($nodesToProcess as $childNode) {
+            /// Only for non-root users...
+            if (!LoggedUser::isRoot()) {
+                /// Check permissions, but only for controller-defined nodes
+                if ($childNode->controller !== null &&
+                    !PH::checkForControllerByName($childNode->controller, $childNode->namespace, UTCP::TYPE_SELECT)) {
+                    continue;
+                }
+            }
+
+            /// Recursion
+            $childNavList = $this->buildNavList($childNode);
+
+            /// Skip nodes which don't have any visible children and have no controller or custom URL defined
+            if (empty($childNavList) && $childNode->controller === null && $childNode->custom_url === null) {
+                continue;
+            }
+
+            /// Add the current node to the current list and append it's children to navList
+            $currentNavList[] = $childNode;
+            $navList = array_merge($navList, $childNavList);
+        }
+
+        /// Prepend the current list to navList
+        if (!empty($currentNavList)) {
+            array_unshift($navList, $currentNavList);
+        }
+
+        return $navList;
     }
 
     public function getSelectedMenuItem()

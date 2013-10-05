@@ -6,6 +6,7 @@ input, textarea {background-color: #ffffff; border: 0; padding: 3px 5px; margin:
 input:focus, textarea:focus {background-color: #ffff99;}
 div.content .left {margin-right: 5px;}
 div.content .right {margin-left: 5px;}
+pre.xdebug-var-dump {white-space: pre;}
 
 
 /* GENERAL USAGE CLASSES */
