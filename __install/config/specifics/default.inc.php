@@ -5,6 +5,7 @@ namespace Config\Specifics;
 final class Data
 {
     private static $_data = array(
+        'PROJECT_NAME' => null,
         'APP_REWRITE_BASE' => '/',
         'SHOW_DEBUG_INFO' => true,
         'EXCEPTIONS_USE_HTML_OUTPUT' => true,

@@ -2,6 +2,7 @@
 
 namespace WebFW\CMS;
 
+use Config\Specifics\Data;
 use WebFW\Core\Classes\HTML\Message;
 use WebFW\Core\Router;
 use WebFW\CMS\Classes\LoggedUser;
@@ -63,5 +64,8 @@ abstract class Controller extends HTMLController
     {
         $this->pageTitle = ($this->pageTitle === '') ? ($this->ns . $this->ctl) : $this->pageTitle;
         $this->pageTitle .= static::TITLE_SUFFIX;
+        if (Data::GetItem('PROJECT_NAME') !== null) {
+            $this->pageTitle .= ' - ' . Data::GetItem('PROJECT_NAME');
+        }
     }
 }

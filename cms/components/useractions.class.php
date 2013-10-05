@@ -25,7 +25,7 @@ class UserActions extends Component
         if (PermissionsHelper::checkForControllerByName(
             'LoggedUser',
             '\\WebFW\\CMS\\Controllers\\',
-            UTCP::TYPE_UPDATE
+            UTCP::TYPE_SELECT
         )) {
             $message = new Link($messageText, Router::URL('LoggedUser', null, '\\WebFW\\CMS\\Controllers\\', null, false));
 

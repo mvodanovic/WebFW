@@ -44,9 +44,6 @@ abstract class ItemController extends Controller implements iValidate
 
         $primaryKeyValues = $this->getPrimaryKeyValues(false);
         if (!empty($primaryKeyValues)) {
-            if (!PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
-                throw new UnauthorizedException('Insufficient privileges');
-            }
             $this->beforeLoad();
             try {
                 $this->tableGateway->loadBy($primaryKeyValues);
@@ -54,11 +51,8 @@ abstract class ItemController extends Controller implements iValidate
                 /// TODO
             }
             $this->afterLoad();
-        } else {
-            if (!PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
-                throw new UnauthorizedException('Insufficient privileges');
-            }
         }
+
         foreach ($this->getEditRequestValues() as $key => $value) {
             $this->tableGateway->$key = $value;
         }
@@ -174,8 +168,12 @@ abstract class ItemController extends Controller implements iValidate
 
     protected function initForm()
     {
-        $this->editForm = new FormStart('post', $this->getRoute('saveItem', $this->getPrimaryKeyValues()));
-        $this->editForm->addCustomAttribute('onsubmit', 'return beforeSubmitEdit();');
+        $primaryKeyValues = $this->getPrimaryKeyValues();
+        if (empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)
+            || PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
+            $this->editForm = new FormStart('post', $this->getRoute('saveItem', $this->getPrimaryKeyValues()));
+            $this->editForm->addCustomAttribute('onsubmit', 'return beforeSubmitEdit();');
+        }
     }
 
     protected function initEditActions()
@@ -240,7 +238,7 @@ abstract class ItemController extends Controller implements iValidate
 
     public function getEditFormHTML()
     {
-        return $this->editForm->parse();
+        return $this->editForm === null ? null : $this->editForm->parse();
     }
 
     public function getURL($action, $setPrimaryKey = true, $additionalParams = null, $escapeAmps = true, $rawurlencode = true)

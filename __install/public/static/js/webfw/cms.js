@@ -167,14 +167,29 @@ $(document).ready(function() {
     });
 
     $('.datepicker').each(function() {
-        $(this).datepicker($(this).data('settings'));
+        var settings = {
+            dateFormat: 'yy-mm-dd',
+            constrainInput: true,
+            firstDay: 1
+        };
+        $.extend(settings, $(this).data('settings'));
+        $(this).datepicker(settings);
     });
 
     $('.datetimepicker').each(function() {
-        $(this).datetimepicker($(this).data('settings'));
+        var settings = {
+            dateFormat: 'yy-mm-dd',
+            constrainInput: true,
+            firstDay: 1
+        };
+        $.extend(settings, $(this).data('settings'));
+        $(this).datetimepicker(settings);
     });
 
     $('.timepicker').each(function() {
-        $(this).timepicker($(this).data('settings'));
+        var settings = {
+        };
+        $.extend(settings, $(this).data('settings'));
+        $(this).timepicker(settings);
     });
 });
