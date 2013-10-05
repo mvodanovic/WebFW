@@ -25,6 +25,10 @@ class Exception extends \Exception
                 header('HTTP/1.1 400 Bad Request');
                 $caption = '400 Bad Request';
                 break;
+            case 401:
+                header('HTTP/1.1 401 Unauthorized');
+                $caption = '401 Unauthorized';
+                break;
             case 404:
                 header('HTTP/1.1 404 Not Found');
                 $caption = '404 Not Found';

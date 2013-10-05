@@ -4,6 +4,8 @@ div.container {position: relative; min-width: 600px; min-height: 100%; margin: 0
 div.content {padding-top: 5px; padding-left: 5px; padding-right: 5px; padding-bottom: 35px; overflow: hidden;}
 input, textarea {background-color: #ffffff; border: 0; padding: 3px 5px; margin: 2px; border-top: 1px solid #848484; border-bottom: 1px solid #e1e1e1; border-left: 1px solid #c1c1c1; border-right: 1px solid #c1c1c1;}
 input:focus, textarea:focus {background-color: #ffff99;}
+div.content .left {margin-right: 5px;}
+div.content .right {margin-left: 5px;}
 
 
 /* GENERAL USAGE CLASSES */

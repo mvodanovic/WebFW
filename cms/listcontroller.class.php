@@ -10,9 +10,9 @@ use WebFW\CMS\Classes\PermissionsHelper;
 use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
 use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Core\Exceptions\BadRequestException;
+use WebFW\Core\Exceptions\UnauthorizedException;
 use WebFW\Core\Exception;
 use WebFW\Database\ListFetcher;
-use WebFW\CMS\Classes\LoggedUser;
 use WebFW\Core\Request;
 use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Classes\HTML\Base\BaseFormItem;
@@ -40,7 +40,7 @@ abstract class ListController extends ItemController
     public function listItems()
     {
         if (!PermissionsHelper::checkForController($this, UTCP::TYPE_SELECT)) {
-            //die('Insufficient privileges!');
+            throw new UnauthorizedException('Insufficient privileges');
         }
 
         $this->initList();
@@ -75,7 +75,7 @@ abstract class ListController extends ItemController
         $this->afterInit();
 
         if (!PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
-            die('Insufficient privileges!');
+            throw new UnauthorizedException('Insufficient privileges');
         }
 
         $primaryKeyValues = $this->getPrimaryKeyValues(false);
@@ -103,7 +103,7 @@ abstract class ListController extends ItemController
         $this->afterInit();
 
         if (!PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
-            die('Insufficient privileges!');
+            throw new UnauthorizedException('Insufficient privileges');
         }
 
         $selectedItems = json_decode(rawurldecode(Request::getInstance()->keys), true);

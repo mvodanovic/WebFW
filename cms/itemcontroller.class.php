@@ -10,10 +10,10 @@ use WebFW\Core\Classes\HTML\FormStart;
 use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Classes\HTML\Message;
 use WebFW\Core\Exceptions\NotFoundException;
+use WebFW\Core\Exceptions\UnauthorizedException;
 use WebFW\Core\Exception;
 use WebFW\Core\Interfaces\iValidate;
 use WebFW\Core\SessionHandler;
-use WebFW\CMS\Classes\LoggedUser;
 use WebFW\Core\Request;
 use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Classes\HTML\Base\BaseFormItem;
@@ -34,7 +34,7 @@ abstract class ItemController extends Controller implements iValidate
     public function editItem()
     {
         if (!PermissionsHelper::checkForController($this, UTCP::TYPE_SELECT)) {
-            die('Insufficient privileges!');
+            throw new UnauthorizedException('Insufficient privileges');
         }
 
         $this->initEdit();
@@ -45,7 +45,7 @@ abstract class ItemController extends Controller implements iValidate
         $primaryKeyValues = $this->getPrimaryKeyValues(false);
         if (!empty($primaryKeyValues)) {
             if (!PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
-                die('Insufficient privileges!');
+                throw new UnauthorizedException('Insufficient privileges');
             }
             $this->beforeLoad();
             try {
@@ -56,7 +56,7 @@ abstract class ItemController extends Controller implements iValidate
             $this->afterLoad();
         } else {
             if (!PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
-                die('Insufficient privileges!');
+                throw new UnauthorizedException('Insufficient privileges');
             }
         }
         foreach ($this->getEditRequestValues() as $key => $value) {
@@ -102,7 +102,7 @@ abstract class ItemController extends Controller implements iValidate
 
         if (!empty($primaryKeyValues)) {
             if (!PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
-                die('Insufficient privileges!');
+                throw new UnauthorizedException('Insufficient privileges');
             }
             try {
                 $this->tableGateway->loadBy($primaryKeyValues);
@@ -112,7 +112,7 @@ abstract class ItemController extends Controller implements iValidate
             }
         } else {
             if (!PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
-                die('Insufficient privileges!');
+                throw new UnauthorizedException('Insufficient privileges');
             }
         }
 

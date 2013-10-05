@@ -10,9 +10,7 @@ use WebFW\Core\Router;
 <div class="login_min_height"></div>
 <div class="login">
     <?php if ($errorMessage !== null): ?>
-    <div class="message">
-        <?=Message::get($errorMessage); ?>
-    </div>
+        <?=Message::get($errorMessage, Message::TYPE_ERROR); ?>
     <?php endif; ?>
     <form method="post" action="<?=Router::URL('CMSLogin', 'doLogin', '\\WebFW\\CMS\\'); ?>">
     <p>CMS Login</p>

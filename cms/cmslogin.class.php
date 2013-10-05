@@ -6,6 +6,7 @@ use WebFW\CMS\DBLayer\ListFetchers\Navigation;
 use WebFW\Core\Exception;
 use WebFW\Core\HTMLController;
 use WebFW\Core\Exceptions\NotFoundException;
+use WebFW\Core\Exceptions\UnauthorizedException;
 use WebFW\Core\Request;
 use WebFW\Core\SessionHandler;
 use WebFW\Core\Router;
@@ -58,11 +59,17 @@ class CMSLogin extends HTMLController
 
         try {
             LoggedUser::getInstance()->doLogin($login, $password, $remember);
-        } catch (NotFoundException $e) {
-            $this->execute();
-            $this->setTplVar('errorMessage', 'Invalid credentials supplied!');
-            $this->setTplVar('login', $login);
-            return;
+        } catch (Exception $e) {
+            switch (true) {
+                case $e instanceof NotFoundException:
+                case $e instanceof UnauthorizedException:
+                    $this->execute();
+                    $this->setTplVar('errorMessage', $e->getMessage());
+                    $this->setTplVar('login', $login);
+                    return;
+                default:
+                    throw $e;
+            }
         }
 
         $returnUrl = SessionHandler::get('returnUrl');

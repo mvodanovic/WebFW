@@ -72,4 +72,24 @@ class LoggedUser extends ItemController
 
         $this->editTabs[] = $tab;
     }
+
+    public function validateData()
+    {
+        parent::validateData();
+
+        if ($this->tableGateway->password !== null) {
+            if ($this->tableGateway->password2 !== $this->tableGateway->password) {
+                $this->addValidationError('password2', 'Passwords don\'t match');
+            }
+        }
+    }
+
+    protected function beforeSave()
+    {
+        parent::beforeSave();
+
+        if ($this->tableGateway->password !== null) {
+            $this->tableGateway->setPassword($this->tableGateway->password);
+        }
+    }
 }

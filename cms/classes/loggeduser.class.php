@@ -4,6 +4,7 @@ namespace WebFW\CMS\Classes;
 
 use WebFW\CMS\DBLayer\UserType;
 use WebFW\Core\Exceptions\NotFoundException;
+use WebFW\Core\Exceptions\UnauthorizedException;
 use WebFW\Core\Exception;
 use WebFW\Core\SessionHandler;
 use WebFW\CMS\DBLayer\User;
@@ -16,16 +17,6 @@ class LoggedUser
     protected static $passwordGeneratorSeed = 'iweiu829e23e';
 
     protected static $instance = null;
-
-    const EXC_INVALID_CREDENTIALS = 1;
-    const EXC_INACTIVE_USER = 2;
-    const EXC_INTERNAL_ERROR = 3;
-
-    protected $exception = array(
-        self::EXC_INVALID_CREDENTIALS => 'Invalid credentials',
-        self::EXC_INACTIVE_USER => 'User not active',
-        self::EXC_INTERNAL_ERROR => 'Internal server error',
-    );
 
     protected function __construct()
     {
@@ -101,28 +92,28 @@ class LoggedUser
                 $seed = 'username';
                 $passwordField = 'password_username';
             } catch (NotFoundException $e) {
-                throw new Exception($this->exception[static::EXC_INVALID_CREDENTIALS], static::EXC_INVALID_CREDENTIALS);
+                throw new UnauthorizedException('Invalid credentials supplied', $e);
             }
         }
 
-        $ok = static::checkPasswordHash($password, $seed, $user->$passwordField);
+        $ok = static::checkPasswordHash($password, $user->$seed, $user->$passwordField);
 
         if (!$ok) {
-            throw new Exception($this->exception[static::EXC_INVALID_CREDENTIALS], static::EXC_INVALID_CREDENTIALS);
+            throw new UnauthorizedException('Invalid credentials supplied');
         }
 
         $this->doLoginByUser($user, $remember);
 
     }
 
-    public function doLoginByUser(&$user, $remember = false)
+    public function doLoginByUser(User $user, $remember = false)
     {
         if (!($user instanceof User)) {
-            throw new Exception($this->exception[static::EXC_INTERNAL_ERROR], static::EXC_INTERNAL_ERROR);
+            throw new Exception('Class . ' . get_class($user) . 'not an instance of WebFW\\CMS\\DBLayer\\User');
         }
 
         if ($user->active !== true) {
-            throw new Exception($this->exception[static::EXC_INACTIVE_USER], static::EXC_INACTIVE_USER);
+            throw new UnauthorizedException('Invalid credentials supplied');
         }
 
         SessionHandler::set(static::$sessionKey, $user);
