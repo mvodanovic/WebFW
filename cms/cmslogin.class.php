@@ -85,7 +85,7 @@ class CMSLogin extends HTMLController
     public function doLogout()
     {
         LoggedUser::getInstance()->doLogout();
-        $this->setRedirectUrl(Router::URL('CMSLogin', null, '\\WebFW\\CMS\\', null, false));
+        $this->setRedirectUrl(Router::getInstance()->URL('CMSLogin', null, '\\WebFW\\CMS\\', null, false));
     }
 
     protected function getDefaultURL($parentNodeID = null, Navigation $listFetcher = null)

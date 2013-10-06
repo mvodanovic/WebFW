@@ -26,9 +26,16 @@ class Route
         return null;
     }
 
+    public function __set($property, $value)
+    {
+        if (property_exists($this, $property)) {
+            $this->$property = $value;
+        }
+    }
+
     public function getURL($escapeAmps = true, $rawurlencode = true)
     {
-        return Router::URLFromRoute($this, $escapeAmps, $rawurlencode);
+        return Router::getInstance()->URLFromRoute($this, $escapeAmps, $rawurlencode);
     }
 
     public function addParams($params)

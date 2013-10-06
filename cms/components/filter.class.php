@@ -25,7 +25,7 @@ class Filter extends Component
         }
 
         $this->setTplVar('filters', $filters);
-        $this->setTplVar('targetURL', Router::URL($ctl, 'listItems', $ns));
+        $this->setTplVar('targetURL', Router::getInstance()->URL($ctl, 'listItems', $ns));
         $this->setTplVar('ctl', $ctl);
         $this->setTplVar('ns', $ns);
         $this->setTplVar('action', 'listItems');

@@ -79,7 +79,7 @@ class Paginator extends Component
 
         /// Generate URL using a controller name
         if ($this->getParam('ctl') !== null) {
-            $url = Router::URL(
+            $url = Router::getInstance()->URL(
                 $this->getParam('ctl'),
                 $this->getParam('action'),
                 $this->getParam('ns'),
@@ -103,7 +103,7 @@ class Paginator extends Component
 
         /// Generate URL using the owner controller
         } elseif ($this->ownerObject instanceof Controller) {
-            $url = Router::URL(
+            $url = Router::getInstance()->URL(
                 get_class($this->ownerObject),
                 $this->ownerObject->getAction(),
                 $params,

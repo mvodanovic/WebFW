@@ -23,6 +23,9 @@ class LoggedUser
         $this->user = SessionHandler::get(static::$sessionKey);
     }
 
+    /**
+     * @return LoggedUser
+     */
     public static function getInstance()
     {
         if (static::$instance === null) {

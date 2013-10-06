@@ -2,7 +2,7 @@
 
 use WebFW\Core\Classes\HTML\Button;
 use WebFW\Core\Classes\HTML\Input;
-use WebFW\Core\Classes\HTML\Message;;
+use WebFW\Core\Classes\HTML\Message;
 use WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
 use WebFW\Core\Router;
 
@@ -12,7 +12,7 @@ use WebFW\Core\Router;
     <?php if ($errorMessage !== null): ?>
         <?=Message::get($errorMessage, Message::TYPE_ERROR); ?>
     <?php endif; ?>
-    <form method="post" action="<?=Router::URL('CMSLogin', 'doLogin', '\\WebFW\\CMS\\'); ?>">
+    <form method="post" action="<?=Router::getInstance()->URL('CMSLogin', 'doLogin', '\\WebFW\\CMS\\'); ?>">
     <p>CMS Login</p>
     <div>
         <?=Input::get('ctl', 'CMSLogin', 'hidden'); ?>

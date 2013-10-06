@@ -27,7 +27,10 @@ class UserActions extends Component
             '\\WebFW\\CMS\\Controllers\\',
             UTCP::TYPE_SELECT
         )) {
-            $message = new Link($messageText, Router::URL('LoggedUser', null, '\\WebFW\\CMS\\Controllers\\', null, false));
+            $message = new Link(
+                $messageText,
+                Router::getInstance()->URL('LoggedUser', null, '\\WebFW\\CMS\\Controllers\\', null, false)
+            );
 
             /// If LoggedUser is the current controller, activate the button.
             if (
@@ -42,7 +45,11 @@ class UserActions extends Component
         else {
             $message = new Message($messageText);
         }
-        $button = new Link('Logout', Router::URL('CMSLogin', 'doLogout', '\\WebFW\\CMS\\', null, false), Link::IMAGE_LOGOUT);
+        $button = new Link(
+            'Logout',
+            Router::getInstance()->URL('CMSLogin', 'doLogout', '\\WebFW\\CMS\\', null, false),
+            Link::IMAGE_LOGOUT
+        );
 
         $this->setTplVar('loginMessage', $message->parse());
         $this->setTplVar('logoutButton', $button->parse());

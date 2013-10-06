@@ -2,8 +2,8 @@
 
 namespace WebFW\Core;
 
+use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Externals\PHPTemplate;
-use WebFW\Core\Framework;
 use Config\Specifics\Data;
 use ReflectionMethod;
 
@@ -85,7 +85,7 @@ abstract class Controller
 
     protected function error404($debugMessage = '404 Not Found')
     {
-        Framework::Error404($debugMessage);
+        throw new NotFoundException($debugMessage);
     }
 
     final protected function setTplVar($name, $value)

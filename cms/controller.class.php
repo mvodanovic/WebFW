@@ -20,7 +20,7 @@ abstract class Controller extends HTMLController
 
         LoggedUser::getInstance()->doLoginByAutoloadCookie();
         if (!LoggedUser::isLoggedIn()) {
-            $this->setRedirectUrl(Router::URL('CMSLogin', null, '\\WebFW\\CMS\\', null, false), true);
+            $this->setRedirectUrl(Router::getInstance()->URL('CMSLogin', null, '\\WebFW\\CMS\\', null, false), true);
         }
 
         $this->addLinkedCSS('/static/css/webfw/reset.css');

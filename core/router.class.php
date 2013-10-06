@@ -3,82 +3,246 @@
 namespace WebFW\Core;
 
 use Config\Specifics\Data;
-use WebFW\Core\Controller;
+use ReflectionClass;
 
 class Router
 {
     protected static $instance;
-    protected static $class;
+    protected static $class = null;
+    protected $routeDefs = array();
 
-    public static function GetInstance()
-   {
-        if (!isset(static::$instance)) {
+    const ROUTE_VARIABLE_REGEX = '[a-zA-Z0-9]+';
+
+    /**
+     * @return Router
+     */
+    public static function getInstance()
+    {
+        if (static::$class === null) {
             static::$class = get_called_class();
+        }
+
+        if (!isset(static::$instance)) {
             static::$instance = new static::$class;
         }
 
         return static::$instance;
-   }
+    }
 
-    public static function URL($controller, $action = null, $namespace = null, $params = array(), $escapeAmps = true, $rawurlencode = true)
+    protected function __construct() {
+        $this->routeDefs[] = array(
+            'pattern' => 'cms',
+            'route' => new Route('CMSLogin', null, '\\WebFW\\CMS\\'),
+            'variables' => array(
+            ),
+        );
+
+        $this->routeDefs[] = array(
+            'pattern' => 'cms/webfw/:ctl:/:action:',
+            'route' => new Route(null, null, '\\WebFW\\CMS\\Controllers\\'),
+            'variables' => array(
+            ),
+        );
+    }
+
+    public function getRouteDefs()
     {
-        if (!isset(static::$instance)) {
-            static::GetInstance();
+        return $this->routeDefs;
+    }
+
+    protected function getURLForRouteDef($routeDef, $controller, $action, $namespace, $params, $amp, $encodeFunction)
+    {
+        $controllerClass = $namespace . $controller;
+        $pattern = Data::GetItem('APP_REWRITE_BASE') . $routeDef['pattern'];
+        $route = &$routeDef['route'];
+        $variables = &$routeDef['variables'];
+        if ($params === null) {
+            $params = array();
         }
 
-        $amp = '&amp;';
-        if ($escapeAmps !== true) {
-            $amp = '&';
-        }
-
-        $encodeFunction = 'rawurlencode';
-        if ($rawurlencode !== true) {
-            $encodeFunction = 'urlencode';
-        }
-
-        $url = '';
-
-        if ($action === null) {
-            $action = Controller::DEFAULT_ACTION_NAME;
-        }
-
-        if (Data::GetItem('APP_REWRITE_ACTIVE') === true) {
-        } elseif (
-            $controller === Data::GetItem('DEFAULT_CTL')
-            && $namespace === Data::GetItem('DEFAULT_CTL_NS')
-            && $action === Controller::DEFAULT_ACTION_NAME
-        ) {
-            $url = Data::GetItem('APP_REWRITE_BASE');
-        } else {
-            $urlParams = array('ctl=' . $encodeFunction($controller));
-
-            if ($action !== Controller::DEFAULT_ACTION_NAME && $action !== null) {
-                $urlParams[] = 'action=' . $encodeFunction($action);
+        /// Check parameters with route
+        if ($route->controller !== null) {
+            if ($controller !== $route->controller) {
+                return null;
             }
-
-            if ($namespace !== null) {
-                $urlParams[] = 'ns=' . $encodeFunction($namespace);
+            $controller = null;
+        }
+        if ($route->action !== null) {
+            if ($action !== $route->action) {
+                return null;
             }
+            $action = null;
+        }
+        if ($route->namespace !== null) {
+            if ($namespace !== $route->namespace) {
+                return null;
+            }
+            $namespace = null;
+        }
+        foreach ($route->params as $key => $value) {
+            if (!array_key_exists($key, $params) || $params[$key] !== $value) {
+                return null;
+            }
+            unset($params[$key]);
+        }
 
-            if (is_array($params)) {
-                foreach ($params as $key => $value) {
-                    if ($key === '' || $value === '') {
-                        continue;
+        /// Get all parameter names from the URI pattern
+        if (!(preg_match_all('#:([a-zA-Z0-9]+):#', $pattern, $matches) > 0)) {
+            return null;
+        }
+        $matches = $matches[1];
+
+        /// For each URI parameter...
+        foreach ($matches as &$param) {
+            /// Get the parameter's required regex pattern and check it
+            $paramPattern = array_key_exists($param, $variables) ? $variables[$param] : static::ROUTE_VARIABLE_REGEX;
+            switch ($param) {
+                case 'ctl':
+                    if (!preg_match("#^$paramPattern$#", $controller)) {
+                        return null;
                     }
+                    break;
+                case 'action':
+                    if (!preg_match("#^$paramPattern$#", $action)) {
+                        return null;
+                    }
+                    break;
+                case 'ns':
+                    if (!preg_match("#^$paramPattern$#", $namespace)) {
+                        return null;
+                    }
+                    break;
+                default:
+                    if (!array_key_exists($param, $params)) {
+                        return null;
+                    }
+                    if (!preg_match("#^$paramPattern$#", $params[$param])) {
+                        return null;
+                    }
+                    break;
+            }
+        }
 
-                    $urlParams[] = $encodeFunction($key) . '=' . $encodeFunction($value);
+        /// Replace parameter placeholders in the URI pattern with actual values
+        /// Those parameters which were injected are nullified
+        $url = preg_replace_callback(
+            "#:([a-zA-Z0-9]+):#",
+            function($matches) use (&$controller, &$action, &$namespace, &$params, $encodeFunction) {
+                switch ($matches[1]) {
+                    case 'ctl':
+                        $value = $encodeFunction($controller);
+                        $controller = null;
+                        break;
+                    case 'action':
+                        $value = $encodeFunction($action);
+                        $action = null;
+                        break;
+                    case 'ns':
+                        $value = $encodeFunction($namespace);
+                        $namespace = null;
+                        break;
+                    default:
+                        $value = $encodeFunction($params[$matches[1]]);
+                        unset($params[$matches[1]]);
+                        break;
                 }
+
+                return $value;
+            },
+            $pattern
+        );
+
+        /// For the remaining parameters which weren't injected, append the in the query string
+        $urlParams = array();
+        if ($controller !== null && $controller !== Data::GetItem('DEFAULT_CTL')) {
+            $urlParams[] = 'ctl=' . $encodeFunction($controller);
+        }
+        if ($namespace !== null && $namespace !== Data::GetItem('DEFAULT_CTL_NS')) {
+            $urlParams[] = 'ns=' . $encodeFunction($namespace);
+        }
+        if ($action !== null && $action !== $controllerClass::DEFAULT_ACTION_NAME) {
+            $urlParams[] = 'action=' . $encodeFunction($action);
+        }
+        foreach ($params as $key => $value) {
+            if ($key === '' || $value === '') {
+                continue;
             }
 
-            $url = Data::GetItem('APP_REWRITE_BASE') . '?' . implode($amp, $urlParams);
+            $urlParams[] = $encodeFunction($key) . '=' . $encodeFunction($value);
+        }
+        if (!empty($urlParams)) {
+            $url .= '?' . implode($amp, $urlParams);
         }
 
         return $url;
     }
 
-    public static function URLFromRoute(Route $route, $escapeAmps = true, $rawurlencode = true)
+    public function URL($controller, $action = null, $namespace = null, $params = array(), $escapeAmps = true, $rawurlencode = true)
     {
-        return static::URL(
+        /// Set the query param delimiter
+        $amp = '&amp;';
+        if ($escapeAmps !== true) {
+            $amp = '&';
+        }
+
+        /// Set the function which will e used for escaping URI parameters
+        $encodeFunction = 'rawurlencode';
+        if ($rawurlencode !== true) {
+            $encodeFunction = 'urlencode';
+        }
+
+        /// Setup empty parameters to their default values
+        if ($controller === null) {
+            $controller = Data::GetItem('DEFAULT_CTL');
+        }
+        if ($namespace === null) {
+            $namespace = Data::GetItem('DEFAULT_CTL_NS');
+        }
+        $controllerClass = $namespace . $controller;
+        if ($action === null) {
+            $action = $controllerClass::DEFAULT_ACTION_NAME;
+        }
+
+        /// Try to match the parameters with existing route definitions
+        foreach ($this->routeDefs as &$routeDef) {
+            $url = $this->getURLForRouteDef($routeDef, $controller, $action, $namespace, $params, $amp, $encodeFunction);
+            if ($url !== null) {
+                return $url;
+            }
+        }
+
+        /// Fallback, build the URL by appending parameters in the query string
+        $urlParams = array();
+        if ($controller !== Data::GetItem('DEFAULT_CTL')) {
+            $urlParams[] = 'ctl=' . $encodeFunction($controller);
+        }
+        if ($namespace !== Data::GetItem('DEFAULT_CTL_NS')) {
+            $urlParams[] = 'ns=' . $encodeFunction($namespace);
+        }
+        if ($action !== $controllerClass::DEFAULT_ACTION_NAME) {
+            $urlParams[] = 'action=' . $encodeFunction($action);
+        }
+        if (is_array($params)) {
+            foreach ($params as $key => $value) {
+                if ($key === '' || $value === '') {
+                    continue;
+                }
+
+                $urlParams[] = $encodeFunction($key) . '=' . $encodeFunction($value);
+            }
+        }
+
+        $url = Data::GetItem('APP_REWRITE_BASE');
+        if (!empty($urlParams)) {
+            $url .= '?' . implode($amp, $urlParams);
+        }
+
+        return $url;
+    }
+
+    public function URLFromRoute(Route $route, $escapeAmps = true, $rawurlencode = true)
+    {
+        return $this->URL(
             $route->controller,
             $route->action,
             $route->namespace,
@@ -88,15 +252,28 @@ class Router
         );
     }
 
-    public static function GetClass()
+    public static function getClass()
     {
         return static::$class;
     }
 
-    final public function __clone()
+    public static function setClass($className, $forceNewInstance = false)
     {
-        throw new Exception('Router is not cloneable.');
+        if (!class_exists($className)) {
+            throw new Exception('Class ' . $className . ' doesn\'t exist');
+        }
+
+        $rc = new ReflectionClass($className);
+        if (!($rc->newInstanceWithoutConstructor() instanceof Router)) {
+            throw new Exception('Class ' . $className . ' is not an instance of WebFW\\Core\\Router');
+        }
+
+        static::$class = $className;
+
+        if ($forceNewInstance === true) {
+            static::$instance = null;
+        }
     }
 
-    private function __construct() {}
+    final private function __clone() {}
 }

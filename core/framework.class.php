@@ -3,13 +3,14 @@
 namespace WebFW\Core;
 
 use Config\Specifics\Data;
+use WebFW\Core\Exceptions\NotFoundException;
 
 final class Framework
 {
-    private static $_ctlPath = 'Application\Controllers\\';
-    private static $_cmpPath = 'Application\Components\\';
+    private static $ctlPath = 'Application\Controllers\\';
+    private static $cmpPath = 'Application\Components\\';
 
-    private static function _loadConfig()
+    private static function loadConfig()
     {
         $file = \WebFW\Config\BASE_PATH . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'current_specifics.inc.php';
 
@@ -52,41 +53,40 @@ final class Framework
 
     public static function Start()
     {
-        self::_loadConfig();
+        static::loadConfig();
 
-        $name = '';
-        if (array_key_exists('ctl', $_REQUEST)) {
-            $name = trim($_REQUEST['ctl']);
+        if (Data::GetItem('ROUTER_CLASS') !== null) {
+            Router::setClass(Data::GetItem('ROUTER_CLASS'));
         }
-        if ($name === '') {
-            $name = Data::GetItem('DEFAULT_CTL');
+
+        /// Controller
+        $ctl = Request::getInstance()->ctl;
+        if ($ctl === null || $ctl === '') {
+            $ctl = Data::GetItem('DEFAULT_CTL');
         }
-        if ($name === null || $name === '') {
+        if ($ctl === null || $ctl === '') {
             require_once \WebFW\Config\FW_PATH . '/templates/helloworld.template.php';
             return;
         }
 
-        $namespace = '';
-        if (array_key_exists('ns', $_REQUEST) && $_REQUEST['ns'] !== '') {
-            $namespace = $_REQUEST['ns'];
+        ///Namespace
+        $ns = Request::getInstance()->ns;
+        if ($ns === null || $ns === '') {
+            $ns = Data::GetItem('DEFAULT_CTL_NS');
         }
-        if ($namespace === '') {
-            $namespace = Data::GetItem('DEFAULT_CTL_NS');
+        if ($ns === null || $ns === '') {
+            $ns = static::$ctlPath;
         }
-        if ($name === null || $name === '') {
-            $namespace = static::$_ctlPath;
-        }
-        if (substr($namespace, -1) !== '\\') {
-            $namespace .= '\\';
+        if (substr($ns, -1) !== '\\') {
+            $ns .= '\\';
         }
 
-        if (!class_exists($namespace . $name)) {
-            self::Error404('Controller missing: ' . $name);
+        $ctl = $ns . $ctl;
+        if (!class_exists($ctl)) {
+            throw new NotFoundException('Controller missing: ' . $ctl);
         }
 
-        $name = $namespace . $name;
-
-        $controller = new $name();
+        $controller = new $ctl();
         $controller->executeAction();
         $controller->processOutput();
         echo $controller->getOutput();
@@ -95,7 +95,7 @@ final class Framework
     public static function runComponent($name, $namespace = null, $params = null, $ownerObject = null)
     {
         if ($namespace === null) {
-            $namespace = static::$_cmpPath;
+            $namespace = static::$cmpPath;
         }
 
         $name = $namespace . $name;
@@ -107,19 +107,6 @@ final class Framework
         $component = new $name($params, $ownerObject);
 
         return $component->run();
-    }
-
-    public static function Error404($debugMessage = '404 Not Found')
-    {
-        if (Data::GetItem('SHOW_DEBUG_INFO') === true) {
-            throw new Exception($debugMessage, 404);
-        } elseif (file_exists(Data::GetItem('ERROR_404_PAGE'))) {
-            header("HTTP/1.1 404 Not Found");
-            readfile(Data::GetItem('ERROR_404_PAGE'));
-            die;
-        } else {
-            throw new Exception($debugMessage, 404);
-        }
     }
 
     private function __construct() {}

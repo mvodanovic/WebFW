@@ -13,6 +13,7 @@ final class Data
         'ERROR_REPORTING' => -1,
         'DEFAULT_CTL' => null,
         'DEFAULT_CTL_NS' => null,
+        'ROUTER_CLASS' => null,
         'DB_USERNAME' => 'todo',
         'DB_PASSWORD' => 'todopwd',
         'DB_NAME' => 'todo',
