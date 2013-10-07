@@ -4,32 +4,37 @@ namespace WebFW\Database;
 
 use WebFW\Core\Exceptions\DBException;
 
-class MySQLHandler extends BaseHandler
+class SQLite3Handler extends BaseHandler
 {
     protected $conntectionResource = false;
     protected $lastQueryResource = false;
 
-    const DEFAULT_PORT = 3306;
-
-    protected function __construct($username, $password, $dbName, $host, $port)
+    protected function __construct($unused1, $unused2, $filename, $unused3, $unused4)
     {
-        $this->connectionResource = new mysqli($host, $username, $password, $dbName, $port);
-
-        if ($this->connectionResource->connect_error) {
-            $connectError = $this->connectionResource->connect_error;
+        try {
+            $this->connectionResource = new \SQLite3($filename);
+        } catch (\Exception $e) {
             $this->connectionResource = false;
-            throw new DBException('Cannot connect to database.', new DBException($connectError));
+            throw new DBException('Cannot connect to database', $e);
         }
     }
 
     public function escapeIdentifier($identifier)
     {
-        return $this->connectionResource->real_escape_string($identifier);
+        return '"' . $identifier . '"';
     }
 
     public function escapeLiteral($literal)
     {
-        return $this->connectionResource->real_escape_string($literal);
+	if (is_string($literal)) {
+            return $this->connectionResource->escapeString($literal);
+        } elseif ($literal === null) {
+            return 'NULL';
+        } elseif (is_bool($literal)) {
+            return (int) $literal;
+        } else {
+            return $literal;
+        }
     }
 
     public function query($query)
@@ -41,34 +46,24 @@ class MySQLHandler extends BaseHandler
 
     public function getLastError()
     {
-        return $this->lastQueryResource->error;
+        return $this->connectionResource->lastErrorMsg();
     }
 
     public function fetchAssoc($queryResource = false, $row = null)
     {
         $resource = &$this->lastQueryResource;
-        if ($queryResource !== false) {
+        if ($queryResource instanceof \SQLite3Result) {
             $resource = &$queryResource;
         }
 
-        if (!($resource instanceof mysqli_result)) {
+        if (!($resource instanceof \SQLite3Result)) {
             return null;
         }
 
-        $returnToRow = null;
-        if ($row !== null) {
-            $returnToRow = $resource->current_field;
-            $ok = $resource->data_seek($row);
-            if (!$ok) {
-                $resource->data_seek($returnToRow);
-                return null;
-            }
-        }
-
-        $data = $resource->fetch_assoc();
-
-        if ($returnToRow !== null) {
-            $resource->data_seek($returnToRow);
+        $data = $resource->fetchArray(SQLITE3_ASSOC);
+        if ($data === false) {
+            $resource->finalize();
+            return null;
         }
 
         return $data;
@@ -76,27 +71,32 @@ class MySQLHandler extends BaseHandler
 
     public function fetchAll($queryResource = false)
     {
-        $resource = &$this->lastQueryResource;
-        if ($queryResource !== false) {
-            $resource = &$queryResource;
+        $resultSet = array();
+        while (($row = $this->fetchAssoc($queryResource)) !== null) {
+            $resultSet[] = $row;
         }
 
-        if (!($resource instanceof mysqli_result)) {
-            return null;
-        }
-
-        return $resource->fetch_all(MYSQLI_ASSOC);
+        return $resultSet;
     }
 
     public function getAffectedRows($queryResource = false)
     {
         $resource = &$this->lastQueryResource;
-        if ($queryResource !== false) {
+        if ($queryResource instanceof \SQLite3Result || $queryResource === true) {
             $resource = &$queryResource;
         }
 
-        if ($resource instanceof mysqli_result) {
-            return $resource->num_rows;
+        if ($resource instanceof \SQLite3Result) {
+            $count = 0;
+            while ($resource->fetchArray(SQLITE3_ASSOC) !== null) {
+                $count++;
+            }
+            $resource->reset();
+            return $count;
+        } elseif ($resource === true) {
+            return $this->connectionResource->changes();
+        } else {
+            return 0;
         }
 
         return $this->connectionResource->affected_rows;
@@ -113,6 +113,10 @@ class MySQLHandler extends BaseHandler
 
     public function convertBoolean($value)
     {
+	if ($value === null) {
+            return null;
+        }
+
         $value = (int) $value;
         switch($value) {
             case 1:

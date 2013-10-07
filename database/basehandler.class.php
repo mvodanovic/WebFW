@@ -24,7 +24,7 @@ abstract class BaseHandler
             $dbName = Data::GetItem('DB_NAME');
             $dbHost = Data::GetItem('DB_HOST');
             $dbPort = Data::GetItem('DB_PORT');
-            if ($dbUsername !== null && $dbPassword !== null && $dbName !== null) {
+            if ($dbName !== null) {
                 $handler = Data::GetItem('DB_HANDLER');
                 if (class_exists($handler) && is_subclass_of($handler, '\\WebFW\\Database\\BaseHandler')) {
                     $instanceID = $handler::createNewConnection($dbUsername, $dbPassword, $dbName, $dbHost, $dbPort);
@@ -35,7 +35,7 @@ abstract class BaseHandler
         }
 
         if ($instanceID === null) {
-            return null;
+            throw new Exception('Couldn\'t create a DB handler instance');
         }
 
         if (!array_key_exists($instanceID, static::$instances)) {

@@ -74,7 +74,11 @@ class Exception extends \Exception
             $args = array();
             if (array_key_exists('args', $traceItem)) {
                 foreach ($traceItem['args'] as $arg) {
-                    $arg = json_encode($arg, JSON_UNESCAPED_SLASHES);
+                    if (defined('JSON_UNESCAPED_SLASHES')) {
+                        $arg = json_encode($arg, JSON_UNESCAPED_SLASHES);
+                    } else {
+                        $arg = json_encode($arg);
+                    }
                     $args[] = sprintf(
                         $argsFormat,
                         $escapeStrings ? htmlspecialchars($arg) : $arg
