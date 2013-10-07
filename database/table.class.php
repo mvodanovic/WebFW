@@ -4,6 +4,7 @@ namespace WebFW\Database;
 use WebFW\Database\BaseHandler;
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\TableConstraints\Constraint;
+use WebFW\Database\TableConstraints\PrimaryKey;
 use WebFW\Core\Exception;
 
 abstract class Table
@@ -44,6 +45,36 @@ abstract class Table
         }
     }
 
+    /**
+     * @param $constraintFieldNames
+     * @return null|Constraint
+     */
+    public function getConstraint($constraintFieldNames)
+    {
+        if (!is_array($constraintFieldNames)) {
+            $constraintFieldNames = array($constraintFieldNames);
+        }
+
+        foreach ($this->constraints as $constraint) {
+            /** @var $constraint Constraint */
+            if (count ($constraintFieldNames) !== count($constraint->getColumns())) {
+                continue;
+            }
+            $isMatch = true;
+            foreach ($constraint->getColumns() as $column) {
+                if (!in_array($column, $constraintFieldNames)) {
+                    $isMatch = false;
+                    break;
+                }
+            }
+            if ($isMatch) {
+                return $constraint;
+            }
+        }
+
+        return null;
+    }
+
     /// TODO: implement
     protected function addIndex()
     {
@@ -71,7 +102,9 @@ abstract class Table
             return null;
         }
 
-        return $this->constraints[$this->primaryKeyConstraintIndex]->getColumns();
+        /** @var $primaryKey PrimaryKey */
+        $primaryKey = &$this->constraints[$this->primaryKeyConstraintIndex];
+        return $primaryKey->getColumns();
     }
 
     public function getColumns()
@@ -79,6 +112,10 @@ abstract class Table
         return $this->columns;
     }
 
+    /**
+     * @param $columnName
+     * @return Column
+     */
     public function getColumn($columnName)
     {
         if (!array_key_exists($columnName, $this->columns)) {

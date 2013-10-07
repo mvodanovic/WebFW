@@ -103,12 +103,16 @@ class Join
         switch ($this->type) {
             case static::TYPE_LEFT:
                 $sql .= ' LEFT';
+                break;
             case static::TYPE_RIGHT:
                 $sql .= ' RIGHT';
+                break;
             case static::TYPE_FULL:
                 $sql .= ' FULL';
+                break;
             case static::TYPE_CROSS:
                 $sql .= ' CROSS';
+                break;
         }
 
         $sql .= ' JOIN ' . $this->tableName;

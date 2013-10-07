@@ -7,17 +7,17 @@ use WebFW\Core\Exception;
 class ForeignKey extends Constraint
 {
     const ACTION_DO_NOTHING = 1;
-    const ACTION_UPDATE = 2;
+    const ACTION_CASCADE = 2;
     const ACTION_RESTRICT = 3;
     const ACTION_SET_NULL = 4;
     const ACTION_SET_DEFAULT = 5;
-    const ACTION_CASCADE = 6;
 
+    protected $foreignTable;
     protected $references;
     protected $onUpdate;
     protected $onDelete;
 
-    public function __construct($columns, $references, $onUpdate, $onDelete, $name = null)
+    public function __construct($foreignTable, $references, $onUpdate, $onDelete, $name = null)
     {
         if (!$this->actionIsValid($onUpdate)) {
             throw new Exception('Invalid update action supplied for foreign key constraint.');
@@ -27,10 +27,20 @@ class ForeignKey extends Constraint
             throw new Exception('Invalid delete action supplied for foreign key constraint.');
         }
 
-        parent::__construct(static::TYPE_FOREIGN_KEY, $columns, $name);
-        $this->references = is_array($references) ? $references : array($references);
+        if (!is_array($references)) {
+            throw new Exception('Foreign key constraint references must be [column => foreignColumn] pairs.');
+        }
+
+        parent::__construct(static::TYPE_FOREIGN_KEY, array_keys($references), $name);
+        $this->foreignTable = $foreignTable;
+        $this->references =  $references;
         $this->onUpdate = $onUpdate;
         $this->onDelete = $onDelete;
+    }
+
+    public function getForeignTable()
+    {
+        return $this->foreignTable;
     }
 
     public function getReferences()
@@ -52,11 +62,10 @@ class ForeignKey extends Constraint
     {
         switch ($action) {
             case static::ACTION_DO_NOTHING:
-            case static::ACTION_UPDATE:
+            case static::ACTION_CASCADE:
             case static::ACTION_RESTRICT:
             case static::ACTION_SET_NULL:
             case static::ACTION_SET_DEFAULT:
-            case static::ACTION_CASCADE:
                 return true;
         }
 

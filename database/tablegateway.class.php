@@ -6,6 +6,7 @@ use WebFW\Core\Interfaces\iValidate;
 use WebFW\Database\BaseHandler;
 use WebFW\Database\Table;
 use WebFW\Database\TableColumns\Column;
+use WebFW\Database\TableConstraints\ForeignKey;
 use WebFW\Database\Query\Select;
 use WebFW\Database\Query\Join;
 use WebFW\Database\Query\Insert;
@@ -20,12 +21,16 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 {
     const PRIMARY_KEY_PREFIX = 'pk_';
 
+    /** @var Table */
     protected $table = null;
     protected $recordData = array();
     protected $oldValues = array();
     protected $recordSetIsNew = true;
     protected $additionalData = array();
     protected $validationErrors = array();
+    protected $foreignListFetchers = array();
+    protected $useForeignListFetchers = true;
+    protected $isTransactionStarted = false;
 
     public function __construct()
     {
@@ -36,6 +41,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         }
 
         foreach ($this->table->getColumns() as $key => $column) {
+            /** @var $column Column */
             $this->recordData[$key] = $column->getDefaultValue();
             $this->oldValues[$key] = $column->getDefaultValue();
         }
@@ -48,11 +54,59 @@ abstract class TableGateway extends ArrayAccess implements iValidate
             throw new Exception('Cannot instantiate table: ' . $table);
         }
         $this->table = new $table();
+        if (!($this->table instanceof Table)) {
+            throw new Exception('Class ' . $table . ' not an instance of WebFW\\Database\\Table');
+        }
     }
 
+    /**
+     * @return Table
+     */
     public function getTable()
     {
         return $this->table;
+    }
+
+    /**
+     * Adds a foreign list fetcher to the table gateway.
+     *
+     * @note The list fetcher is used for fetching lists of data from dependant tables.
+     * @note The list fetcher must have a table gateway defined, the list will be populated with table gateways.
+     * @note The list fetcher's table must have a foreign key referencing this table gateway's table.
+     *
+     * @param string $collectionFieldName - name under which the list will be stored in the table gateway
+     * @param array|string $tableFieldNames - name of dependant table's fields which compose the foreign key
+     * @param string $listFetcher - name of the list fetcher
+     * @param string $namespace - namespace of the list fetcher
+     * @throws \WebFW\Core\Exception - if called with invalid parameters
+     * @see useForeignListFetchers
+     */
+    public function addForeignListFetcher($collectionFieldName, $tableFieldNames, $listFetcher, $namespace = '\\Application\\DBLayer\\ListFetchers\\')
+    {
+        $listFetcher = $namespace . $listFetcher;
+        if (!class_exists($listFetcher)) {
+            throw new Exception('Cannot instantiate list fetcher: ' . $listFetcher);
+        }
+        /** @var $listFetcherInstance ListFetcher */
+        $listFetcherInstance = new $listFetcher();
+        if (!($listFetcherInstance instanceof ListFetcher)) {
+            throw new Exception('Class ' . $listFetcher . ' not an instance of WebFW\\Database\\ListFetcher');
+        }
+
+        if (!($listFetcherInstance->getTableGateway() instanceof TableGateway)) {
+            throw new Exception('Foreign list fetcher ' . $listFetcher . ' has no table gateway specified');
+        }
+
+        $foreignKey = $listFetcherInstance->getTable()->getConstraint($tableFieldNames);
+        if (!($foreignKey instanceof ForeignKey)) {
+            throw new Exception('No foreign keys defined for list fetcher ' . $listFetcher . ' with fields: ' . implode(', ', $tableFieldNames));
+        }
+
+        $this->foreignListFetchers[$collectionFieldName] = array(
+            'listFetcher' => $listFetcherInstance,
+            'foreignKey' => $foreignKey,
+        );
+        $this->additionalData[$collectionFieldName] = array();
     }
 
     public function __get($key)
@@ -75,18 +129,155 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         $this->offsetUnset($key);
     }
 
-    public function loadWithArray(array $values)
+    /**
+     * Loads lists of dependant tables from the database.
+     *
+     * @see addForeignListFetcher()
+     */
+    public function loadDependantTables()
     {
-        $this->beforeLoad();
-
-        foreach ($values as $key => $value) {
-            $this->recordData[$key] = Table::castValueToType($value, $this->table->getColumn($key)->getType());
+        foreach ($this->foreignListFetchers as $collectionFieldName => &$listFetcherDef) {
+            /** @var $listFetcher ListFetcher */
+            $listFetcher = $listFetcherDef['listFetcher'];
+            /** @var $foreignKey ForeignKey */
+            $foreignKey = $listFetcherDef['foreignKey'];
+            $filter = array();
+            foreach ($foreignKey->getReferences() as $column => $foreignColumn) {
+                $filter[$column] = $this->$foreignColumn;
+            }
+            $this->additionalData[$collectionFieldName] = $listFetcher->getList($filter);
         }
-        $this->oldValues = $this->recordData;
+    }
 
-        $this->recordSetIsNew = false;
+    /**
+     * Saves lists of dependant tables to the database.
+     *
+     * @note New entries are inserted, existing ones are updated if present in lists, removed otherwise.
+     * @note This method doesn't create a transaction, but it updates multiple items in multiple tables.
+     * @note If a dependant table hasn't passed validation, hasValidationErrors() will return true.
+     *
+     * @see addForeignListFetcher()
+     * @see hasValidationErrors()
+     * @see startTransaction()
+     */
+    public function saveDependantTables()
+    {
+        /// Iterate through all dependant tables
+        foreach ($this->foreignListFetchers as $collectionFieldName => &$listFetcherDef) {
+            /** @var $foreignKey ForeignKey */
+            $foreignKey = $listFetcherDef['foreignKey'];
+            /// List of primary key values of the dependant table referencing data in this table gateway
+            $dependantKeyList = array();
+            /// Foreign key values of the dependant table referencing data in this table gateway
+            $foreignKeyValues = array();
+            /// List of primary key columns of the dependant table
+            $columns = null;
+            /// Table name of the dependant table
+            $tableName = null;
 
-        $this->afterLoad();
+            /// Iterate through th list, fill the local variables
+            foreach ($this->additionalData[$collectionFieldName] as $tableGateway) {
+                /** @var $tableGateway TableGateway */
+
+                /// Save the dependant table gateway, perform INSERT or UPDATE
+                $tableGateway->save();
+
+                /// The following data is filled only on first iteration
+                if ($columns === null) {
+                    $columns = $tableGateway->getPrimaryKeyColumns();
+                    /// If there is only one key column, remove the unnecessary array
+                    if (count($columns) === 1) {
+                        $columns = $columns[0];
+                    }
+                    $tableName = $tableGateway->getTable()->getName();
+                    foreach ($foreignKey->getColumns() as $column) {
+                        $foreignKeyValues[$column] = $tableGateway->$column;
+                    }
+                }
+
+                /// The following data is filled by every iteration
+                $values = array_values($tableGateway->getPrimaryKeyValues(false));
+                /// If there is only one key column, remove the unnecessary array
+                if (count($values) === 1) {
+                    $values = $values[0];
+                }
+                $dependantKeyList[] = $values;
+            }
+
+            /// If data is found, DELETE all dependent table items which aren't in the list
+            if ($columns !== null) {
+                $delete = new Delete($tableName);
+                foreach ($foreignKeyValues as $column => $value) {
+                    $delete->addCondition($column, $value);
+                }
+                $delete->addInCondition($columns, $dependantKeyList, null, true);
+                BaseHandler::getInstance()->query($delete->getSQL());
+            }
+        }
+    }
+
+    public function addDependantItem($fieldName, TableGateway $item)
+    {
+        foreach ($this->foreignListFetchers as $collectionFieldName => &$listFetcherDef) {
+            if ($collectionFieldName !== $fieldName) {
+                continue;
+            }
+
+            /** @var $listFetcher ListFetcher */
+            $listFetcher = $listFetcherDef['listFetcher'];
+            $tableGateway = $listFetcher->getTableGateway();
+            if (!($item instanceof $tableGateway)) {
+                throw new Exception('Item must be an instance of ' . get_class($tableGateway));
+            }
+
+            /** @var $foreignKey ForeignKey */
+            $foreignKey = $listFetcherDef['foreignKey'];
+            foreach ($foreignKey->getReferences() as $column => $foreignColumn) {
+                $item->$foreignColumn = $this->$column;
+            }
+
+            $this->additionalData[$fieldName][] = $item;
+            break;
+        }
+    }
+
+    /**
+     * Load the table gateway with values from the array.
+     *
+     * @param array $values - array of values to load into the table gateway
+     * @param bool $isNew - true: just INSERT data into new object; false: mimic load(), UPDATE existing data
+     * @see load()
+     * @see loadBy()
+     */
+    public function loadWithArray(array $values, $isNew = false)
+    {
+        /// If updating existing data, trigger beforeLoad()
+        if (!$isNew) {
+            $this->beforeLoad();
+        }
+
+        /// Set values through the standard setter
+        foreach ($values as $key => $value) {
+            $this->$key = $value;
+        }
+
+        /// If updating existing data, update oldValues as well so it seems the data has been read from the database
+        if (!$isNew) {
+            $this->oldValues = $this->recordData;
+        }
+
+        /// Set the appropriate flag for recordSetIsNew
+        $this->recordSetIsNew = $isNew;
+
+        /// Load dependant tables
+        if ($this->useForeignListFetchers === true) {
+            $this->loadDependantTables();
+        }
+
+        /// If updating existing data, trigger afterLoad()
+        if (!$isNew) {
+            $this->afterLoad();
+        }
     }
 
     public function load($primaryKeyValue)
@@ -119,6 +310,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         $select = new Select($this->table->getName(), $this->table->getAlias());
         $columns = array();
         foreach ($this->table->getColumns() as $column) {
+            /** @var $column Column */
             $columns[] = $column->getName();
         }
         $select->addSelections($columns, $this->table->getAliasedName());
@@ -148,7 +340,57 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 
         $this->recordSetIsNew = false;
 
+        if ($this->useForeignListFetchers === true) {
+            $this->loadDependantTables();
+        }
+
         $this->afterLoad();
+    }
+
+    /**
+     * Starts a new transaction.
+     *
+     * @note Only one transaction can be started per connection. Attempting to start another one will fail.
+     * @note A transaction will be started only if the table gateway is using foreign list fetchers.
+     *
+     * @see commit()
+     * @see rollback()
+     * @see addForeignListFetcher()
+     * @see useForeignListFetchers
+     */
+    protected function startTransaction()
+    {
+        if (!$this->isTransactionStarted && $this->useForeignListFetchers) {
+            $this->isTransactionStarted = BaseHandler::getInstance()->startTransaction();
+        }
+    }
+
+    /**
+     * Commit the transaction started by this table gateway.
+     *
+     * @see startTransaction()
+     * @see rollback()
+     */
+    protected function commit()
+    {
+        if ($this->isTransactionStarted === true) {
+            BaseHandler::getInstance()->commit();
+            $this->isTransactionStarted = false;
+        }
+    }
+
+    /**
+     * Rollback the transaction started by this table gateway.
+     *
+     * @see startTransaction()
+     * @see commit()
+     */
+    protected function rollback()
+    {
+        if ($this->isTransactionStarted === true) {
+            BaseHandler::getInstance()->rollback();
+            $this->isTransactionStarted = false;
+        }
     }
 
     public function save()
@@ -161,19 +403,34 @@ abstract class TableGateway extends ArrayAccess implements iValidate
             return;
         }
 
+        $this->startTransaction();
+
         if ($this->recordSetIsNew === true) {
             try {
                 $this->saveNew();
             } catch (Exception $e) {
+                $this->rollback();
                 throw new DBException('Error while trying to insert new data in the database.', $e);
             }
         } else {
             try {
                 $this->saveExisting();
             } catch (Exception $e) {
+                $this->rollback();
                 throw new DBException('Error while trying to update data in the database.', $e);
             }
         }
+
+        if ($this->useForeignListFetchers === true) {
+            $this->saveDependantTables();
+        }
+
+        if ($this->hasValidationErrors()) {
+            $this->rollback();
+            return;
+        }
+
+        $this->commit();
 
         $this->afterSave();
     }
@@ -187,6 +444,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         $values = array();
         $primaryKeyColumns = $this->table->getPrimaryKeyColumns();
         foreach ($this->table->getColumns() as $column) {
+            /** @var $column Column */
             $columnName = $column->getName();
             if ($this->$columnName !== $column->getDefaultValue()) {
                 $columns[] = $columnName;
@@ -243,7 +501,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
             return;
         }
         foreach ($this->table->getPrimaryKeyColumns() as $column) {
-            $update->addCondition($column, $this->$column);
+            $update->addCondition($column, $this->oldValues[$column]);
         }
         $update->appendSemicolon();
 
@@ -349,7 +607,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         return isset($this->recordData[$offset]) || isset($this->additionalData[$offset]);
     }
 
-    public function offsetGet($offset)
+    public function &offsetGet($offset)
     {
         if (array_key_exists($offset, $this->recordData)) {
             return $this->recordData[$offset];
@@ -366,6 +624,20 @@ abstract class TableGateway extends ArrayAccess implements iValidate
     {
         if (array_key_exists($offset, $this->recordData)) {
             $this->recordData[$offset] = Table::castValueToType($value, $this->table->getColumn($offset)->getType());
+            /// If the offset is a foreign key in dependant items, update them as well
+            foreach ($this->foreignListFetchers as $collectionFieldName => &$listFetcherDef) {
+                /** @var $foreignKey ForeignKey */
+                $foreignKey = &$listFetcherDef['foreignKey'];
+                foreach ($foreignKey->getReferences() as $column => $foreignColumn) {
+                    if ($foreignColumn === $offset) {
+                        foreach ($this->additionalData[$collectionFieldName] as &$tableGateway) {
+                            /** @var $tableGateway TableGateway */
+                            $tableGateway->$column = $value;
+                        }
+                        break;
+                    }
+                }
+            }
         } elseif (is_null($offset)) {
             $this->additionalData[] = $value;
         } else {
@@ -487,7 +759,22 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 
     public function hasValidationErrors()
     {
-        return !empty($this->validationErrors);
+        if (!empty($this->validationErrors)) {
+            return true;
+        }
+
+        if ($this->useForeignListFetchers === true) {
+            foreach ($this->foreignListFetchers as $collectionFieldName => $listFetcherDef) {
+                foreach ($this->additionalData[$collectionFieldName] as $tableGateway) {
+                    /** @var $tableGateway TableGateway */
+                    if ($tableGateway->hasValidationErrors()) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 
     public function getValidationErrors($field = null)

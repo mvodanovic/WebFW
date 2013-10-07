@@ -113,6 +113,7 @@ class Select extends ConditionalQuery
         }
 
         foreach ($this->joins as &$join) {
+            /** @var $join Join */
             $sql .= $join->getSQL();
         }
 
