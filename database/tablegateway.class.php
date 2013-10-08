@@ -607,7 +607,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         return isset($this->recordData[$offset]) || isset($this->additionalData[$offset]);
     }
 
-    public function &offsetGet($offset)
+    public function offsetGet($offset)
     {
         if (array_key_exists($offset, $this->recordData)) {
             return $this->recordData[$offset];

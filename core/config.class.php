@@ -26,7 +26,7 @@ class Config
         if ($data === false) {
             throw new Exception('Config file ' . $file . ' has a parse error');
         }
-        static::$configData = $data;
+        static::addData($data);
 
         /// Load the specifics definition file, return on fail
         $file = \WebFW\Config\BASE_PATH . DIRECTORY_SEPARATOR . 'config'
@@ -46,11 +46,23 @@ class Config
         if (!file_exists($file)) {
             return;
         }
-        $data = parse_ini_file($file, true);
+        $data = parse_ini_file($file, true, INI_SCANNER_RAW);
         if ($data === false) {
             return;
         }
-        static::$configData = array_merge(static::$configData, $data);
+        static::addData($data);
+    }
+
+    protected static function addData($data)
+    {
+        foreach ($data as $sectionName => &$section) {
+            if (!array_key_exists($sectionName, static::$configData)) {
+                static::$configData[$sectionName] = array();
+            }
+            foreach ($section as $key => &$value) {
+                static::$configData[$sectionName][$key] = $value;
+            }
+        }
     }
 
     protected static function parseConfigData()
