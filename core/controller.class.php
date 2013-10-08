@@ -4,7 +4,6 @@ namespace WebFW\Core;
 
 use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Externals\PHPTemplate;
-use Config\Specifics\Data;
 use ReflectionMethod;
 
 abstract class Controller

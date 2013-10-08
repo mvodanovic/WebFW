@@ -2,7 +2,7 @@
 
 namespace WebFW\Menu;
 
-use Config\Specifics\Data;
+use WebFW\Core\Config;
 use WebFW\Core\Route;
 
 class Item extends BaseNode
@@ -53,7 +53,7 @@ class Item extends BaseNode
     {
         if ($this->href !== null) {
             if ($this->hrefIsFull === false) {
-                return Data::GetItem('APP_REWRITE_BASE') . $this->href;
+                return Config::get('General', 'rewriteBase') . $this->href;
             } else {
                 return $this->href;
             }

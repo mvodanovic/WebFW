@@ -2,8 +2,6 @@
 
 namespace WebFW\Core;
 
-use Config\Specifics\Data;
-
 class Exception extends \Exception
 {
     protected $htmlOutput = true;
@@ -12,7 +10,7 @@ class Exception extends \Exception
     {
         parent::__construct($message, $code, $e);
 
-        $htmlOutput = Data::GetItem('EXCEPTIONS_USE_HTML_OUTPUT');
+        $htmlOutput = Config::get('Debug', 'useHTMLOutput');
         if (is_bool($htmlOutput)) {
             $this->htmlOutput = $htmlOutput;
         }

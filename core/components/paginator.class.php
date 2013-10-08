@@ -5,7 +5,7 @@ namespace WebFW\Core\Components;
 use WebFW\Core\Component;
 use WebFW\Core\Router;
 use WebFW\Core\Controller;
-use Config\Specifics\Data;
+use WebFW\Core\Config;
 
 class Paginator extends Component
 {
@@ -110,9 +110,9 @@ class Paginator extends Component
                 $this->getParam('escapeAmps')
             );
 
-        /// Fallback - generate URL using the APP_REWRITE_BASE
+        /// Fallback - generate URL using the rewriteBase
         } else {
-            $url = Data::getItem('APP_REWRITE_BASE');
+            $url = Config::get('General', 'rewriteBase');
             if ($page > 1) {
                 $url .= '?' . $this->getParam('pageParamName') . '=' . $page;
             }

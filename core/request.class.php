@@ -3,7 +3,6 @@
 namespace WebFW\Core;
 
 use WebFW\Core\Exceptions\NotFoundException;
-use Config\Specifics\Data;
 
 class Request
 {
@@ -45,7 +44,7 @@ class Request
 
         /// Iterate through route definitions provided by the router
         foreach (Router::getInstance()->getRouteDefs() as $routeDef) {
-            $pattern = Data::GetItem('APP_REWRITE_BASE') . $routeDef['pattern'];
+            $pattern = Config::get('General', 'rewriteBase') . $routeDef['pattern'];
             $variables = &$routeDef['variables'];
             $parameters = array();
 
@@ -92,7 +91,7 @@ class Request
             break;
         }
 
-        if (!$matchFound && $requestURI !== Data::GetItem('APP_REWRITE_BASE')) {
+        if (!$matchFound && $requestURI !== Config::get('General', 'rewriteBase')) {
             throw new NotFoundException('No route defined for URI ' . $requestURI);
         }
     }

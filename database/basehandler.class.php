@@ -3,7 +3,7 @@
 namespace WebFW\Database;
 
 use WebFW\Core\Exception;
-use Config\Specifics\Data;
+use WebFW\Core\Config;
 
 abstract class BaseHandler
 {
@@ -34,14 +34,14 @@ abstract class BaseHandler
         }
 
         if ($instanceID === null) {
-            $dbUsername = Data::GetItem('DB_USERNAME');
-            $dbPassword = Data::GetItem('DB_PASSWORD');
-            $dbName = Data::GetItem('DB_NAME');
-            $dbHost = Data::GetItem('DB_HOST');
-            $dbPort = Data::GetItem('DB_PORT');
+            $dbUsername = Config::get('Database', 'username');
+            $dbPassword = Config::get('Database', 'password');
+            $dbName = Config::get('Database', 'databaseName');
+            $dbHost = Config::get('Database', 'serverHost');
+            $dbPort = Config::get('Database', 'serverPort');
             if ($dbName !== null) {
                 /** @var $handler BaseHandler */
-                $handler = Data::GetItem('DB_HANDLER');
+                $handler = Config::get('Database', 'handlerClass');
                 if (class_exists($handler) && is_subclass_of($handler, '\\WebFW\\Database\\BaseHandler')) {
                     $instanceID = $handler::createNewConnection($dbUsername, $dbPassword, $dbName, $dbHost, $dbPort);
                 } else {

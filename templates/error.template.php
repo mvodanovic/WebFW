@@ -7,7 +7,7 @@
         <div style="border: 3px solid red; margin-top: 20px; overflow-x: auto; padding-left: 10px; padding-right: 10px; background-color: #F9966B; font-size: 0.9em; -moz-border-radius: 15px; border-radius: 15px;">
             <h1><?=$caption; ?></h1>
         </div>
-<?php if (\Config\Specifics\Data::GetItem('SHOW_DEBUG_INFO') === true): ?>
+<?php if (\WebFW\Core\Config::get('Debug', 'showInfo') === true): ?>
         <div style="white-space: nowrap; font-family: 'Courier New', monospace; overflow-x: auto; border: 3px solid #9E9E9E; background-color: #DEDEDE; padding: 10px; margin-top: 20px; -moz-border-radius: 15px; border-radius: 15px;">
             <h3 style="margin-bottom: 20px;"><?php echo get_class($this); ?></h3>
             <div><span style="font-weight: bold;">At:</span> <?php echo htmlspecialchars($this->file), ':', $this->line; ?></div>

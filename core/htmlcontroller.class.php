@@ -4,7 +4,6 @@ namespace WebFW\Core;
 
 use WebFW\Externals\PHPTemplate;
 use WebFW\Core\Framework;
-use Config\Specifics\Data;
 
 abstract class HTMLController extends Controller
 {
@@ -14,16 +13,6 @@ abstract class HTMLController extends Controller
     protected $headHTML = array();
     protected $headJS = array();
     protected $headCSS = array();
-
-    public function __construct()
-    {
-        parent::__construct();
-
-        $value = Data::GetItem('DEFAULT_BASE_TEMPLATE');
-        if ($value !== null) {
-            $this->baseTemplate = $value;
-        }
-    }
 
     public function getTitle()
     {

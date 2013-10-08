@@ -2,7 +2,6 @@
 
 namespace WebFW\Core;
 
-use Config\Specifics\Data;
 use ReflectionClass;
 
 class Router
@@ -53,7 +52,7 @@ class Router
     protected function getURLForRouteDef($routeDef, $controller, $action, $namespace, $params, $amp, $encodeFunction)
     {
         $controllerClass = $namespace . $controller;
-        $pattern = Data::GetItem('APP_REWRITE_BASE') . $routeDef['pattern'];
+        $pattern = Config::get('General', 'rewriteBase') . $routeDef['pattern'];
         $route = &$routeDef['route'];
         $variables = &$routeDef['variables'];
         if ($params === null) {
@@ -154,10 +153,10 @@ class Router
 
         /// For the remaining parameters which weren't injected, append the in the query string
         $urlParams = array();
-        if ($controller !== null && $controller !== Data::GetItem('DEFAULT_CTL')) {
+        if ($controller !== null && $controller !== Config::get('General', 'defaultController')) {
             $urlParams[] = 'ctl=' . $encodeFunction($controller);
         }
-        if ($namespace !== null && $namespace !== Data::GetItem('DEFAULT_CTL_NS')) {
+        if ($namespace !== null && $namespace !== Config::get('General', 'defaultControllerNamespace')) {
             $urlParams[] = 'ns=' . $encodeFunction($namespace);
         }
         if ($action !== null && $action !== $controllerClass::DEFAULT_ACTION_NAME) {
@@ -193,10 +192,10 @@ class Router
 
         /// Setup empty parameters to their default values
         if ($controller === null) {
-            $controller = Data::GetItem('DEFAULT_CTL');
+            $controller = Config::get('General', 'defaultController');
         }
         if ($namespace === null) {
-            $namespace = Data::GetItem('DEFAULT_CTL_NS');
+            $namespace = Config::get('General', 'defaultControllerNamespace');
         }
         $controllerClass = $namespace . $controller;
         if ($action === null) {
@@ -213,10 +212,10 @@ class Router
 
         /// Fallback, build the URL by appending parameters in the query string
         $urlParams = array();
-        if ($controller !== Data::GetItem('DEFAULT_CTL')) {
+        if ($controller !== Config::get('General', 'defaultController')) {
             $urlParams[] = 'ctl=' . $encodeFunction($controller);
         }
-        if ($namespace !== Data::GetItem('DEFAULT_CTL_NS')) {
+        if ($namespace !== Config::get('General', 'defaultControllerNamespace')) {
             $urlParams[] = 'ns=' . $encodeFunction($namespace);
         }
         if ($action !== $controllerClass::DEFAULT_ACTION_NAME) {
@@ -232,7 +231,7 @@ class Router
             }
         }
 
-        $url = Data::GetItem('APP_REWRITE_BASE');
+        $url = Config::get('General', 'rewriteBase');
         if (!empty($urlParams)) {
             $url .= '?' . implode($amp, $urlParams);
         }
