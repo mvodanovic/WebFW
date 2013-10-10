@@ -11,6 +11,8 @@ final class Framework
 
     public static function Start()
     {
+        Request::handleIncomingRedirection();
+
         Config::init();
 
         if (Config::get('Debug', 'errorReporting') !== null) {

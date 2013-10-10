@@ -7,4 +7,7 @@ RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule ^.*$ index.php [NS,QSA,L]
 
-ErrorDocument 404 /404.html
+ErrorDocument 400 /
+ErrorDocument 401 /
+ErrorDocument 404 /
+ErrorDocument 500 /

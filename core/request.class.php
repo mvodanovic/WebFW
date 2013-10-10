@@ -2,7 +2,10 @@
 
 namespace WebFW\Core;
 
+use WebFW\Core\Exception;
 use WebFW\Core\Exceptions\NotFoundException;
+use WebFW\Core\Exceptions\BadRequestException;
+use WebFW\Core\Exceptions\UnauthorizedException;
 
 class Request
 {
@@ -19,6 +22,27 @@ class Request
         }
 
         $this->parseRequest();
+    }
+
+    public static function handleIncomingRedirection()
+    {
+        /// Don't try to match the request if it hasn't been redirected
+        if (!array_key_exists('REDIRECT_STATUS', $_SERVER)) {
+            return;
+        }
+
+        switch ($_SERVER['REDIRECT_STATUS']) {
+            case '200':
+                return;
+            case '400':
+                throw new BadRequestException('400 Bad Request');
+            case '401':
+                throw new UnauthorizedException('401 Unauthorized');
+            case '404':
+                throw new NotFoundException('404 Not Found');
+            default:
+                throw new Exception('500 Internal Server Error');
+        }
     }
 
     /**
