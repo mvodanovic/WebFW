@@ -152,7 +152,7 @@ abstract class ItemController extends Controller implements iValidate
     protected function initEdit()
     {
         $this->init();
-        $this->template = \WebFW\Config\FW_PATH . '/cms/templates/edit';
+        $this->template = \WebFW\Core\FW_PATH . '/cms/templates/edit';
     }
 
     protected function afterInitEdit()

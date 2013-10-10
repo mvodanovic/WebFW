@@ -65,7 +65,7 @@ abstract class Component
     {
         $templateDirectory = explode('\\', get_class($this));
         $templateDirectory = strtolower(end($templateDirectory));
-        $templateDirectory = \WebFW\Config\CMP_TEMPLATE_PATH
+        $templateDirectory = \WebFW\Core\CMP_TEMPLATE_PATH
             . DIRECTORY_SEPARATOR
             . $templateDirectory
             . DIRECTORY_SEPARATOR;

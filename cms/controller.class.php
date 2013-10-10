@@ -37,7 +37,7 @@ abstract class Controller extends HTMLController
 
     protected function init()
     {
-        $this->baseTemplate = \WebFW\Config\FW_PATH . '/cms/templates/base';
+        $this->baseTemplate = \WebFW\Core\FW_PATH . '/cms/templates/base';
         $this->setPageTitle();
     }
 

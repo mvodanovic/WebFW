@@ -35,7 +35,7 @@ final class Framework
      * @throws Exception When an error occurs
      * @internal
      */
-    public static function Start()
+    public static function start()
     {
         Config::init();
 
@@ -59,7 +59,7 @@ final class Framework
             $ctl = Config::get('General', 'defaultController');
         }
         if ($ctl === null || $ctl === '') {
-            require_once \WebFW\Config\FW_PATH . '/templates/helloworld.template.php';
+            require_once \WebFW\Core\FW_PATH . '/core/templates/helloworld.template.php';
             return;
         }
 
@@ -83,7 +83,7 @@ final class Framework
         /** @var $controller Controller */
         $controller = new $ctl();
         if (!($controller instanceof Controller)) {
-            throw new Exception('Class ' . $ctl . 'is not an instance of WebFW\\Core\\Component.');
+            throw new Exception('Class ' . $ctl . 'is not an instance of WebFW\\Core\\Controller.');
         }
         $controller->executeAction();
         $controller->processOutput();
@@ -129,7 +129,7 @@ final class Framework
     private function __construct() {}
 
     /**
-     * Class cannot be cloned,
+     * Class cannot be cloned.
      */
     private function __clone() {}
 }

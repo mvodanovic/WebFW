@@ -199,7 +199,7 @@ abstract class ListController extends ItemController
     protected function initList()
     {
         $this->init();
-        $this->template = \WebFW\Config\FW_PATH . '/cms/templates/list';
+        $this->template = \WebFW\Core\FW_PATH . '/cms/templates/list';
         $this->filter += $this->getFilterValues();
 
         $page = Request::getInstance()->p;

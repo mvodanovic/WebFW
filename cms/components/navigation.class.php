@@ -111,6 +111,6 @@ class Navigation extends Component
         parent::setDefaultParams();
 
         $this->setParam('template', 'navigation');
-        $this->setParam('templateDirectory', \WebFW\Config\FW_PATH . '/cms/templates/components/');
+        $this->setParam('templateDirectory', \WebFW\Core\FW_PATH . '/cms/templates/components/');
     }
 }

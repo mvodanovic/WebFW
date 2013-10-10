@@ -8,7 +8,7 @@ class Database
 
     public function getCreateQueries()
     {
-        $basePath = \WebFW\Config\BASE_PATH;
+        $basePath = \WebFW\Core\BASE_PATH;
         $list = array();
         if (file_exists($basePath) && is_dir($basePath)) {
             $list = $this->getTableList($basePath);
@@ -25,7 +25,7 @@ class Database
                 continue;
             }
             $entry = $directoryPath . DIRECTORY_SEPARATOR . $entry;
-            if ($entry === \WebFW\Config\PUBLIC_PATH) {
+            if ($entry === \WebFW\Core\PUBLIC_PATH) {
                 continue;
             }
             if (is_dir($entry)) {

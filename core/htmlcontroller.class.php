@@ -48,7 +48,7 @@ abstract class HTMLController extends Controller
                 );
             }
 
-            $templateDir = \WebFW\Config\BASE_TEMPLATE_PATH . DIRECTORY_SEPARATOR;
+            $templateDir = \WebFW\Core\BASE_TEMPLATE_PATH . DIRECTORY_SEPARATOR;
 
             try {
                 $template = new PHPTemplate($this->baseTemplate . '.template.php', $templateDir);

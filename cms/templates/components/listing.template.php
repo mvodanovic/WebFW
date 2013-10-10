@@ -10,7 +10,7 @@ use WebFW\Core\ArrayAccess;
     '\\WebFW\\Core\\Components\\',
     array(
         'template' => 'paginator',
-        'templateDirectory' => \WebFW\Config\FW_PATH . '/cms/templates/components/',
+        'templateDirectory' => \WebFW\Core\FW_PATH . '/cms/templates/components/',
         'page' => $page,
         'totalItemsCount' => $totalCount,
         'itemsPerPage' => $itemsPerPage,

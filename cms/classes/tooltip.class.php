@@ -27,7 +27,7 @@ class Tooltip
                 break;
         }
 
-        $tpl = new PHPTemplate(\WebFW\Config\FW_PATH . '/cms/templates/tooltip.template.php');
+        $tpl = new PHPTemplate(\WebFW\Core\FW_PATH . '/cms/templates/tooltip.template.php');
         $tpl->set('message', $message);
         $tpl->set('imageHTML', $imageHTML);
         $tpl->set('class', $class);

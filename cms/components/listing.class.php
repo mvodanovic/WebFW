@@ -65,7 +65,7 @@ class Listing extends Component
         parent::setDefaultParams();
 
         $this->setParam('template', 'listing');
-        $this->setParam('templateDirectory', \WebFW\Config\FW_PATH . '/cms/templates/components/');
+        $this->setParam('templateDirectory', \WebFW\Core\FW_PATH . '/cms/templates/components/');
     }
 
     public function getRowButton(ListRowAction &$action, &$listRow)

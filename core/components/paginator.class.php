@@ -60,7 +60,7 @@ class Paginator extends Component
             $higherPages[$i] = $this->getPageURL($i);
         }
 
-        $this->templateDirectory = \WebFW\Config\FW_PATH . '/core/templates/';
+        $this->templateDirectory = \WebFW\Core\FW_PATH . '/core/templates/';
         $this->template = 'paginator';
         $this->setTplVar('firstPage', $this->getFirstPageURL());
         $this->setTplVar('lowerPages', $lowerPages);

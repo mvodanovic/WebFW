@@ -67,7 +67,7 @@ abstract class Controller
 
         $templateDir = explode('\\', $this->className);
         $templateDir = strtolower(end($templateDir));
-        $templateDir = \WebFW\Config\CTL_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDir . DIRECTORY_SEPARATOR;
+        $templateDir = \WebFW\Core\CTL_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDir . DIRECTORY_SEPARATOR;
 
         try {
             $template = new PHPTemplate($this->template . '.template.php', $templateDir);

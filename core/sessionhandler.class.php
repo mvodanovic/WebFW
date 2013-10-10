@@ -27,6 +27,6 @@ class SessionHandler
 
     protected static function getSessionKey($key)
     {
-        return \WebFW\Config\APP_ID . '-' .  $key;
+        return Config::get('General', 'projectName') . '-' .  $key;
     }
 }

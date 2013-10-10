@@ -35,8 +35,8 @@ class CMSLogin extends HTMLController
             $this->setRedirectUrl($url, true);
         }
 
-        $this->baseTemplate = \WebFW\Config\FW_PATH . '/cms/templates/base';
-        $this->template = \WebFW\Config\FW_PATH . '/cms/templates/login';
+        $this->baseTemplate = \WebFW\Core\FW_PATH . '/cms/templates/base';
+        $this->template = \WebFW\Core\FW_PATH . '/cms/templates/login';
         $this->pageTitle = 'CMS Login' . Controller::TITLE_SUFFIX;
         $this->setTplVar('errorMessage', null);
         $this->setTplVar('login', null);

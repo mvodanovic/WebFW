@@ -116,7 +116,7 @@ class Exception extends \Exception
             return;
         }
 
-        include \WebFW\Config\FW_PATH . '/templates/error.template.php';
+        include \WebFW\Core\FW_PATH . '/core/templates/error.template.php';
     }
 
     /**

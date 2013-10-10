@@ -60,6 +60,6 @@ class UserActions extends Component
         parent::setDefaultParams();
 
         $this->setParam('template', 'useractions');
-        $this->setParam('templateDirectory', \WebFW\Config\FW_PATH . '/cms/templates/components/');
+        $this->setParam('templateDirectory', \WebFW\Core\FW_PATH . '/cms/templates/components/');
     }
 }
