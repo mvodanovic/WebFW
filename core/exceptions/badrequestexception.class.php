@@ -4,10 +4,27 @@ namespace WebFW\Core\Exceptions;
 
 use WebFW\Core\Exception;
 
+/**
+ * Class BadRequestException
+ *
+ * Exception intended to be thrown when a bad request has been made.
+ * This exception has it's code automatically set to 400.
+ *
+ * @package WebFW\Core\Exceptions
+ * @see Exception
+ */
 class BadRequestException extends Exception
 {
-    public function __construct($message, \Exception $e = null)
+    /**
+     * Constructor.
+     *
+     * @param string|null $message
+     * @param \Exception|null $e
+     * @param bool $displayResponseBody
+     * @see Exception::__construct()
+     */
+    public function __construct($message = null, \Exception $e = null, $displayResponseBody = true)
     {
-        parent::__construct($message, 400, $e);
+        parent::__construct($message, 400, $e, $displayResponseBody);
     }
 }

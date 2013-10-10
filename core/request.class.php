@@ -4,14 +4,38 @@ namespace WebFW\Core;
 
 use WebFW\Core\Exception;
 use WebFW\Core\Exceptions\NotFoundException;
-use WebFW\Core\Exceptions\BadRequestException;
-use WebFW\Core\Exceptions\UnauthorizedException;
 
+/**
+ * Class Request
+ *
+ * Handles the request received from the client.
+ * Is a singleton.
+ *
+ * @package WebFW\Core
+ */
 class Request
 {
+    /**
+     * Request values reference.
+     *
+     * @var array
+     * @internal
+     */
     protected $values = array();
-    protected static $instance;
 
+    /**
+     * Instance of the Request class.
+     *
+     * @var Request
+     * @internal
+     */
+    protected static $instance = null;
+
+    /**
+     * Constructor.
+     *
+     * @internal
+     */
     protected function __construct()
     {
         $this->values = &$_REQUEST;
@@ -24,6 +48,12 @@ class Request
         $this->parseRequest();
     }
 
+    /**
+     * If the request is a 4xx or 5xx error redirect, handles it with an appropriate exception.
+     *
+     * @throws Exception The exception based on the incoming redirect type
+     * @internal
+     */
     public static function handleIncomingRedirection()
     {
         /// Don't try to match the request if it hasn't been redirected
@@ -31,21 +61,14 @@ class Request
             return;
         }
 
-        switch ($_SERVER['REDIRECT_STATUS']) {
-            case '200':
-                return;
-            case '400':
-                throw new BadRequestException('400 Bad Request');
-            case '401':
-                throw new UnauthorizedException('401 Unauthorized');
-            case '404':
-                throw new NotFoundException('404 Not Found');
-            default:
-                throw new Exception('500 Internal Server Error');
+        if ($_SERVER['REDIRECT_STATUS'] >= 400 && $_SERVER['REDIRECT_STATUS'] <= 599) {
+            throw new Exception(null, $_SERVER['REDIRECT_STATUS']);
         }
     }
 
     /**
+     * Returns a singleton instance of the Request class.
+     *
      * @return Request
      */
     public static function getInstance()
@@ -57,6 +80,12 @@ class Request
         return static::$instance;
     }
 
+    /**
+     * Parses the request and extracts parameters from it based on defined patterns.
+     *
+     * @throws Exceptions\NotFoundException If the route cannot be matched to any known pattern
+     * @internal
+     */
     protected function parseRequest()
     {
         $requestURI = $_SERVER['REQUEST_URI'];
@@ -120,16 +149,34 @@ class Request
         }
     }
 
+    /**
+     * Checks if a request value with the given key exists.
+     *
+     * @param string $key The key to check the request for
+     * @return bool True if the key exists, false otherwise
+     */
     public function __isset($key)
     {
         return array_key_exists($key, $this->values);
     }
 
+    /**
+     * Gets the request value with the given key.
+     *
+     * @param string $key The key to get the value for
+     * @return mixed|null The value, or null if the key doesn't exist
+     */
     public function __get($key)
     {
         return isset($this->values[$key]) ? $this->values[$key] : null;
     }
 
+    /**
+     * Gets the request value for the given key.
+     *
+     * @param string $key The key to set the value for
+     * @param mixed|null $value The value to be set
+     */
     public function __set($key, $value = null)
     {
 
@@ -142,21 +189,61 @@ class Request
         }
     }
 
-    public function getValue($name)
+    /**
+     * Unsets the value with the given key.
+     *
+     * @param string $key
+     */
+    public function __unset($key)
     {
-        return $this->__get($name);
+        if (array_key_exists($key, $this->values)) {
+            unset($this->values[$key]);
+        }
     }
 
-    public function setValue($name, $value)
+    /**
+     * Alias of __get().
+     *
+     * @param string $key
+     * @return mixed|null
+     * @see __get()
+     * @deprecated
+     */
+    public function getValue($key)
     {
-        $this->__set($name, $value);
+        return $this->__get($key);
     }
 
+    /**
+     * Alias of __set().
+     *
+     * @param string $key
+     * @param mixed|null $value
+     * @see __set()
+     * @deprecated
+     */
+    public function setValue($key, $value = null)
+    {
+        $this->__set($key, $value);
+    }
+
+    /**
+     * Get all the request values.
+     *
+     * @return array The list of key - value pairs of the request
+     */
     public function getValues()
     {
         return $this->values;
     }
 
+    /**
+     * Get a list of request values with a common prefix.
+     *
+     * @param string $prefix The prefix of keys to get values for
+     * @param bool $keepPrefix If set to true, the prefix will be kept, otherwise it will be stripped
+     * @return array Key - value pairs which match the requested criteria
+     */
     public function getValuesWithPrefix($prefix, $keepPrefix = true)
     {
         $prefixedArray = array();
@@ -175,10 +262,15 @@ class Request
         return $prefixedArray;
     }
 
+    /**
+     * Alias of __unset().
+     *
+     * @param $key
+     * @see __unset()
+     * @deprecated
+     */
     public function removeValue($key)
     {
-        if (array_key_exists($key, $this->values)) {
-            unset($this->values[$key]);
-        }
+        $this->__unset($key);
     }
 }

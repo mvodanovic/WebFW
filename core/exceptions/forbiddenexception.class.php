@@ -5,15 +5,15 @@ namespace WebFW\Core\Exceptions;
 use WebFW\Core\Exception;
 
 /**
- * Class NotFoundException
+ * Class ForbiddenException
  *
- * Exception intended to be thrown when the requested resource cannot be found.
- * This exception has it's code automatically set to 404.
+ * Exception intended to be thrown when the user tries to access a resource he doesn't have sufficient privileges for.
+ * This exception has it's code automatically set to 403.
  *
  * @package WebFW\Core\Exceptions
  * @see Exception
  */
-class NotFoundException extends Exception
+class ForbiddenException extends Exception
 {
     /**
      * Constructor.
@@ -25,6 +25,6 @@ class NotFoundException extends Exception
      */
     public function __construct($message, \Exception $e = null, $displayErrorMessage = true)
     {
-        parent::__construct($message, 404, $e, $displayErrorMessage);
+        parent::__construct($message, 403, $e, $displayErrorMessage);
     }
 }

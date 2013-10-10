@@ -2,12 +2,91 @@
 
 namespace WebFW\Core;
 
+/**
+ * Class Exception
+ *
+ * Default exception class used by WebFW.
+ *
+ * @package WebFW\Core
+ */
 class Exception extends \Exception
 {
+    /**
+     * If set to true, log data in debug output will be stylized with HTML.
+     * If set to false, plain-text log will be outputted.
+     * Set through the config file: Debug > useHTMLOutput
+     *
+     * @internal
+     * @var bool
+     */
     protected $htmlOutput = true;
 
-    public function __construct($message, $code = 500, \Exception $e = null)
+    /**
+     * Caption used for displaying the exception.
+     * It will be used in the request header, HTML title and displayed in HTML body as title.
+     * Unlike the exception's $message, this is always visible to users in some way.
+     * It is set automatically using the exception's $code parameter.
+     *
+     * @internal
+     * @var string
+     */
+    protected $caption = null;
+
+    /**
+     * If set to true, response body will filled with data. If set to false, response body will be empty.
+     *
+     * @internal
+     * @var bool
+     */
+    protected $displayResponseBody = true;
+
+    /**
+     * A list of recognized response codes and their matching captions.
+     *
+     * @var array
+     */
+    protected $messages = array(
+        '400' => 'Bad Request',
+        '401' => 'Unauthorized',
+        '402' => 'Payment Required',
+        '403' => 'Forbidden',
+        '404' => 'Not Found',
+        '405' => 'Method Not Allowed',
+        '500' => 'Internal Server Error',
+        '502' => 'Bad Gateway',
+        '503' => 'Service Unavailable',
+        '504' => 'Gateway Timeout',
+    );
+
+    /**
+     * Constructor.
+     * 4xx and 5xx codes are treated as HTTP response codes, otherwise a 500 response code is returned.
+     * Set $displayResponseBody to true if the exception is to be shown to users,
+     * to false if it is to be interpreted by a machine.
+     *
+     * @param string|null $message If left blank, it will be the same as the $caption
+     * @param int $code The error code
+     * @param \Exception|null $e A chained exception, if it exists
+     * @param bool $displayResponseBody Should the response body be displayed or not
+     */
+    public function __construct($message = null, $code = 500, \Exception $e = null, $displayResponseBody = true)
     {
+        if (!array_key_exists((string) $code, $this->messages)) {
+            if ($code > 400 && $code < 500) {
+                $this->caption = '400 ' . $this->messages['400'];
+            } else {
+                $this->caption = '500 ' . $this->messages['500'];
+            }
+        } else {
+            $this->caption = $code . ' ' . $this->messages[(string) $code];
+        }
+
+        if ($message === null) {
+            $message = $this->caption;
+        }
+
+        $this->displayResponseBody = $displayResponseBody;
+
         parent::__construct($message, $code, $e);
 
         $htmlOutput = Config::get('Debug', 'useHTMLOutput');
@@ -16,35 +95,39 @@ class Exception extends \Exception
         }
     }
 
+    /**
+     * If called, will stop further processing and return a response to the client.
+     *
+     * @internal
+     */
     public function ErrorMessage()
     {
-        switch ($this->code) {
-            case 400:
-                header('HTTP/1.1 400 Bad Request');
-                $caption = '400 Bad Request';
-                break;
-            case 401:
-                header('HTTP/1.1 401 Unauthorized');
-                $caption = '401 Unauthorized';
-                break;
-            case 404:
-                header('HTTP/1.1 404 Not Found');
-                $caption = '404 Not Found';
-                break;
-            case 500:
-            default:
-                header('HTTP/1.1 500 Internal Server Error');
-                $caption = '500 Internal Server Error';
-                trigger_error($this->getFile() . ': ' . $this->getLine() . ': ' .  $this->getMessage());
-                break;
+        if ($this->getCode() >= 500 && $this->getCode() <= 599) {
+            trigger_error($this->getFile() . ': ' . $this->getLine() . ': ' .  $this->getMessage());
         }
+
+        header('HTTP/1.1 ' . $this->caption);
+
         while (ob_get_level() > 0) {
             ob_end_clean();
         }
+
+        if (!$this->displayResponseBody) {
+            return;
+        }
+
         include \WebFW\Config\FW_PATH . '/templates/error.template.php';
     }
 
-    public function getDebugBacktrace($escapeStrings = true, $htmlOutput = null)
+    /**
+     * Gets the debug backtrace of the exception.
+     * If $htmlOutput is set to null, it will use the value from the project's configuration.
+     *
+     * @param bool $escapeStrings Should the strings be HTML escaped or not
+     * @param bool|null $htmlOutput Should the list be HTML-formatted or not
+     * @return array List of backtrace items
+     */
+    protected function getDebugBacktrace($escapeStrings = true, $htmlOutput = null)
     {
         if ($htmlOutput === null) {
             $htmlOutput = $this->htmlOutput;
@@ -98,7 +181,15 @@ class Exception extends \Exception
         return $backtrace;
     }
 
-    public function getChainedExceptions($escapeStrings = true, $htmlOutput = null)
+    /**
+     * Gets the list of chained exceptions, including this one.
+     * If $htmlOutput is set to null, it will use the value from the project's configuration.
+     *
+     * @param bool $escapeStrings Should the strings be HTML escaped or not
+     * @param bool|null $htmlOutput Should the list be HTML-formatted or not
+     * @return array List of backtrace items
+     */
+    protected function getChainedExceptions($escapeStrings = true, $htmlOutput = null)
     {
         if ($htmlOutput === null) {
             $htmlOutput = $this->htmlOutput;
