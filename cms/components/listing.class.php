@@ -8,6 +8,7 @@ use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Component;
 use WebFW\Core\Exception;
 use WebFW\CMS\Controller;
+use WebFW\Database\TableGateway;
 
 class Listing extends Component
 {
@@ -68,7 +69,7 @@ class Listing extends Component
         $this->setParam('templateDirectory', \WebFW\Core\FW_PATH . '/cms/templates/components/');
     }
 
-    public function getRowButton(ListRowAction &$action, &$listRow)
+    public function getRowButton(ListRowAction $action, TableGateway $listRow)
     {
         $params = array();
         $handlerFunction = $action->getHandlerFunction();
@@ -83,7 +84,7 @@ class Listing extends Component
                         $params = array();
                         break;
                     }
-                    $params['pk_' . $column] = $listRow[$column];
+                    $params[$column] = $listRow[$column];
                 }
             }
         }

@@ -1,10 +1,16 @@
 <?php
 
 use WebFW\Core\Classes\HTML\Button;
+use WebFW\Core\Classes\HTML\FormStart;
 use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Classes\HTML\Message;
-use WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
-use WebFW\Core\Router;
+
+/** @var $errorMessage string */
+/** @var $loginForm FormStart */
+/** @var $usernameField Input */
+/** @var $passwordField Input */
+/** @var $rememberMeField Input */
+/** @var $loginButton Button */
 
 ?>
 <div class="login_min_height"></div>
@@ -12,22 +18,17 @@ use WebFW\Core\Router;
     <?php if ($errorMessage !== null): ?>
         <?=Message::get($errorMessage, Message::TYPE_ERROR); ?>
     <?php endif; ?>
-    <form method="post" action="<?=Router::getInstance()->URL('CMSLogin', 'doLogin', '\\WebFW\\CMS\\'); ?>">
+    <?=$loginForm->parse(); ?>
     <p>CMS Login</p>
-    <div>
-        <?=Input::get('ctl', 'CMSLogin', 'hidden'); ?>
-        <?=Input::get('action', 'doLogin', 'hidden'); ?>
-        <?=Input::get('ns', '\\WebFW\\CMS\\', 'hidden'); ?>
-    </div>
     <div class="left"><label for="login">Username:</label></div>
-    <div class="right"><?=Input::get('login', $login, 'text', null, 'login'); ?></div>
+    <div class="right"><?=$usernameField->parse(); ?></div>
     <div class="clear"></div>
     <div class="left"><label for="password">Password:</label></div>
-    <div class="right"><?=Input::get('password', null, 'password', null, 'password'); ?></div>
+    <div class="right"><?=$passwordField->parse(); ?></div>
     <div class="clear"></div>
     <div class="left"><label for="remember">Remember me:</label></div>
-    <div class="right"><?=Input::get('remember', null, 'checkbox', null, 'remember'); ?></div>
+    <div class="right"><?=$rememberMeField->parse(); ?></div>
     <div class="clear"></div>
-    <div class="right"><?=Button::get(null, 'Login', BaseHTMLItem::IMAGE_LOGIN, 'submit'); ?></div>
+    <div class="right"><?=$loginButton->parse(); ?></div>
     </form>
 </div>

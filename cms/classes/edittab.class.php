@@ -78,14 +78,19 @@ class EditTab
         return in_array($fieldName, $this->fieldNames);
     }
 
-    public function setValues($values)
+    /**
+     * @param array $values
+     */
+    public function setValues(array $values)
     {
         foreach ($values as $name => $value) {
             foreach ($this->fields as &$fieldRow) {
                 foreach ($fieldRow as &$field) {
+                    /** @var $formItem BaseFormItem */
                     $formItem = &$field['formItem'];
                     if ($formItem->getName() === static::FIELD_PREFIX . $name) {
                         if ($formItem instanceof Input) {
+                            /** @var $formItem Input */
                             if ($formItem->getType() === 'checkbox' && $value === true) {
                                 $formItem->setChecked();
                             } elseif ($formItem->getType() === 'radio') {
@@ -96,6 +101,7 @@ class EditTab
                                 $formItem->setValue($value);
                             }
                         } else {
+                            /** @var $formItem BaseFormItem */
                             $formItem->setValue($value);
                         }
                     }
@@ -103,8 +109,10 @@ class EditTab
             }
 
             foreach ($this->hiddenFields as &$formItem) {
+                /** @var $formItem BaseFormItem */
                 if ($formItem->getName() === static::FIELD_PREFIX . $name) {
                     if ($formItem instanceof Input) {
+                        /** @var $formItem Input */
                         if ($formItem->getType() === 'checkbox' && $value === true) {
                             $formItem->setChecked();
                         } elseif ($formItem->getType() === 'radio') {
@@ -115,6 +123,7 @@ class EditTab
                             $formItem->setValue($value);
                         }
                     } else {
+                        /** @var $formItem BaseFormItem */
                         $formItem->setValue($value);
                     }
                 }
@@ -122,11 +131,15 @@ class EditTab
         }
     }
 
+    /**
+     * @param TableGateway $tableGateway
+     */
     public function setErrors(TableGateway $tableGateway)
     {
         foreach ($this->fields as &$fieldRow) {
             foreach ($fieldRow as &$field) {
                 $formItem = &$field['formItem'];
+                /** @var $formItem BaseFormItem */
                 $fieldName = substr($formItem->getName(), strlen(static::FIELD_PREFIX));
                 $errors = $tableGateway->getValidationErrors($fieldName);
                 if (!empty($errors)) {

@@ -130,7 +130,19 @@ class Navigation extends TreeTableGateway
 
     public function getLink()
     {
-        return Link::get($this->getCaption(), $this->getURL());
+        $options = array(
+            'label' => $this->getCaption(),
+        );
+        if ($this->custom_url !== null) {
+            $options['icons'] = array('primary' => 'ui-icon-extlink');
+        } elseif ($this->controller === null) {
+            $options['icons'] = array('secondary' => 'ui-icon-triangle-1-s');
+        }
+        $link = new Link(null, $this->getURL(), $options);
+        if ($this->custom_url !== null) {
+            $link->addCustomAttribute('target', '_blank');
+        }
+        return $link->parse();
     }
 
     public function getTreeIDList()

@@ -71,7 +71,11 @@ abstract class TreeController extends ListController
 
         /// New
         if (PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
-            $HTMLItem = new Link('Add item', $this->getURL('editItem', false, $buttonFilter, false), Link::IMAGE_ADD);
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-plusthick'),
+                'label' => 'Add item',
+            );
+            $HTMLItem = new Link(null, $this->getURL('editItem', false, $buttonFilter, false), $options);
             $listAction = new ListAction($HTMLItem);
             $this->registerListAction($listAction);
         }
@@ -80,7 +84,11 @@ abstract class TreeController extends ListController
     protected function initListRowActions()
     {
         /// Children
-        $link = new Link(null, null, Link::IMAGE_SEARCH);
+        $options = array(
+            'icons' => array('primary' => 'ui-icon-folder-open'),
+            'text' => false,
+        );
+        $link = new Link(null, null, $options);
         $route = $this->getRoute(null, false);
         $listRowAction = new ListRowAction($link, $route);
         $listRowAction->setHandlerFunction('listRowHandlerChildren');
@@ -88,8 +96,12 @@ abstract class TreeController extends ListController
 
         /// Delete
         if (PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
-            $link = new Link(null, null, Link::IMAGE_DELETE);
-            $link->addCustomAttribute('onclick', "return confirm('Item will be deleted.\\nAre you sure?');");
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-trash'),
+                'text' => false,
+            );
+            $link = new Link(null, null, $options);
+            $link->addEvent('click', 'confirmAction', array('message' => "Item will be deleted.\nAre you sure?"));
             $route = $this->getRoute('deleteItem');
             $listRowAction = new ListRowAction($link, $route);
             $listRowAction->setHandlerFunction('listRowHandlerDelete');
@@ -98,7 +110,11 @@ abstract class TreeController extends ListController
 
         /// Edit
         if (PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
-            $link = new Link(null, null, Link::IMAGE_EDIT);
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-pencil'),
+                'text' => false,
+            );
+            $link = new Link(null, null, $options);
             $route = $this->getRoute('editItem');
             $listRowAction = new ListRowAction($link, $route);
             $this->registerListRowAction($listRowAction);
@@ -106,7 +122,11 @@ abstract class TreeController extends ListController
 
         /// Add
         if (PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
-            $link = new Link(null, null, Link::IMAGE_ADD);
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-plusthick'),
+                'text' => false,
+            );
+            $link = new Link(null, null, $options);
             $route = $this->getRoute('editItem');
             $listRowAction = new ListRowAction($link, $route);
             $listRowAction->setHandlerFunction('listRowHandlerAdd');
@@ -120,26 +140,45 @@ abstract class TreeController extends ListController
 
         /// Save
         if (empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
-            $HTMLItem = new Button(null, 'Save new', Link::IMAGE_SAVE, 'submit');
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-disk'),
+                'label' => 'Save new',
+            );
+            $HTMLItem = new Button(null, 'submit', $options);
             $editAction = new EditAction($HTMLItem);
             $this->registerEditAction($editAction);
         } elseif (PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
-            $HTMLItem = new Button(null, 'Update', Link::IMAGE_SAVE, 'submit');
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-disk'),
+                'label' => 'Update',
+            );
+            $HTMLItem = new Button(null, 'submit', $options);
             $editAction = new EditAction($HTMLItem);
             $this->registerEditAction($editAction);
         }
 
         /// Cancel
-        $HTMLItem = new Link('Cancel', $this->getURL(null, false, $this->treeFilter, false), Link::IMAGE_CANCEL);
-        $HTMLItem->addCustomAttribute('onclick', "return confirm('Any unsaved changes will be lost.\\nAre you sure?');");
+        $options = array(
+            'icons' => array('primary' => 'ui-icon-cancel'),
+            'label' => 'Cancel',
+        );
+        $HTMLItem = new Link(null, $this->getURL(null, false, $this->treeFilter, false), $options);
         $editAction = new EditAction($HTMLItem);
         $this->registerEditAction($editAction);
 
         /// Delete
         if (!empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
             if ($this->tableGateway->getChildrenNodeCount() === 0) {
-                $HTMLItem = new Link('Delete', $this->getURL('deleteItem', true, null, false), Link::IMAGE_DELETE);
-                $HTMLItem->addCustomAttribute('onclick', "return confirm('Item will be deleted.\\nAre you sure?');");
+                $options = array(
+                    'icons' => array('primary' => 'ui-icon-trash'),
+                    'label' => 'Delete',
+                );
+                $HTMLItem = new Link(null, $this->getURL('deleteItem', true, null, false), $options);
+                $HTMLItem->addEvent(
+                    'click',
+                    'confirmAction',
+                    array('message' => "Item will be deleted.\nAre you sure?")
+                );
                 $editAction = new EditAction($HTMLItem);
                 $editAction->makeRightAligned();
                 $this->registerEditAction($editAction);

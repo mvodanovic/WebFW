@@ -28,6 +28,7 @@ abstract class ItemController extends Controller implements iValidate
     protected $editActions = array();
     protected $editForm = null;
 
+    /** @var TableGateway */
     protected $tableGateway = null;
     protected $unsavedChangesExistMessage = 'Unsaved changes exist. Are you sure you want to leave?';
 
@@ -77,6 +78,7 @@ abstract class ItemController extends Controller implements iValidate
         $this->initEditActions();
 
         foreach ($this->editTabs as &$tab) {
+            /** @var $tab EditTab */
             $tab->setValues($this->tableGateway->getValues(true));
             $tab->setErrors($this->tableGateway);
         }
@@ -116,17 +118,19 @@ abstract class ItemController extends Controller implements iValidate
         }
 
         foreach ($this->editTabs as &$tab) {
+            /** @var $tab EditTab */
             foreach ($tab->getFields() as $fieldRow) {
                 foreach ($fieldRow as &$field) {
-                    if ($field['formItem'] instanceof BaseFormItem) {
-                        $formItemName = $field['formItem']->getName();
+                    $formItem = &$field['formItem'];
+                    if ($formItem instanceof BaseFormItem) {
+                        $formItemName = $formItem->getName();
                         $value = Request::getInstance()->$formItemName;
                         $formItemName = substr($formItemName, strlen(EditTab::FIELD_PREFIX));
                         /// If checkbox is left empty, it's value is FALSE, and not NULL.
                         if (
                             $value === null
-                            && $field['formItem'] instanceof Input
-                            && $field['formItem']->getType() == 'checkbox'
+                            && $formItem instanceof Input
+                            && $formItem->getType() == 'checkbox'
                         ) {
                             $value = false;
                         }
@@ -172,7 +176,7 @@ abstract class ItemController extends Controller implements iValidate
         if (empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)
             || PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
             $this->editForm = new FormStart('post', $this->getRoute('saveItem', $this->getPrimaryKeyValues()));
-            $this->editForm->addCustomAttribute('onsubmit', 'return beforeSubmitEdit();');
+            $this->editForm->addEvent('submit', 'beforeSubmitEdit');
         }
     }
 
@@ -182,17 +186,29 @@ abstract class ItemController extends Controller implements iValidate
 
         /// Save
         if (empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
-            $HTMLItem = new Button(null, 'Save new', Link::IMAGE_SAVE, 'submit');
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-disk'),
+                'label' => 'Save new',
+            );
+            $HTMLItem = new Button(null, 'submit', $options);
             $editAction = new EditAction($HTMLItem);
             $this->registerEditAction($editAction);
         } elseif (PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
-            $HTMLItem = new Button(null, 'Update', Link::IMAGE_SAVE, 'submit');
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-disk'),
+                'label' => 'Update',
+            );
+            $HTMLItem = new Button(null, 'submit', $options);
             $editAction = new EditAction($HTMLItem);
             $this->registerEditAction($editAction);
         }
 
         /// Cancel
-        $HTMLItem = new Link('Cancel', $this->getURL(null, false, null, false), Link::IMAGE_CANCEL);
+        $options = array(
+            'icons' => array('primary' => 'ui-icon-cancel'),
+            'label' => 'Cancel',
+        );
+        $HTMLItem = new Link(null, $this->getURL(null, false, null, false), $options);
         $editAction = new EditAction($HTMLItem);
         $this->registerEditAction($editAction);
     }

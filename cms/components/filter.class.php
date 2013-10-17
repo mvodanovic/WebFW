@@ -2,33 +2,49 @@
 
 namespace WebFW\CMS\Components;
 
+use WebFW\Core\Classes\HTML\Button;
+use WebFW\Core\Classes\HTML\FormStart;
 use WebFW\Core\Component;
 use WebFW\Core\Exception;
-use WebFW\CMS\Controller;
+use WebFW\CMS\ListController;
 use WebFW\Core\Router;
 
 class Filter extends Component
 {
     public function execute()
     {
-        if (!($this->ownerObject instanceof Controller)) {
-            throw new Exception('Owner must be an instance of \\WebFW\\CMS\\Controller');
+        /** @var $ownerObject ListController */
+        $ownerObject = $this->ownerObject;
+
+        if (!($ownerObject instanceof ListController)) {
+            throw new Exception('Owner must be an instance of \\WebFW\\CMS\\ListController');
         }
 
-        $filters = $this->ownerObject->getListFilters();
-        $ctl = $this->ownerObject->getName();
-        $ns = $this->ownerObject->getNamespace();
+        $filters = $ownerObject->getListFilters();
+        $ctl = $ownerObject->getName();
+        $ns = $ownerObject->getNamespace();
 
         if (empty($filters)) {
             $this->useTemplate = false;
             return;
         }
 
+        $params = array();
+        if ($ownerObject->isPopup()) {
+            $params['popup'] = '1';
+        }
+
+        $form = new FormStart('get', Router::getInstance()->URL($ctl, 'listItems', $ns, $params));
+
+        $options = array(
+            'icons' => array('primary' => 'ui-icon-search'),
+            'label' => 'Filter',
+        );
+        $submitButton = new Button(null, 'submit', $options);
+
         $this->setTplVar('filters', $filters);
-        $this->setTplVar('targetURL', Router::getInstance()->URL($ctl, 'listItems', $ns));
-        $this->setTplVar('ctl', $ctl);
-        $this->setTplVar('ns', $ns);
-        $this->setTplVar('action', 'listItems');
+        $this->setTplVar('form', $form);
+        $this->setTplVar('submitButton', $submitButton);
     }
 
     protected function setDefaultParams()

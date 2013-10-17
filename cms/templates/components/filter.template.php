@@ -1,12 +1,16 @@
 <?php
 
+use WebFW\Core\Classes\HTML\FormStart;
 use WebFW\Core\Classes\HTML\Button;
-use WebFW\Core\Classes\HTML\Input;
+
+/** @var $form FormStart */
+/** @var $filters array */
+/** @var $submitButton Button */
 
 ?>
 
 <div class="filter">
-    <form method="get" action="<?=$targetURL; ?>">
+    <?=$form->parse(); ?>
         <ul>
             <?php foreach ($filters as &$filterDef): ?>
             <li>
@@ -19,10 +23,7 @@ use WebFW\Core\Classes\HTML\Input;
             </li>
             <?php endforeach; ?>
             <li>
-                <?=Input::get('ctl', $ctl, 'hidden'); ?>
-                <?=Input::get('ns', $ns, 'hidden'); ?>
-                <?=Input::get('action', $action, 'hidden'); ?>
-                <?=Button::get(null, 'Filter', Button::IMAGE_SEARCH, 'submit'); ?>
+                <?=$submitButton->parse(); ?>
             </li>
         </ul>
     </form>

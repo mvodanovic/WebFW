@@ -2,8 +2,6 @@
 
 namespace WebFW\Core\Classes\HTML\Base;
 
-use WebFW\Core\Classes\HTML\Tooltip;
-
 abstract class BaseHTMLItem
 {
     protected $id = null;
@@ -13,6 +11,7 @@ abstract class BaseHTMLItem
     protected $styles = array();
     protected $innerHTMLElements = array();
     protected $attributes = array();
+    protected $events = array();
     protected $hasClosingTag = true;
     protected $tagName = null;
     protected $skipInnerHTMLDecoration = false;
@@ -71,6 +70,15 @@ abstract class BaseHTMLItem
         $this->styles[$key] = $value;
     }
 
+    public function addEvent($eventName, $functionName, $functionParameters = null)
+    {
+        $this->events[] = array(
+            'eventName' => $eventName,
+            'functionName' => $functionName,
+            'functionParameters' => $functionParameters,
+        );
+    }
+
     public function addCustomAttribute($key, $value)
     {
         $this->attributes[$key] = htmlspecialchars($key) . '="' . htmlspecialchars($value) . '"';
@@ -98,6 +106,11 @@ abstract class BaseHTMLItem
 
         if ($this->id !== null) {
             $this->attributes['id'] = 'id="' . $this->id . '"';
+        }
+
+        if (!empty($this->events)) {
+            $this->attributes['data-events'] = 'data-events="'
+                . htmlspecialchars(json_encode($this->events)) . '"';
         }
 
         foreach ($this->styles as $key => $value) {

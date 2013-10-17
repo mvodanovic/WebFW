@@ -12,6 +12,7 @@ use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Core\Exceptions\BadRequestException;
 use WebFW\Core\Exceptions\UnauthorizedException;
 use WebFW\Core\Exception;
+use WebFW\Core\Route;
 use WebFW\Database\ListFetcher;
 use WebFW\Core\Request;
 use WebFW\Core\Classes\HTML\Link;
@@ -212,7 +213,11 @@ abstract class ListController extends ItemController
     {
         /// New
         if (PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)) {
-            $HTMLItem = new Link('Add item', $this->getURL('editItem', false, null, false), Link::IMAGE_ADD);
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-plusthick'),
+                'label' => 'Add item',
+            );
+            $HTMLItem = new Link(null, $this->getURL('editItem', false, null, false), $options);
             $listAction = new ListAction($HTMLItem);
             $this->registerListAction($listAction);
         }
@@ -222,8 +227,12 @@ abstract class ListController extends ItemController
     {
         /// Delete
         if (PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
-            $link = new Link(null, null, Link::IMAGE_DELETE);
-            $link->addCustomAttribute('onclick', "return confirm('Item will be deleted.\\nAre you sure?');");
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-trash'),
+                'text' => false,
+            );
+            $link = new Link(null, null, $options);
+            $link->addEvent('click', 'confirmAction', array('message' => "Item will be deleted.\nAre you sure?"));
             $route = $this->getRoute('deleteItem');
             $listRowAction = new ListRowAction($link, $route);
             $this->registerListRowAction($listRowAction);
@@ -231,9 +240,24 @@ abstract class ListController extends ItemController
 
         /// Edit
         if (PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
-            $link = new Link(null, null, Link::IMAGE_EDIT);
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-pencil'),
+                'text' => false,
+            );
+            $link = new Link(null, null, $options);
             $route = $this->getRoute('editItem');
             $listRowAction = new ListRowAction($link, $route);
+            $this->registerListRowAction($listRowAction);
+        }
+
+        /// Select
+        if ($this->isPopup === true) {
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-check'),
+                'text' => false,
+            );
+            $link = new Link(null, null, $options, 'reference_select');
+            $listRowAction = new ListRowAction($link, null, true);
             $this->registerListRowAction($listRowAction);
         }
     }
@@ -242,7 +266,11 @@ abstract class ListController extends ItemController
     {
         /// Delete
         if (PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
-            $button = new Button(null, 'Delete', Button::IMAGE_DELETE, 'button', null, 'mass_delete');
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-trash'),
+                'label' => 'Delete',
+            );
+            $button = new Button(null, 'button', $options, 'mass_delete');
             $button->addCustomAttribute('data-confirm', "Selected items will be deleted.\nAre you sure?");
             $button->addCustomAttribute('data-url', $this->getURL('massDeleteItems', false, null, false));
             $listMassAction = new ListMassAction($button);
@@ -279,8 +307,12 @@ abstract class ListController extends ItemController
 
         /// Delete
         if (!empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_DELETE)) {
-            $HTMLItem = new Link('Delete', $this->getURL('deleteItem', true, null, false), Link::IMAGE_DELETE);
-            $HTMLItem->addCustomAttribute('onclick', "return beforeDelete('Item will be deleted.\\nAre you sure?');");
+            $options = array(
+                'icons' => array('primary' => 'ui-icon-trash'),
+                'label' => 'Delete',
+            );
+            $HTMLItem = new Link(null, $this->getURL('deleteItem', true, null, false), $options);
+            $HTMLItem->addEvent('click', 'confirmAction', array('message' => "Item will be deleted.\nAre you sure?"));
             $editAction = new EditAction($HTMLItem);
             $editAction->makeRightAligned();
             $this->registerEditAction($editAction);

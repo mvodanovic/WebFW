@@ -4,6 +4,7 @@ namespace WebFW\CMS;
 
 use WebFW\Core\Classes\HTML\Message;
 use WebFW\Core\Config;
+use WebFW\Core\Request;
 use WebFW\Core\Router;
 use WebFW\CMS\Classes\LoggedUser;
 use WebFW\Core\HTMLController;
@@ -13,6 +14,7 @@ abstract class Controller extends HTMLController
     const TITLE_SUFFIX = ' - WebFW CMS';
 
     protected $messages = array();
+    protected $isPopup = false;
 
     public function __construct()
     {
@@ -21,6 +23,11 @@ abstract class Controller extends HTMLController
         LoggedUser::getInstance()->doLoginByAutoloadCookie();
         if (!LoggedUser::isLoggedIn()) {
             $this->setRedirectUrl(Router::getInstance()->URL('CMSLogin', null, '\\WebFW\\CMS\\', null, false), true);
+        }
+
+        if (Request::getInstance()->popup === '1') {
+            $this->isPopup = true;
+            $this->simpleOutput = true;
         }
 
         $this->addLinkedCSS('/static/css/webfw/reset.css');
@@ -67,5 +74,19 @@ abstract class Controller extends HTMLController
         if (Config::get('General', 'projectName') !== null) {
             $this->pageTitle .= ' - ' . Config::get('General', 'projectName');
         }
+    }
+
+    public function getRoute($action, $params = array())
+    {
+        if ($this->isPopup === true) {
+            $params['popup'] = 1;
+        }
+
+        return parent::getRoute($action, $params);
+    }
+
+    public function isPopup()
+    {
+        return $this->isPopup;
     }
 }

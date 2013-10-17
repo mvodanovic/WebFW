@@ -38,14 +38,21 @@ class TreeBreadcrumbs extends Component
                 $key[EditTab::FIELD_PREFIX . $parentColumn] = $node->$childColumn;
             }
             $url = $this->ownerObject->getURL(null, false, $key, false);
-            $link = new Link($node->getCaption(), $url);
+            $options = array(
+                'label' => $node->getCaption(),
+            );
+            $link = new Link($node->getCaption(), $url, $options);
             $breadcrumbs[] = $link;
 
             $node = $node->getParentNode();
         }
-        $link = new Link('Home', $this->ownerObject->getURL(null, false, null, false));
+        $options = array(
+            'icons' => array('primary' => 'ui-icon-home'),
+            'text' => false,
+        );
+        $link = new Link(null, $this->ownerObject->getURL(null, false, null, false), $options);
         $breadcrumbs[] = $link;
-        $breadcrumbs[0]->addClass('active');
+        $breadcrumbs[0]->addClass('ui-state-focus');
         $breadcrumbs = array_reverse($breadcrumbs);
 
         $this->setTplVar('breadcrumbs', $breadcrumbs);

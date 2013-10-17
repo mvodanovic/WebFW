@@ -1,13 +1,20 @@
 <?php
 
 use WebFW\Core\Framework;
+use WebFW\CMS\Controller;
+
+/**
+ * @var $htmlHead string
+ * @var $htmlBody string
+ * @var $controller Controller
+ */
 
 ?>
 <!DOCTYPE html>
 
 <html>
 <head>
-    <?php echo $htmlHead; ?>
+    <?=$htmlHead; ?>
 </head>
 <body>
     <div class="container">

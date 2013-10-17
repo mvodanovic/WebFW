@@ -22,11 +22,8 @@ a:hover, a:active {text-decoration: none; color: #00dd00;}
 
 
 /* BUTTONS */
-button, a.button {display: inline-block; height: 28px; border: 1px solid #0033ff; background-color: #6699ff; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px; margin: 3px 0; padding: 0;}
-a.button:link, a.button:visited {}
-button:hover, button.active, a.button:hover, a.button.active {background-color: #99ccff}
-button img, a.button img {line-height: 26px; margin: 0px; padding: 2px 5px; vertical-align: middle;}
-button span, a.button span {line-height: 26px; color: #333333; vertical-align: middle; white-space: nowrap; padding: 2px 5px; font-weight: bold; letter-spacing: 1px;}
+.jquery_ui_button {height: 28px; margin: 3px 0; padding: 0;}
+.jquery_ui_button span {line-height: 26px; color: #333333; vertical-align: middle; white-space: nowrap; padding: 2px 5px; font-weight: bold; letter-spacing: 1px;}
 
 
 /* MESSAGES */
@@ -59,10 +56,6 @@ footer div {padding: 0 10px;}
 /* NAVIGATION */
 div.nav {background-color: #99ccff;}
 div.nav ul li {float: left; padding: 0 3px;}
-/*div.nav ul li a.button {background-color: #ffffff;}*/
-div.nav ul li a.button.active {background-color: #99ccff !important;}
-/*div.nav ul li a.button:link, div.container ul.nav li a.button:visited {}*/
-/*div.nav ul li a.button:hover, div.container ul.nav li a.button:active {background-color: #99ccff}*/
 
 
 /* FILTER */
@@ -96,8 +89,9 @@ table.list tfoot tr td div.right span {line-height: 32px;}
 div.editor {background-color: #99ccff; border: 1px solid #0033ff; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;}
 div.editor div.header {border-bottom: 1px solid #0033ff;}
 div.editor div.footer {border-top: 1px solid #0033ff;}
+div.editor div.footer .left {margin-left: 3px;}
+div.editor div.footer .right {margin-right: 3px;}
 div.editor div.header ul li {float: left; padding: 0 3px;}
-div.editor div.header ul li a.active {background-color: #99ccff;}
 div.editor div.body table {width: 100%;}
 div.editor div.body table tr:not(:last-child) {border-bottom: 1px solid #0033ff;}
 div.editor div.body table tr td {padding: 0 5px; vertical-align: middle; line-height: 12px;}

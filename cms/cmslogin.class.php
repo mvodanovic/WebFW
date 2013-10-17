@@ -3,10 +3,15 @@
 namespace WebFW\CMS;
 
 use WebFW\CMS\DBLayer\ListFetchers\Navigation;
+use WebFW\CMS\DBLayer\Navigation as TGNavigation;
+use WebFW\Core\Classes\HTML\Button;
+use WebFW\Core\Classes\HTML\FormStart;
+use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Exception;
 use WebFW\Core\HTMLController;
 use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Core\Exceptions\UnauthorizedException;
+use WebFW\Core\Exceptions\ForbiddenException;
 use WebFW\Core\Request;
 use WebFW\Core\SessionHandler;
 use WebFW\Core\Router;
@@ -21,6 +26,10 @@ class CMSLogin extends HTMLController
         $this->addLinkedCSS('/static/css/webfw/reset.css');
         $this->addLinkedCSS('/static/css/webfw/formalize.css');
         $this->addLinkedCSS('/static/css/webfw/cms.css');
+        $this->addLinkedCSS('/static/css/webfw/jquery-ui-1.10.3.custom.min.css');
+        $this->addLinkedJS('/static/js/webfw/jquery-1.10.2.min.js');
+        $this->addLinkedJS('/static/js/webfw/jquery-ui-1.10.3.custom.min.js');
+        $this->addLinkedJS('/static/js/webfw/cms.js');
         $this->addHeadMeta('Content-Type', 'text/html; charset=UTF-8', 'http-equiv');
     }
 
@@ -30,16 +39,38 @@ class CMSLogin extends HTMLController
         if (LoggedUser::isLoggedIn()) {
             $url = $this->getDefaultURL();
             if ($url === null) {
-                throw new Exception('Cannot find any CMS controllers to redirect to');
+                throw new ForbiddenException('Cannot find any CMS controllers to redirect to');
             }
             $this->setRedirectUrl($url, true);
         }
 
+        $this->setTemplateVariables(null, null);
+
         $this->baseTemplate = \WebFW\Core\FW_PATH . '/cms/templates/base';
         $this->template = \WebFW\Core\FW_PATH . '/cms/templates/login';
         $this->pageTitle = 'CMS Login' . Controller::TITLE_SUFFIX;
-        $this->setTplVar('errorMessage', null);
-        $this->setTplVar('login', null);
+    }
+
+    protected function setTemplateVariables($username, $errorMessage)
+    {
+        $options = array(
+            'icons' => array('primary' => 'ui-icon-key'),
+            'label' => 'Login',
+        );
+        $loginButton = new Button(null, 'submit', $options);
+
+        $loginForm = new FormStart('post', Router::getInstance()->URL('CMSLogin', 'doLogin', '\\WebFW\\CMS\\'));
+
+        $usernameField = new Input('login', $username, 'text', null, 'login');
+        $passwordField = new Input('password', null, 'password', null, 'password');
+        $rememberMeField = new Input('remember', null, 'checkbox', null, 'remember');
+
+        $this->setTplVar('errorMessage', $errorMessage);
+        $this->setTplVar('loginForm', $loginForm);
+        $this->setTplVar('usernameField', $usernameField);
+        $this->setTplVar('passwordField', $passwordField);
+        $this->setTplVar('rememberMeField', $rememberMeField);
+        $this->setTplVar('loginButton', $loginButton);
     }
 
     public function doLogin()
@@ -48,7 +79,7 @@ class CMSLogin extends HTMLController
         if (LoggedUser::isLoggedIn()) {
             $url = $this->getDefaultURL();
             if ($url === null) {
-                throw new Exception('Cannot find any CMS controllers to redirect to');
+                throw new ForbiddenException('Cannot find any CMS controllers to redirect to');
             }
             $this->setRedirectUrl($url, true);
         }
@@ -63,9 +94,9 @@ class CMSLogin extends HTMLController
             switch (true) {
                 case $e instanceof NotFoundException:
                 case $e instanceof UnauthorizedException:
+                case $e instanceof ForbiddenException:
                     $this->execute();
-                    $this->setTplVar('errorMessage', $e->getMessage());
-                    $this->setTplVar('login', $login);
+                    $this->setTemplateVariables($login, $e->getMessage());
                     return;
                 default:
                     throw $e;
@@ -76,7 +107,7 @@ class CMSLogin extends HTMLController
         if ($returnUrl === null) {
             $returnUrl = $this->getDefaultURL();
             if ($returnUrl === null) {
-                throw new Exception('Cannot find any CMS controllers to redirect to');
+                throw new ForbiddenException('Cannot find any CMS controllers to redirect to');
             }
         }
         $this->setRedirectUrl($returnUrl, true);
@@ -103,6 +134,7 @@ class CMSLogin extends HTMLController
         }
 
         foreach ($listFetcher->getList($filter, $sort) as $node) {
+            /** @var $node TGNavigation */
             if ($node->controller !== null && class_exists($node->namespace . $node->controller)) {
                 return $node->getURL();
             }
