@@ -17,10 +17,4 @@ class Textarea extends BaseFormItem
             $this->classes[] = $class;
         }
     }
-
-    public static function get($name = null, $value = null, $class = null, $id = null)
-    {
-        $imageObject = new static($name, $value, $class, $id);
-        return $imageObject->parse();
-    }
 }

@@ -35,7 +35,7 @@ class FormStart extends BaseHTMLItem
                     $paramPair = explode('=', $paramPair);
                     $paramPair[0] = rawurldecode($paramPair[0]);
                     $paramPair[1] = rawurldecode($paramPair[1]);
-                    $hidden = new Input($paramPair[0], $paramPair[1], 'hidden');
+                    $hidden = new Input($paramPair[0], 'hidden', $paramPair[1]);
                     $hiddenDiv .= $hidden->parse();
                 }
                 if ($hiddenDiv !== '') {

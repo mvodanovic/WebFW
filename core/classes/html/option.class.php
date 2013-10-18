@@ -25,10 +25,4 @@ class Option extends BaseFormItem
             $this->addCustomAttribute('value', $value);
         }
     }
-
-    public static function get($selected = false, $value = null, $caption = null, $class = null, $id = null)
-    {
-        $optionObject = new static($selected, $value, $caption, $class, $id);
-        return $optionObject->parse();
-    }
 }

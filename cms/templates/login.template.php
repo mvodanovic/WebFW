@@ -5,7 +5,7 @@ use WebFW\Core\Classes\HTML\FormStart;
 use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Classes\HTML\Message;
 
-/** @var $errorMessage string */
+/** @var $errorMessage Message */
 /** @var $loginForm FormStart */
 /** @var $usernameField Input */
 /** @var $passwordField Input */
@@ -15,8 +15,8 @@ use WebFW\Core\Classes\HTML\Message;
 ?>
 <div class="login_min_height"></div>
 <div class="login">
-    <?php if ($errorMessage !== null): ?>
-        <?=Message::get($errorMessage, Message::TYPE_ERROR); ?>
+    <?php if ($errorMessage instanceof Message): ?>
+        <?=$errorMessage->parse(); ?>
     <?php endif; ?>
     <?=$loginForm->parse(); ?>
     <p>CMS Login</p>

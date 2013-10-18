@@ -48,7 +48,7 @@ class ReferencePicker extends BaseFormItem
         $this->addCustomAttribute('data-url', $this->route->getURL(false));
         $this->addCustomAttribute('data-name', $this->dataName);
         $this->addCustomAttribute('data-value', $this->dataValue);
-        $this->addCustomAttribute('data-caption', 'Test caption');
+        $this->addCustomAttribute('data-caption', '');
         $this->addClass('reference_picker');
 
         parent::prepareHTMLChunks();

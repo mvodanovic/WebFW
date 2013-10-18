@@ -50,7 +50,7 @@ abstract class TreeController extends ListController
             }
 
             if (!$fieldAlreadyDefined) {
-                $firstEditTab->addField(new Input($parentColumn, null, 'hidden'), null);
+                $firstEditTab->addField(new Input($parentColumn, 'hidden'), null);
             }
         }
     }

@@ -7,6 +7,7 @@ use WebFW\CMS\DBLayer\Navigation as TGNavigation;
 use WebFW\Core\Classes\HTML\Button;
 use WebFW\Core\Classes\HTML\FormStart;
 use WebFW\Core\Classes\HTML\Input;
+use WebFW\Core\Classes\HTML\Message;
 use WebFW\Core\Exception;
 use WebFW\Core\HTMLController;
 use WebFW\Core\Exceptions\NotFoundException;
@@ -53,6 +54,10 @@ class CMSLogin extends HTMLController
 
     protected function setTemplateVariables($username, $errorMessage)
     {
+        if ($errorMessage !== null) {
+            $errorMessage = new Message($errorMessage, Message::TYPE_ERROR);
+        }
+
         $options = array(
             'icons' => array('primary' => 'ui-icon-key'),
             'label' => 'Login',
@@ -61,9 +66,9 @@ class CMSLogin extends HTMLController
 
         $loginForm = new FormStart('post', Router::getInstance()->URL('CMSLogin', 'doLogin', '\\WebFW\\CMS\\'));
 
-        $usernameField = new Input('login', $username, 'text');
-        $passwordField = new Input('password', null, 'password');
-        $rememberMeField = new Input('remember', null, 'checkbox');
+        $usernameField = new Input('login', 'text', $username);
+        $passwordField = new Input('password', 'password');
+        $rememberMeField = new Input('remember', 'checkbox');
 
         $this->setTplVar('errorMessage', $errorMessage);
         $this->setTplVar('loginForm', $loginForm);

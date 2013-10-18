@@ -43,7 +43,7 @@ class Navigation extends TreeController
 
         $tab = new EditTab('default');
 
-        $readonly = new Input('strParentNodeCaption', null, 'text');
+        $readonly = new Input('strParentNodeCaption', 'text');
         $readonly->disable();
         $tab->addField(
             $readonly,
@@ -51,37 +51,37 @@ class Navigation extends TreeController
             'Parent node caption.'
         );
         $tab->addField(
-            new Input('caption', null, 'text'),
+            new Input('caption', 'text'),
             'Caption',
             'Caption displayed where needed.'
         );
         $tab->addField(
-            new Input('controller', null, 'text'),
+            new Input('controller', 'text'),
             'Controller',
             "Controller name without the namespace.\nLeave all route fields blank to use the node as a parent node."
         );
         $tab->addField(
-            new Input('namespace', null, 'text'),
+            new Input('namespace', 'text'),
             'Namespace',
             'Full namespace including both the starting and ending slash.'
         );
         $tab->addField(
-            new Input('action', null, 'text'),
+            new Input('action', 'text'),
             'Action',
             'Can be left blank for default action.'
         );
         $tab->addField(
-            new Input('params', null, 'text'),
+            new Input('params', 'text'),
             'URL Parameters',
             "URL GET syntax.\nBlank for no additional parameters."
         );
         $tab->addField(
-            new Input('custom_url', null, 'url'),
+            new Input('custom_url', 'url'),
             'Custom URL',
             "Overrides routing parameters.\nCan be used to link to anything, including external links."
         );
         $tab->addField(
-            new Input('active', null, 'checkbox'),
+            new Input('active', 'checkbox'),
             'Active',
             'If inactive, won\'t be visible as well as all it\'s children.',
             true

@@ -10,7 +10,7 @@ class Input extends BaseFormItem
     protected $hasClosingTag = false;
     protected $type = null;
 
-    public function __construct($name = null, $value = null, $type = null, $class = null)
+    public function __construct($name = null, $type = null, $value = null, $class = null)
     {
         $this->setType($type);
 
@@ -19,12 +19,6 @@ class Input extends BaseFormItem
         if ($class !== null) {
             $this->classes[] = $class;
         }
-    }
-
-    public static function get($name = null, $value = null, $type = null, $class = null, $id = null)
-    {
-        $imageObject = new static($name, $value, $type, $class, $id);
-        return $imageObject->parse();
     }
 
     public function prepareHTMLChunks()

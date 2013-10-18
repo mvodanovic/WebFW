@@ -27,10 +27,4 @@ class Message extends BaseHTMLItem
                 break;
         }
     }
-
-    public static function get($value, $type = null)
-    {
-        $messageObject = new static($value, $type);
-        return $messageObject->parse();
-    }
 }

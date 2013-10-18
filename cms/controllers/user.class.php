@@ -53,33 +53,33 @@ class User extends ListController
         );
 
         $tab->addField(
-            new Input('username', null, 'text'),
+            new Input('username', 'text'),
             'Username',
             'Username, used for login.'
         );
         $tab->addField(
-            new Input('email', null, 'email'),
+            new Input('email', 'email'),
             'E-mail',
             'User\'s email, can also be used for login.',
             false
         );
         $tab->addField(
-            new Input('first_name', null, 'text'),
+            new Input('first_name', 'text'),
             'First name'
         );
         $tab->addField(
-            new Input('last_name', null, 'text'),
+            new Input('last_name', 'text'),
             'Last name',
             null,
             false
         );
         $tab->addField(
-            new Input('password', null, 'password'),
+            new Input('password', 'password'),
             'Password',
             'This field is used only when changing the user\'s password.'
         );
         $tab->addField(
-            new Input('password2', null, 'password'),
+            new Input('password2', 'password'),
             'Confirm password',
             'This field must match the Password field.',
             false
@@ -92,12 +92,12 @@ class User extends ListController
             2
         );
         $tab->addField(
-            new Select('user_type_id', null, $userTypes),
+            new Select('user_type_id', $userTypes),
             'User Type',
             'TODO: Only root users can work with the root user type.'
         );
         $tab->addField(
-            new Input('active', null, 'checkbox'),
+            new Input('active', 'checkbox'),
             'Active',
             'Inactive users cannot log in to CMS.',
             true
@@ -116,10 +116,10 @@ class User extends ListController
             true
         );
 
-        $this->addListFilter(new Select('user_type_id', null, $userTypes), 'User Type');
-        $this->addListFilter(new Input('username', null, 'text'), 'Username');
-        $this->addListFilter(new Input('email', null, 'email'), 'Email');
-        $this->addListFilter(new Select('active', null, ListHelper::getBooleanList(true)), 'Active');
+        $this->addListFilter(new Select('user_type_id', $userTypes), 'User Type');
+        $this->addListFilter(new Input('username', 'text'), 'Username');
+        $this->addListFilter(new Input('email', 'email'), 'Email');
+        $this->addListFilter(new Select('active', ListHelper::getBooleanList(true)), 'Active');
     }
 
     public function processList(&$list)

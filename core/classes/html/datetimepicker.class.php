@@ -8,7 +8,7 @@ class DateTimePicker extends Input
 {
     public function __construct($name = null, $value = null, $settings = null, $class = null)
     {
-        parent::__construct($name, $value, 'text', $class);
+        parent::__construct($name, 'text', $value, $class);
 
         $this->addClass('datetimepicker');
 

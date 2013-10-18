@@ -9,7 +9,7 @@ class Select extends BaseFormItem
     protected $tagName = 'select';
     protected $options = null;
 
-    public function __construct($name = null, $value = null, $options = array(), $class = null)
+    public function __construct($name = null, $options = array(), $value = null, $class = null)
     {
         parent::__construct($name, $value);
 
@@ -28,12 +28,6 @@ class Select extends BaseFormItem
         $this->value = null;
         parent::prepareHTMLChunks();
         $this->value = $value;
-    }
-
-    public static function get($name = null, $value = null, $class = null, $id = null)
-    {
-        $selectObject = new static($name, $value, $class, $id);
-        return $selectObject->parse();
     }
 
     protected function generateOptionsHTML()
