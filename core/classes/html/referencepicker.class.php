@@ -13,13 +13,13 @@ class ReferencePicker extends BaseFormItem
     protected $dataName;
     protected $dataValue;
 
-    public function __construct(Route $route, $name = null, $value = null, $id = null)
+    public function __construct(Route $route, $name = null, $value = null)
     {
         $this->route = $route;
         $this->dataName = $name;
         $this->dataValue = $value;
 
-        parent::__construct(null, null, $id);
+        parent::__construct(null, null);
     }
 
     public function getName()

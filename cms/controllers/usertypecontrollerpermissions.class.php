@@ -50,49 +50,49 @@ class UserTypeControllerPermissions extends ListController
         $userTypes = ListHelper::GetKeyValueList($userTypeLf->getList(null, array('user_type_id' => 'ASC')), 'user_type_id', 'caption');
 
         $tab->addField(
-            new Select('user_type_id', null, $userTypes, null, 'user_type_id'),
+            new Select('user_type_id', null, $userTypes),
             'User Type',
             'Root user types always have all permissions.',
             true
         );
         $tab->addField(
-            new Input('select', null, 'checkbox', null, 'select'),
+            new Input('select', null, 'checkbox'),
             'Select',
             'Ability to see controller\'s item list.',
             false
         );
         $tab->addField(
-            new Input('controller', null, 'text', null, 'controller'),
+            new Input('controller', null, 'text'),
             'Controller',
             'Controller name, without the namespace.',
             true
         );
         $tab->addField(
-            new Input('insert', null, 'checkbox', null, 'insert'),
+            new Input('insert', null, 'checkbox'),
             'Insert',
             'Ability to insert new items using the controller.',
             false
         );
         $tab->addField(
-            new Input('namespace', null, 'text', null, 'namespace'),
+            new Input('namespace', null, 'text'),
             'Namespace',
             'Full namespace, both starting and ending with a slash.',
             true
         );
         $tab->addField(
-            new Input('update', null, 'checkbox', null, 'update'),
+            new Input('update', null, 'checkbox'),
             'Update',
             'Ability to update existing items using the controller.',
             false
         );
         $tab->addField(
-            new Input('custom', null, 'checkbox', null, 'custom'),
+            new Input('custom', null, 'checkbox'),
             'Custom',
             'Unused by default, but can be used for custom access rights.',
             true
         );
         $tab->addField(
-            new Input('delete', null, 'checkbox', null, 'delete'),
+            new Input('delete', null, 'checkbox'),
             'Delete',
             'Ability to delete existing items using the controller.',
             false
@@ -111,9 +111,9 @@ class UserTypeControllerPermissions extends ListController
                 true
             );
 
-        $this->addListFilter(new Select('user_type_id', null, $userTypes, null, 'user_type_id'), 'User Type');
-        $this->addListFilter(new Input('namespace', null, 'text', null, 'namespace'), 'Namespace');
-        $this->addListFilter(new Input('controller', null, 'text', null, 'controller'), 'Controller');
+        $this->addListFilter(new Select('user_type_id', null, $userTypes), 'User Type');
+        $this->addListFilter(new Input('namespace', null, 'text'), 'Namespace');
+        $this->addListFilter(new Input('controller', null, 'text'), 'Controller');
     }
 
     public function processList(&$list)

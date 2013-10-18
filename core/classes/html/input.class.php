@@ -10,11 +10,11 @@ class Input extends BaseFormItem
     protected $hasClosingTag = false;
     protected $type = null;
 
-    public function __construct($name = null, $value = null, $type = null, $class = null, $id = null)
+    public function __construct($name = null, $value = null, $type = null, $class = null)
     {
         $this->setType($type);
 
-        parent::__construct($name, $value, $id);
+        parent::__construct($name, $value);
 
         if ($class !== null) {
             $this->classes[] = $class;
@@ -35,9 +35,7 @@ class Input extends BaseFormItem
             } elseif ($this->value === false) {
                 $this->setValue('0');
             }
-            if ($this->type === 'checkbox') {
-                //$this->addCustomAttribute('checked', 'checked');
-            } else {
+            if ($this->type !== 'checkbox') {
                 $this->addCustomAttribute('value', $this->value);
             }
         }

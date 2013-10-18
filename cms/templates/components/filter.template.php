@@ -15,10 +15,10 @@ use WebFW\Core\Classes\HTML\Button;
             <?php foreach ($filters as &$filterDef): ?>
             <li>
                 <span class="filter">
-                    <?php if ($filterDef['label'] !== null): ?>
-                    <label<?php if($filterDef['id'] !== null): ?> for="<?=$filterDef['id']; ?>"<?php endif; ?>><?=htmlspecialchars($filterDef['label']); ?>:</label>
-                    <?php endif; ?>
-                    <?=$filterDef['formItem']; ?>
+                    <label>
+                        <?=htmlspecialchars($filterDef['label']); ?>:
+                        <?=$filterDef['formItem']; ?>
+                    </label>
                 </span>
             </li>
             <?php endforeach; ?>

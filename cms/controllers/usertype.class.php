@@ -39,13 +39,13 @@ class UserType extends ListController
         $tab = new EditTab('default');
 
         $tab->addField(
-            new Input('caption', null, 'text', null, 'caption'),
+            new Input('caption', null, 'text'),
             'Type caption',
             'Caption of the user type.',
             false
         );
         $tab->addField(
-            new Input('is_root', null, 'checkbox', null, 'is_root'),
+            new Input('is_root', null, 'checkbox'),
             'Is Root',
             "Is this user type the root type.\n Root types have full access rights.",
             true

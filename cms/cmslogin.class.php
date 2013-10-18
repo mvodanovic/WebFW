@@ -61,9 +61,9 @@ class CMSLogin extends HTMLController
 
         $loginForm = new FormStart('post', Router::getInstance()->URL('CMSLogin', 'doLogin', '\\WebFW\\CMS\\'));
 
-        $usernameField = new Input('login', $username, 'text', null, 'login');
-        $passwordField = new Input('password', null, 'password', null, 'password');
-        $rememberMeField = new Input('remember', null, 'checkbox', null, 'remember');
+        $usernameField = new Input('login', $username, 'text');
+        $passwordField = new Input('password', null, 'password');
+        $rememberMeField = new Input('remember', null, 'checkbox');
 
         $this->setTplVar('errorMessage', $errorMessage);
         $this->setTplVar('loginForm', $loginForm);

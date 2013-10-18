@@ -12,7 +12,6 @@ use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Core\Exceptions\BadRequestException;
 use WebFW\Core\Exceptions\UnauthorizedException;
 use WebFW\Core\Exception;
-use WebFW\Core\Route;
 use WebFW\Database\ListFetcher;
 use WebFW\Core\Request;
 use WebFW\Core\Classes\HTML\Link;
@@ -295,7 +294,6 @@ abstract class ListController extends ItemController
         $this->listFilters[] = array(
             'formItem' => $formItem->parse(),
             'label' => $label,
-            'id' => $formItem->getID(),
         );
     }
 

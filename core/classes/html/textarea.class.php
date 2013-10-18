@@ -9,9 +9,9 @@ class Textarea extends BaseFormItem
     protected $tagName = 'textarea';
     protected $skipInnerHTMLDecoration = true;
 
-    public function __construct($name = null, $value = null, $class = null, $id = null)
+    public function __construct($name = null, $value = null, $class = null)
     {
-        parent::__construct($name, $value, $id);
+        parent::__construct($name, $value);
 
         if ($class !== null) {
             $this->classes[] = $class;

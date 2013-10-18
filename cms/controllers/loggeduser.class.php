@@ -31,39 +31,39 @@ class LoggedUser extends ItemController
         $tab = new EditTab('default');
 
         $tab->addField(
-            new Input('username', null, 'text', null, 'username'),
+            new Input('username', null, 'text'),
             'Username',
             'Username, used for login.'
         );
         $tab->addField(
-            new Input('email', null, 'email', null, 'email'),
+            new Input('email', null, 'email'),
             'E-mail',
             'User\'s email, can also be used for login.',
             false
         );
         $tab->addField(
-            new Input('first_name', null, 'text', null, 'first_name'),
+            new Input('first_name', null, 'text'),
             'First name'
         );
         $tab->addField(
-            new Input('last_name', null, 'text', null, 'last_name'),
+            new Input('last_name', null, 'text'),
             'Last name',
             null,
             false
         );
         $tab->addField(
-            new Input('password', null, 'password', null, 'password'),
+            new Input('password', null, 'password'),
             'Password',
             'This field is used only when changing the user\'s password.'
         );
         $tab->addField(
-            new Input('password2', null, 'password', null, 'password2'),
+            new Input('password2', null, 'password'),
             'Confirm password',
             'This field must match the Password field.',
             false
         );
         $tab->addField(
-            new Textarea('address', null, null, 'address'),
+            new Textarea('address'),
             'Address',
             null,
             true,

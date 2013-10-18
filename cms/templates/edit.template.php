@@ -37,10 +37,10 @@
                                         <?php if ($field['rowspan'] > 1): ?> rowspan="<?=$field['rowspan']; ?>"<?php endif; ?>
                                         <?php if ($field['rowspanFix'] === true): ?> class="rowspan_fix"<?php endif; ?>
                                     >
-                                        <label<?php if($field['formItem']->getID() !== null): ?> for="<?=$field['formItem']->getID(); ?>"<?php endif; ?>>
-                                            <?=htmlspecialchars($field['label']); ?>:
-                                        </label><br \>
-                                        <?=$field['formItem']->parse(); ?>
+                                        <label>
+                                            <?=htmlspecialchars($field['label']); ?>:<br \>
+                                            <?=$field['formItem']->parse(); ?>
+                                        </label>
                                         <?=array_key_exists('description', $field) ? $field['description'] : ''; ?>
                                         <?=array_key_exists('error', $field) ? $field['error'] : ''; ?>
                                     </td>

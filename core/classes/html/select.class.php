@@ -9,9 +9,9 @@ class Select extends BaseFormItem
     protected $tagName = 'select';
     protected $options = null;
 
-    public function __construct($name = null, $value = null, $options = array(), $class = null, $id = null)
+    public function __construct($name = null, $value = null, $options = array(), $class = null)
     {
-        parent::__construct($name, $value, $id);
+        parent::__construct($name, $value);
 
         $this->options = &$options;
 

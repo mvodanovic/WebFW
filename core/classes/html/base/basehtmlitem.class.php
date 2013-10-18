@@ -4,7 +4,6 @@ namespace WebFW\Core\Classes\HTML\Base;
 
 abstract class BaseHTMLItem
 {
-    protected $id = null;
     protected $image;
     protected $value;
     protected $classes = array();
@@ -38,11 +37,6 @@ abstract class BaseHTMLItem
     public function __construct($value)
     {
         $this->setValue($value);
-    }
-
-    public function setID($id)
-    {
-        $this->id = $id;
     }
 
     public function setImage($image)
@@ -104,10 +98,6 @@ abstract class BaseHTMLItem
 
         $this->innerHTML = implode('', $this->innerHTMLElements + $innerHTMLElements);
 
-        if ($this->id !== null) {
-            $this->attributes['id'] = 'id="' . $this->id . '"';
-        }
-
         if (!empty($this->events)) {
             $this->attributes['data-events'] = 'data-events="'
                 . htmlspecialchars(json_encode($this->events)) . '"';
@@ -142,10 +132,5 @@ abstract class BaseHTMLItem
                 . $this->attributesHTML
                 . ' />';
         }
-    }
-
-    public function getID()
-    {
-        return $this->id;
     }
 }

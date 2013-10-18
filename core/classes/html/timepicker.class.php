@@ -6,9 +6,9 @@ use WebFW\Core\Classes\HTML\Input;
 
 class TimePicker extends Input
 {
-    public function __construct($name = null, $value = null, $settings = null, $class = null, $id = null)
+    public function __construct($name = null, $value = null, $settings = null, $class = null)
     {
-        parent::__construct($name, $value, 'text', $class, $id);
+        parent::__construct($name, $value, 'text', $class);
 
         $this->addClass('timepicker');
 

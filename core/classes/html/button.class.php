@@ -20,11 +20,10 @@ class Button extends BaseFormItem
      * @param string|null $type Button's type attribute
      * @param string|object|array|null $jqueryUIOptions Parameters which will be given to jQuery UI button() function
      * @param string|null $class Custom class to apply to the button
-     * @param string|null $id ID to be given to the button
      */
-    public function __construct($caption = null, $type = null, $jqueryUIOptions = null, $class = null, $id = null)
+    public function __construct($caption = null, $type = null, $jqueryUIOptions = null, $class = null)
     {
-        parent::__construct(null, $caption, $id);
+        parent::__construct(null, $caption);
 
         if ($type !== null) {
             $this->addCustomAttribute('type', $type);

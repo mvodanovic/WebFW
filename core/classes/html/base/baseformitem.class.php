@@ -8,17 +8,13 @@ abstract class BaseFormItem extends BaseHTMLItem
     protected $nameHTML = '';
     protected $valueHTML = '';
 
-    public function __construct($name = null, $value = null, $id = null)
+    public function __construct($name = null, $value = null)
     {
         parent::__construct($value);
 
         if ($name !== null) {
             $this->addCustomAttribute('name', $name);
             $this->name = $name;
-        }
-
-        if ($id !== null) {
-            $this->setID($id);
         }
     }
 

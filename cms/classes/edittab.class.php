@@ -220,10 +220,10 @@ class EditTab
     {
         $class = $isActive ? 'button active' : 'button';
 
-        $button = new Button(null, $this->getName(), null, 'button', $class);
-        $button->setID('btn_tab_' . $this->getID());
+        $button = new Button($this->getName(), 'button', null, $class);
+        $button->addCustomAttribute('id', 'btn_tab_' . $this->getID());
         $button->addCustomAttribute('data-id', $this->getID());
-        $button->addCustomAttribute('onclick', 'switchEditTab(this);');
+        $button->addEvent('click', 'switchEditTab', array('this'));
 
         return $button->parse();
     }
