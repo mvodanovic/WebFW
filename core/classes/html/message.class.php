@@ -16,14 +16,16 @@ class Message extends BaseHTMLItem
     {
         parent::__construct($value);
 
+        $this->addClass('ui-widget ui-widget-content ui-corner-all');
+
         switch ($type) {
             case static::TYPE_NOTICE:
-                $this->setImage(static::IMAGE_HELP);
-                $this->addClass('notice');
+                $this->setImage('ui-icon-info');
+                $this->addClass('ui-state-highlight');
                 break;
             case static::TYPE_ERROR:
-                $this->setImage(static::IMAGE_NOTICE);
-                $this->addClass('error');
+                $this->setImage('ui-icon-alert');
+                $this->addClass('ui-state-error');
                 break;
         }
     }

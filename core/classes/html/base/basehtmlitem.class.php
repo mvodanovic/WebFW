@@ -18,22 +18,6 @@ abstract class BaseHTMLItem
     protected $innerHTML = '';
     protected $attributesHTML = '';
 
-    const IMAGE_SAVE = '/static/images/webfw/icons/save.png';
-    const IMAGE_APPLY = '/static/images/webfw/icons/apply.png';
-    const IMAGE_CANCEL = '/static/images/webfw/icons/cancel.png';
-    const IMAGE_DELETE = '/static/images/webfw/icons/delete.png';
-    const IMAGE_COPY = '/static/images/webfw/icons/copy.png';
-    const IMAGE_PRINT = '/static/images/webfw/icons/print.png';
-    const IMAGE_ADD = '/static/images/webfw/icons/add.png';
-    const IMAGE_EDIT = '/static/images/webfw/icons/edit.png';
-    const IMAGE_IMPORT = '/static/images/webfw/icons/import.png';
-    const IMAGE_EXPORT = '/static/images/webfw/icons/export.png';
-    const IMAGE_NOTICE = '/static/images/webfw/icons/notice.png';
-    const IMAGE_SEARCH = '/static/images/webfw/icons/search.png';
-    const IMAGE_HELP = '/static/images/webfw/icons/help.png';
-    const IMAGE_LOGIN = '/static/images/webfw/icons/login.png';
-    const IMAGE_LOGOUT = '/static/images/webfw/icons/logout.png';
-
     public function __construct($value)
     {
         $this->setValue($value);
@@ -88,7 +72,7 @@ abstract class BaseHTMLItem
             $innerHTMLElements[] = htmlspecialchars($this->value);
         } else {
             if ($this->image !== null) {
-                $innerHTMLElements[] = '<img src="' . $this->image . '" alt="" />';
+                $innerHTMLElements[] = '<span class="ui-icon ' . $this->image . '"></span>';
             }
 
             if ($this->value !== null) {
