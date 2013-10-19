@@ -40,9 +40,9 @@
                                         <label>
                                             <?=htmlspecialchars($field['label']); ?>:<br \>
                                             <?=$field['formItem']->parse(); ?>
+                                            <?=array_key_exists('description', $field) ? $field['description'] : ''; ?>
+                                            <?=array_key_exists('error', $field) ? $field['error'] : ''; ?>
                                         </label>
-                                        <?=array_key_exists('description', $field) ? $field['description'] : ''; ?>
-                                        <?=array_key_exists('error', $field) ? $field['error'] : ''; ?>
                                     </td>
                                 <?php endforeach; ?>
                             </tr>

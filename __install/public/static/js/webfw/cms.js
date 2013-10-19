@@ -70,7 +70,7 @@ function select_nav_element(id)
 
     $('div.nav ul').hide();
     $('div.nav ul li a').removeClass('ui-state-focus');
-    $('div.nav ul[data-parent-id=0]').show();
+    $('div.nav ul[data-parent-id="0"]').show();
     var treeList = element.data('tree');
     for (var i = 0; i < treeList.length; i++) {
         var itemId = treeList[i];
@@ -141,8 +141,29 @@ function initializePage(scope)
 
     $('.tooltip', $(scope)).tooltip({
         content: function() {
-            return $(this).data('text');
+            var iconClass = null;
+            var title = null;
+            switch ($(this).data('class')) {
+                case 'ui-state-highlight':
+                    iconClass = 'ui-icon-info';
+                    title = 'Info';
+                    break;
+                case 'ui-state-error':
+                    iconClass = 'ui-icon-alert';
+                    title = 'Error';
+                    break;
+            }
+            var html = '';
+            if (iconClass != null) {
+                html += '<span class="ui-icon ' + iconClass + '" style="float: left; margin-right: .3em;"></span>';
+                html += '<span style="font-weight: bold;">' + title + '</span>';
+                html += '<br />';
+            }
+            html += $('<div/>').text($(this).data('text')).html();
+
+            return html;
         },
+        tooltipClass: $(this).data('class'),
         items: ".tooltip",
         show: true,
         hide: true

@@ -1,3 +1,3 @@
-<span class="tooltip" data-text="<?=htmlspecialchars($message); ?>" data-class="<?=$class; ?>">
+<span class="tooltip <?=$class; ?>" data-text="<?=htmlspecialchars($message); ?>" data-class="<?=$class; ?>">
     <?=$imageHTML; ?>
 </span>

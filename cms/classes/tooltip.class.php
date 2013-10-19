@@ -19,11 +19,12 @@ class Tooltip
 
         switch ($type) {
             case static::TYPE_NOTICE:
-                $imageHTML = '<img alt="" src="' . BaseHTMLItem::IMAGE_HELP . '" />';
+                $imageHTML = '<span class="ui-icon ui-icon-info"></span>';
+                $class = 'ui-state-highlight';
                 break;
             case static::TYPE_ERROR:
-                $imageHTML = '<img alt="" src="' . BaseHTMLItem::IMAGE_NOTICE . '" />';
-                $class = 'error';
+                $imageHTML = '<span class="ui-icon ui-icon-alert"></span>';
+                $class = 'ui-state-error';
                 break;
         }
 

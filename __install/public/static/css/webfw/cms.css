@@ -34,11 +34,9 @@ div.message.notice {border:1px solid #ffff00 !important; background-color: #ffff
 div.message.error {border:1px solid #fcd700 !important; background-color: #ffff00 !important;}
 
 
-
 /* TOOLTIPS */
-.tooltip img {cursor: pointer;}
-.ui-tooltip {border: 1px solid #ffff00; background-color: #ffff99;  border-radius: 15px; -moz-border-radius: 15px; -webkit-border-radius: 15px; white-space: pre-line;}
-.ui-tooltip.error {border: 1px solid #fcd700 !important; background-color: #ffff00 !important;}
+.tooltip {display: inline; border: 0; background: none;}
+.tooltip > span.ui-icon {cursor: pointer; display: inline-block; vertical-align: middle;}
 
 
 /* HEADER */
