@@ -38,8 +38,10 @@ class Route
         return Router::getInstance()->URLFromRoute($this, $escapeAmps, $rawurlencode);
     }
 
-    public function addParams($params)
+    public function addParams(array $params = null)
     {
-        $this->params = array_merge(is_array($this->params) ? $this->params : array(), $params);
+        if (is_array($params)) {
+            $this->params = array_merge(is_array($this->params) ? $this->params : array(), $params);
+        }
     }
 }

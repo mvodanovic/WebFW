@@ -257,7 +257,7 @@ abstract class ItemController extends Controller implements iValidate
         return $this->editForm === null ? null : $this->editForm->parse();
     }
 
-    public function getURL($action, $setPrimaryKey = true, $additionalParams = null, $escapeAmps = true, $rawurlencode = true)
+    public function getURL($action = null, $setPrimaryKey = true, $additionalParams = null, $escapeAmps = true, $rawurlencode = true)
     {
         if ($additionalParams === null) {
             $additionalParams = array();

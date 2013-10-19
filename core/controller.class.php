@@ -115,12 +115,12 @@ abstract class Controller
         return $this->output;
     }
 
-    public function getURL($action, $params = array(), $escapeAmps = true, $rawurlencode = true)
+    public function getURL($action = null, $params = array(), $escapeAmps = true, $rawurlencode = true)
     {
         return $this->getRoute($action, $params)->getURL($escapeAmps, $rawurlencode);
     }
 
-    public function getRoute($action, $params = array())
+    public function getRoute($action = null, $params = array())
     {
         return new Route($this->ctl, $action, $this->ns, $params);
     }

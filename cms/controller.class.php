@@ -76,7 +76,7 @@ abstract class Controller extends HTMLController
         }
     }
 
-    public function getRoute($action, $params = array())
+    public function getRoute($action = null, $params = array())
     {
         if ($this->isPopup === true) {
             $params['popup'] = 1;

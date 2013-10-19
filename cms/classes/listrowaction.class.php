@@ -20,23 +20,23 @@ class ListRowAction
         $this->setPrimaryKeyInDataAttribute = $setPrimaryKeyInDataAttribute;
     }
 
-    public function getLink($params = null)
+    public function getLink(TableGateway $tableGateway = null, $params = array())
     {
         if (!($this->link instanceof Link)) {
             return null;
         }
 
-        if (is_array($params) && $this->route instanceof Route) {
-            $prefixedParams = array();
-            foreach ($params as $key => $value) {
-                $prefixedParams[TableGateway::PRIMARY_KEY_PREFIX . $key] = $value;
+        if ($this->route instanceof Route) {
+            if ($tableGateway instanceof TableGateway) {
+                $params = array_merge($tableGateway->getPrimaryKeyValues(), $params);
             }
-            $this->route->addParams($prefixedParams);
+            $this->route->addParams($params);
             $this->link->addCustomAttribute('href', $this->route->getURL(false));
         }
 
-        if ($this->setPrimaryKeyInDataAttribute === true && is_array($params)) {
-            $this->link->addCustomAttribute('data-primary-key', json_encode($params, JSON_FORCE_OBJECT));
+        if ($this->setPrimaryKeyInDataAttribute === true && $tableGateway instanceof TableGateway) {
+            $dataParams = $tableGateway->getPrimaryKeyValues(false);
+            $this->link->addCustomAttribute('data-primary-key', json_encode($dataParams, JSON_FORCE_OBJECT));
         }
 
         return $this->link;

@@ -89,7 +89,7 @@ abstract class TreeController extends ListController
             'text' => false,
         );
         $link = new Link(null, null, $options);
-        $route = $this->getRoute(null, false);
+        $route = $this->getRoute();
         $listRowAction = new ListRowAction($link, $route);
         $listRowAction->setHandlerFunction('listRowHandlerChildren');
         $this->registerListRowAction($listRowAction);

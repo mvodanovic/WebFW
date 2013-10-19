@@ -71,26 +71,17 @@ class Listing extends Component
 
     public function getRowButton(ListRowAction $action, TableGateway $listRow)
     {
-        $params = array();
         $handlerFunction = $action->getHandlerFunction();
 
         if ($handlerFunction !== null) {
             $params = $this->ownerObject->$handlerFunction($listRow);
-        } else if ($listRow !== null) {
-            $primaryKeyColumns = $this->ownerObject->getPrimaryKeyColumns();
-            if (is_array($primaryKeyColumns)) {
-                foreach ($primaryKeyColumns as $column) {
-                    if (!ArrayAccess::keyExists($column, $listRow)) {
-                        $params = array();
-                        break;
-                    }
-                    $params[$column] = $listRow[$column];
-                }
+            if (is_array($params)) {
+                return $action->getLink(null, $params)->parse();
+            } else {
+                return null;
             }
-        }
-
-        if ($params !== null) {
-            return $action->getLink($params)->parse();
+        } else if ($listRow !== null) {
+            return $action->getLink($listRow)->parse();
         } else {
             return null;
         }
