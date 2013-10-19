@@ -124,7 +124,7 @@ class Navigation extends TreeTableGateway
             $route = new Route($this->controller, $this->action, $this->namespace, $params);
             return $route->getURL(false);
         } else {
-            return 'javascript:select_nav_element(' . $this->node_id . ')';
+            return 'javascript:selectNavElement(' . $this->node_id . ')';
         }
     }
 

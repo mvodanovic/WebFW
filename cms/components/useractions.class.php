@@ -37,7 +37,8 @@ class UserActions extends Component
 
             /// If LoggedUser is the current controller, activate the button.
             if ($this->ownerObject instanceof LoggedUserCtl) {
-                $message->addClass('ui-state-focus');
+                $message->addClass('ui-state-active');
+                $message->addClass('ui-state-persist');
             }
         }
 

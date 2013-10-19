@@ -52,7 +52,8 @@ class TreeBreadcrumbs extends Component
         );
         $link = new Link(null, $this->ownerObject->getURL(null, false, null, false), $options);
         $breadcrumbs[] = $link;
-        $breadcrumbs[0]->addClass('ui-state-focus');
+        $breadcrumbs[0]->addClass('ui-state-active');
+        $breadcrumbs[0]->addClass('ui-state-persist');
         $breadcrumbs = array_reverse($breadcrumbs);
 
         $this->setTplVar('breadcrumbs', $breadcrumbs);

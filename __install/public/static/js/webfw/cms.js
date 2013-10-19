@@ -56,7 +56,7 @@ function confirmAction(e)
     }
 }
 
-function select_nav_element(id)
+function selectNavElement(id)
 {
     var element = null;
     $('div.nav ul li').each(function() {
@@ -69,18 +69,20 @@ function select_nav_element(id)
     }
 
     $('div.nav ul').hide();
-    $('div.nav ul li a').removeClass('ui-state-focus');
+    $('div.nav ul li a:not(.ui-state-force-persist)').removeClass('ui-state-active').removeClass('ui-state-persist');
     $('div.nav ul[data-parent-id="0"]').show();
     var treeList = element.data('tree');
     for (var i = 0; i < treeList.length; i++) {
         var itemId = treeList[i];
         $('div.nav ul[data-parent-id='+itemId+']').show();
-        $('div.nav ul li[data-id='+itemId+'] a').addClass('ui-state-focus');
+        $('div.nav ul li[data-id='+itemId+'] a').addClass('ui-state-active').addClass('ui-state-persist');
     }
 }
 
-function select_nav_element_by_name(name)
+function selectNavElementByName(name, preserveSelection)
 {
+    preserveSelection = typeof preserveSelection !== 'undefined' ? preserveSelection : false;
+
     var element = null;
     $('div.nav ul li').each(function() {
         if ($(this).data('name') == name) {
@@ -91,7 +93,11 @@ function select_nav_element_by_name(name)
         return;
     }
 
-    select_nav_element(element.data('id'));
+    if (preserveSelection == true) {
+        $('a', element).addClass('ui-state-force-persist');
+    }
+
+    selectNavElement(element.data('id'));
 }
 
 var contentHasChanged = false;
@@ -296,7 +302,15 @@ function initializePage(scope)
     });
 
     $('.jquery_ui_button', $(scope)).each(function() {
-        $(this).button($(this).data('options'));
+        $(this).bind('mouseleave keyup mouseup blur', function(e) {
+            if ($(this).hasClass('ui-state-persist')) {
+                e.stopImmediatePropagation();
+                if (e.type == 'blur') {
+                    $(this).removeClass('ui-state-focus');
+                }
+                $(this).removeClass('ui-state-hover');
+            }
+        }).button($(this).data('options'));
     });
 }
 
