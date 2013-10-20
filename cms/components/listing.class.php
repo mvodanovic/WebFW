@@ -7,14 +7,14 @@ use WebFW\Core\ArrayAccess;
 use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Component;
 use WebFW\Core\Exception;
-use WebFW\CMS\Controller;
+use WebFW\CMS\ListController;
 use WebFW\Database\TableGateway;
 
 class Listing extends Component
 {
     public function execute()
     {
-        if (!($this->ownerObject instanceof Controller)) {
+        if (!($this->ownerObject instanceof ListController)) {
             throw new Exception('Owner must be an instance of \\WebFW\\CMS\\Controller');
         }
         $listFetcher = $this->ownerObject->getListFetcher();
@@ -59,6 +59,7 @@ class Listing extends Component
         $this->setTplVar('listRowActions', $listRowActions);
         $this->setTplVar('listMassActions', $listMassActions);
         $this->setTplVar('hasCheckboxes', $hasCheckboxes);
+        $this->setTplVar('sortingDefinitionJSON', $this->ownerObject->getJSONSortingDef());
     }
 
     protected function setDefaultParams()

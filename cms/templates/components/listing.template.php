@@ -32,7 +32,7 @@ use WebFW\Core\ArrayAccess;
 </div>
 
 <?php if ($totalCount > 0): ?>
-<table class="list">
+<table class="list" data-sorting-definition="<?=htmlspecialchars($sortingDefinitionJSON); ?>">
     <thead>
     <tr>
         <?php if ($hasCheckboxes === true): ?>

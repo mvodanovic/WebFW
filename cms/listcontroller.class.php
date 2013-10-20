@@ -62,7 +62,6 @@ abstract class ListController extends ItemController
         );
         $totalCount = $this->listFetcher->getCount($this->filter);
 
-        $this->addHeadJS('var sortingDef = ' . ($this->isSortingEnabled() ? $this->getJSONSortingDef() : 'null') . ';');
         $this->setTplVar('listData', $listData);
         $this->setTplVar('totalCount', $totalCount);
         $this->setTplVar('page', $this->page);
@@ -90,7 +89,7 @@ abstract class ListController extends ItemController
         }
 
         $this->beforeDelete();
-        $this->tableGateway->delete();
+        //$this->tableGateway->delete();
         $this->afterDelete();
 
         $this->setRedirectUrl($this->getURL(null, true, null, false), true);
@@ -270,7 +269,11 @@ abstract class ListController extends ItemController
                 'label' => 'Delete',
             );
             $button = new Button(null, 'button', $options, 'mass_delete');
-            $button->addCustomAttribute('data-confirm', "Selected items will be deleted.\nAre you sure?");
+            $button->addEvent(
+                'click',
+                'confirmAction',
+                array('message' => "Selected items will be deleted.\nAre you sure?")
+            );
             $button->addCustomAttribute('data-url', $this->getURL('massDeleteItems', false, null, false));
             $listMassAction = new ListMassAction($button);
             $this->registerListMassAction($listMassAction);
@@ -292,7 +295,7 @@ abstract class ListController extends ItemController
         }
 
         $this->listFilters[] = array(
-            'formItem' => $formItem->parse(),
+            'formItem' => $formItem,
             'label' => $label,
         );
     }
@@ -310,7 +313,7 @@ abstract class ListController extends ItemController
                 'label' => 'Delete',
             );
             $HTMLItem = new Link(null, $this->getURL('deleteItem', true, null, false), $options);
-            $HTMLItem->addEvent('click', 'confirmAction', array('message' => "Item will be deleted.\nAre you sure?"));
+            $HTMLItem->addEvent('click', 'confirmDeleteInEdit', array('message' => "Item will be deleted.\nAre you sure?"));
             $editAction = new EditAction($HTMLItem);
             $editAction->makeRightAligned();
             $this->registerEditAction($editAction);

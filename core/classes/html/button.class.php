@@ -14,6 +14,7 @@ use WebFW\Core\Classes\HTML\Base\BaseFormItem;
 class Button extends BaseFormItem
 {
     protected $tagName = 'button';
+    protected $skipInnerHTMLDecoration = true;
 
     /**
      * @param string|null $caption Button caption

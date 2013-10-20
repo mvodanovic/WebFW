@@ -5,6 +5,7 @@ namespace WebFW\Core\Classes\HTML\Base;
 abstract class BaseFormItem extends BaseHTMLItem
 {
     protected $name = null;
+    protected $useLabel = true;
     protected $nameHTML = '';
     protected $valueHTML = '';
 
@@ -37,5 +38,10 @@ abstract class BaseFormItem extends BaseHTMLItem
     public function getName()
     {
         return $this->name;
+    }
+
+    public function useLabel()
+    {
+        return $this->useLabel;
     }
 }

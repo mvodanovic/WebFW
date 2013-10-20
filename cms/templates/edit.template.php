@@ -7,13 +7,10 @@
     <div class="editor">
 
         <?php if (count($editTabs) > 1): ?>
-            <div class="header">
-                <ul class="tabs">
-                    <?php foreach ($editTabs as $i => &$tab): ?>
-                    <li><?=$tab->getButton($i === 0); ?></li>
-                    <?php endforeach; ?>
-                </ul>
-                <div class="clear"></div>
+            <div class="header jquery_ui_buttonset">
+                <?php foreach ($editTabs as $i => &$tab): ?>
+                    <?=$tab->getButton($i === 0); ?>
+                <?php endforeach; ?>
             </div>
         <?php endif; ?>
 
@@ -37,12 +34,16 @@
                                         <?php if ($field['rowspan'] > 1): ?> rowspan="<?=$field['rowspan']; ?>"<?php endif; ?>
                                         <?php if ($field['rowspanFix'] === true): ?> class="rowspan_fix"<?php endif; ?>
                                     >
+                                        <?php if ($field['formItem']->useLabel()): ?>
                                         <label>
-                                            <?=htmlspecialchars($field['label']); ?>:<br \>
+                                        <?php endif; ?>
+                                            <span class="label"><?=htmlspecialchars($field['label']); ?></span>:<br />
                                             <?=$field['formItem']->parse(); ?>
                                             <?=array_key_exists('description', $field) ? $field['description'] : ''; ?>
                                             <?=array_key_exists('error', $field) ? $field['error'] : ''; ?>
+                                        <?php if ($field['formItem']->useLabel()): ?>
                                         </label>
+                                        <?php endif; ?>
                                     </td>
                                 <?php endforeach; ?>
                             </tr>

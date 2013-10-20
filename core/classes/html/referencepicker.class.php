@@ -8,6 +8,7 @@ use WebFW\Core\Route;
 class ReferencePicker extends BaseFormItem
 {
     protected $tagName = 'div';
+    protected $useLabel = false;
     protected $skipInnerHTMLDecoration = true;
     protected $route;
     protected $dataName;
@@ -19,7 +20,7 @@ class ReferencePicker extends BaseFormItem
         $this->dataName = $name;
         $this->dataValue = $value;
 
-        parent::__construct(null, null);
+        parent::__construct();
     }
 
     public function getName()
@@ -46,9 +47,9 @@ class ReferencePicker extends BaseFormItem
     {
         $this->route->addParams(array('popup' => 1));
         $this->addCustomAttribute('data-url', $this->route->getURL(false));
-        $this->addCustomAttribute('data-name', $this->dataName);
-        $this->addCustomAttribute('data-value', $this->dataValue);
-        $this->addCustomAttribute('data-caption', '');
+        $this->addCustomAttribute('data-field-name', $this->dataName);
+        $this->addCustomAttribute('data-values', json_encode($this->dataValue, JSON_FORCE_OBJECT));
+        $this->addCustomAttribute('data-caption', null);
         $this->addClass('reference_picker');
 
         parent::prepareHTMLChunks();

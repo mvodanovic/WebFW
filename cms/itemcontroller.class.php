@@ -30,7 +30,6 @@ abstract class ItemController extends Controller implements iValidate
 
     /** @var TableGateway */
     protected $tableGateway = null;
-    protected $unsavedChangesExistMessage = 'Unsaved changes exist. Are you sure you want to leave?';
 
     public function editItem()
     {
@@ -157,17 +156,6 @@ abstract class ItemController extends Controller implements iValidate
     {
         $this->init();
         $this->template = \WebFW\Core\FW_PATH . '/cms/templates/edit';
-    }
-
-    protected function afterInitEdit()
-    {
-        parent::afterInitEdit();
-
-        if ($this->unsavedChangesExistMessage !== null) {
-            $this->addHeadJS(
-                'var unsavedChangesExistMessage = "' . htmlspecialchars($this->unsavedChangesExistMessage) . '";'
-            );
-        }
     }
 
     protected function initForm()

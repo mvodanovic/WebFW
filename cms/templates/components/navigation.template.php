@@ -24,12 +24,3 @@
         <?php endif; ?>
     <?php endforeach; ?>
 </div>
-
-<script type="text/javascript">
-// <![CDATA[
-    $('div.nav ul').hide();
-    $('div.nav ul li a').removeClass('ui-state-active').removeClass('ui-state-persist');
-    $('div.nav ul[data-parent-id=0]').show();
-    selectNavElementByName('<?=$component->getSelectedMenuItem(); ?>', true);
-// ]]>
-</script>

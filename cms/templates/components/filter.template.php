@@ -14,12 +14,16 @@ use WebFW\Core\Classes\HTML\Button;
         <ul>
             <?php foreach ($filters as &$filterDef): ?>
             <li>
-                <span class="filter">
+                <div class="filterItem">
+                    <?php if ($filterDef['formItem']->useLabel()): ?>
                     <label>
-                        <?=htmlspecialchars($filterDef['label']); ?>:
-                        <?=$filterDef['formItem']; ?>
+                    <?php endif; ?>
+                        <span class="label"><?=htmlspecialchars($filterDef['label']); ?></span>:
+                        <?=$filterDef['formItem']->parse(); ?>
+                    <?php if ($filterDef['formItem']->useLabel()): ?>
                     </label>
-                </span>
+                    <?php endif; ?>
+                </div>
             </li>
             <?php endforeach; ?>
             <li>

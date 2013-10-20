@@ -218,12 +218,11 @@ class EditTab
 
     public function getButton($isActive = false)
     {
-        $class = $isActive ? 'button active' : 'button';
+        $class = $isActive ? ' ui-state-active ui-state-persist' : null;
 
         $button = new Button($this->getName(), 'button', null, $class);
-        $button->addCustomAttribute('id', 'btn_tab_' . $this->getID());
         $button->addCustomAttribute('data-id', $this->getID());
-        $button->addEvent('click', 'switchEditTab', array('this'));
+        $button->addEvent('click', 'switchEditTab', array('id' => $this->getID()));
 
         return $button->parse();
     }
