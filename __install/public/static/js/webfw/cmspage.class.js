@@ -375,13 +375,15 @@ CMSPage.selectNavElement = function(id)
             element = $(this);
         }
     });
+
+    $('div.nav ul').hide();
+    $('div.nav ul[data-parent-id="0"]').show();
+
     if (element == null) {
         return;
     }
 
-    $('div.nav ul').hide();
     $('div.nav ul li a:not(.ui-state-force-persist)').removeClass('ui-state-active').removeClass('ui-state-persist');
-    $('div.nav ul[data-parent-id="0"]').show();
     var treeList = element.data('tree');
     for (var i = 0; i < treeList.length; i++) {
         var itemId = treeList[i];
@@ -403,20 +405,20 @@ CMSPage.selectNavElementByName = function(name, preserveSelection)
     preserveSelection = typeof preserveSelection !== 'undefined' ? preserveSelection : false;
 
     var element = null;
+    var id = null;
+
     $('div.nav ul li').each(function() {
         if ($(this).data('name') == name) {
             element = $(this);
+            id = element.data('id');
         }
     });
-    if (element == null) {
-        return;
-    }
 
-    if (preserveSelection == true) {
+    if (element != null && preserveSelection == true) {
         $('a', element).addClass('ui-state-force-persist');
     }
 
-    CMSPage.selectNavElement(element.data('id'));
+    CMSPage.selectNavElement(id);
 }
 
 /**

@@ -16,7 +16,7 @@ use WebFW\CMS\Controller;
 <head>
     <?=$htmlHead; ?>
 </head>
-<body data-selected-menu-item="<?=htmlspecialchars($controller->getSelectedMenuItem()); ?>">
+<body data-selected-menu-item="<?=$controller instanceof Controller ? htmlspecialchars($controller->getSelectedMenuItem()) : ''; ?>">
     <div class="container">
 
         <header>

@@ -100,7 +100,7 @@ div.editor div.body table tr td.shrinked {width: 1px; white-space: nowrap;}
 
 
 /* LOGIN */
-div.login {background-color: #99ccff; width: 350px; height: 173px; margin: auto; position: absolute; top:0; bottom: 0; left: 0; right: 0; border: 1px solid #0033ff; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;}
+div.login {background-color: #99ccff; width: 350px; height: 178px; margin: auto; position: absolute; top:0; bottom: 0; left: 0; right: 0; border: 1px solid #0033ff; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;}
 div.login p {background-color: #6699ff; padding: .2em .4em; font-size: 16px; font-weight: bold; letter-spacing: 1px; font-variant: small-caps;}
 div.login div.left, div.login div.right {padding: .4em; line-height: 24px;}
 div.login div.message {position: absolute; top: -35px; left: 0;}

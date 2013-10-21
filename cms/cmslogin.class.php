@@ -30,7 +30,7 @@ class CMSLogin extends HTMLController
         $this->addLinkedCSS('/static/css/webfw/jquery-ui-1.10.3.custom.min.css');
         $this->addLinkedJS('/static/js/webfw/jquery-1.10.2.min.js');
         $this->addLinkedJS('/static/js/webfw/jquery-ui-1.10.3.custom.min.js');
-        $this->addLinkedJS('/static/js/webfw/cms.js');
+        $this->addLinkedJS('/static/js/webfw/cmspage.class.js');
         $this->addHeadMeta('Content-Type', 'text/html; charset=UTF-8', 'http-equiv');
     }
 
