@@ -39,6 +39,7 @@ abstract class TreeController extends ListController
 
         foreach ($this->tableGateway->getParentNodeKeyColumns() as $parentColumn => $childColumn)
         {
+            /** @var EditTab $firstEditTab */
             $firstEditTab = reset($this->editTabs);
 
             $fieldAlreadyDefined = false;

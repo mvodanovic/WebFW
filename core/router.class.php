@@ -198,6 +198,9 @@ class Router
             $namespace = Config::get('General', 'defaultControllerNamespace');
         }
         $controllerClass = $namespace . $controller;
+        if (!class_exists($controllerClass)) {
+            return null;
+        }
         if ($action === null) {
             $action = $controllerClass::DEFAULT_ACTION_NAME;
         }

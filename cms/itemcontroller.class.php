@@ -30,6 +30,7 @@ abstract class ItemController extends Controller implements iValidate
 
     /** @var TableGateway */
     protected $tableGateway = null;
+    protected $filter = array();
 
     public function editItem()
     {
@@ -136,6 +137,14 @@ abstract class ItemController extends Controller implements iValidate
                         $this->tableGateway->$formItemName = $value;
                     }
                 }
+            }
+
+            foreach ($tab->getHiddenFields() as $formItem) {
+                /** @var Input $formItem */
+                $formItemName = $formItem->getName();
+                $value = Request::getInstance()->$formItemName;
+                $formItemName = substr($formItemName, strlen(EditTab::FIELD_PREFIX));
+                $this->tableGateway->$formItemName = $value;
             }
         }
 

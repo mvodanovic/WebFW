@@ -25,7 +25,6 @@ abstract class ListController extends ItemController
     const LIST_FILTER_PREFIX = 'f_';
 
     protected $listFetcher = null;
-    protected $filter = array();
     protected $sort = array();
     protected $page = 1;
     protected $itemsPerPage = 30;
