@@ -88,7 +88,7 @@ abstract class ListController extends ItemController
         }
 
         $this->beforeDelete();
-        //$this->tableGateway->delete();
+        $this->tableGateway->delete();
         $this->afterDelete();
 
         $this->setRedirectUrl($this->getURL(null, true, null, false), true);
