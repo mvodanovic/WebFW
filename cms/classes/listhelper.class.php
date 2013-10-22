@@ -27,11 +27,15 @@ class ListHelper
                 continue;
             }
 
-            if (!ArrayAccess::keyExists($keyColumn, $listItem) || !ArrayAccess::keyExists($valueColumn, $listItem)) {
-                continue;
-            }
+            if (is_object($listItem) && method_exists($listItem, $valueColumn)) {
+                $newList[$listItem[$keyColumn]] = $listItem->$valueColumn();
+            } else {
+                if (!ArrayAccess::keyExists($keyColumn, $listItem) || !ArrayAccess::keyExists($valueColumn, $listItem)) {
+                    continue;
+                }
 
-            $newList[$listItem[$keyColumn]] = $listItem[$valueColumn];
+                $newList[$listItem[$keyColumn]] = $listItem[$valueColumn];
+            }
         }
 
         if ($prefixWithEmptyEntry) {

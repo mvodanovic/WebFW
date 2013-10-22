@@ -7,7 +7,7 @@ use WebFW\Core\Classes\HTML\FormStart;
 use WebFW\Core\Component;
 use WebFW\Core\Exception;
 use WebFW\CMS\ListController;
-use WebFW\Core\Router;
+use WebFW\Core\Route;
 
 class Filter extends Component
 {
@@ -34,7 +34,7 @@ class Filter extends Component
             $params['popup'] = '1';
         }
 
-        $form = new FormStart('get', Router::getInstance()->URL($ctl, 'listItems', $ns, $params));
+        $form = new FormStart('get', new Route($ctl, null, $ns, $params));
 
         $options = array(
             'icons' => array('primary' => 'ui-icon-search'),

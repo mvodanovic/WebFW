@@ -22,27 +22,30 @@ class FormStart extends BaseHTMLItem
 
     public function prepareHTMLChunks()
     {
-        if (strtolower($this->method) === 'post') {
-            if ($this->action instanceof Route) {
-                $this->action = $this->action->getURL(false);
+        $urlParamSeparator = '&';
+        if ($this->action instanceof Route) {
+            $this->action = $this->action->getURL(false);
+        } else {
+            if (strpos($this->action, '&amp;') > 0) {
+                $urlParamSeparator = '&amp;';
             }
-            $actionSplit = explode('?', $this->action, 2);
-            $this->action = $actionSplit[0];
-            if (array_key_exists(1, $actionSplit)) {
-                $params = explode('&', $actionSplit[1]);
-                $hiddenDiv = '';
-                foreach ($params as $paramPair) {
-                    $paramPair = explode('=', $paramPair);
-                    $paramPair[0] = rawurldecode($paramPair[0]);
-                    $paramPair[1] = rawurldecode($paramPair[1]);
-                    $hidden = new Input($paramPair[0], 'hidden', $paramPair[1]);
-                    $hiddenDiv .= $hidden->parse();
-                }
-                if ($hiddenDiv !== '') {
-                    $hiddenDiv = '<div class="hidden">' . $hiddenDiv . '</div>';
-                }
-                $this->innerHTMLElements[] = $hiddenDiv;
+        }
+        $actionSplit = explode('?', $this->action, 2);
+        $this->action = $actionSplit[0];
+        if (array_key_exists(1, $actionSplit)) {
+            $params = explode($urlParamSeparator, $actionSplit[1]);
+            $hiddenDiv = '';
+            foreach ($params as $paramPair) {
+                $paramPair = explode('=', $paramPair);
+                $paramPair[0] = rawurldecode($paramPair[0]);
+                $paramPair[1] = rawurldecode($paramPair[1]);
+                $hidden = new Input($paramPair[0], 'hidden', $paramPair[1]);
+                $hiddenDiv .= $hidden->parse();
             }
+            if ($hiddenDiv !== '') {
+                $hiddenDiv = '<div class="hidden">' . $hiddenDiv . '</div>';
+            }
+            $this->innerHTMLElements[] = $hiddenDiv;
         }
 
         if ($this->method !== null) {
