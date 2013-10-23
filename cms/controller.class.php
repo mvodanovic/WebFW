@@ -38,6 +38,8 @@ abstract class Controller extends HTMLController
         $this->addLinkedJS('/static/js/webfw/jquery-1.10.2.min.js');
         $this->addLinkedJS('/static/js/webfw/jquery-ui-1.10.3.custom.min.js');
         $this->addLinkedJS('/static/js/webfw/jquery-ui-timepicker-addon.min.js');
+        $this->addLinkedJS('/static/js/webfw/tinymce/tinymce.min.js');
+        $this->addLinkedJS('/static/js/webfw/tinymce/jquery.tinymce.min.js');
         $this->addLinkedJS('/static/js/webfw/referencepicker.class.js');
         $this->addLinkedJS('/static/js/webfw/cmspage.class.js');
         $this->addHeadMeta('Content-Type', 'text/html; charset=UTF-8', 'http-equiv');
