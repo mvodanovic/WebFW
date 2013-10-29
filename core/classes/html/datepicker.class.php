@@ -2,8 +2,6 @@
 
 namespace WebFW\Core\Classes\HTML;
 
-use WebFW\Core\Classes\HTML\Input;
-
 class DatePicker extends Input
 {
     public function __construct($name = null, $value = null, $settings = null, $class = null)

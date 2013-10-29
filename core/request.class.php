@@ -2,7 +2,6 @@
 
 namespace WebFW\Core;
 
-use WebFW\Core\Exception;
 use WebFW\Core\Exceptions\NotFoundException;
 
 /**

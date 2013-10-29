@@ -1,7 +1,6 @@
 <?php
 namespace WebFW\Database;
 
-use WebFW\Database\BaseHandler;
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\TableConstraints\Constraint;
 use WebFW\Database\TableConstraints\PrimaryKey;

@@ -4,9 +4,7 @@ namespace WebFW\Database;
 
 use WebFW\Core\Exception;
 use WebFW\Core\Exceptions\DBException;
-use WebFW\Database\BaseHandler;
 use WebFW\Database\Query\Join;
-use WebFW\Database\Table;
 use WebFW\Database\TableConstraints\ForeignKey;
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\Query\Select;

@@ -24,16 +24,17 @@ function ReferencePicker(element, dialogTitle) {
 
     this.values = {};
 
-    this.captionDisplay = $('<span/>').addClass('caption').css('display', 'inline-block').css('margin-right', '.3em');
+    this.captionDisplay = $('<span></span>').addClass('caption')
+        .css('display', 'inline-block').css('margin-right', '.3em');
 
-    this.selectButton = $('<button/>').prop('type', 'button').data('options', {
+    this.selectButton = $('<button></button>').prop('type', 'button').data('options', {
         icons: {primary: 'ui-icon-pencil'},
         text: false
     }).addClass('jquery_ui_button').click({instance: this}, function(e) {
         e.data.instance.openDialog();
     }).css('margin-right', '.3em');
 
-    this.clearButton = $('<button/>').prop('type', 'button').data('options', {
+    this.clearButton = $('<button></button>').prop('type', 'button').data('options', {
         icons: {primary: 'ui-icon-close'},
         text: false
     }).addClass('jquery_ui_button').click({instance: this}, function(e) {
@@ -57,7 +58,7 @@ ReferencePicker.prototype.openDialog = function() {
     var windowWidth = $(window).width();
     var windowHeight = $(window).height();
 
-    this.dialog = $('<div/>').data('owner', this).dialog({
+    this.dialog = $('<div></div>').data('owner', this).dialog({
         title: this.dialogTitle,
         modal: true,
         draggable: false,
@@ -67,7 +68,7 @@ ReferencePicker.prototype.openDialog = function() {
         create: function() { $(this).data('owner').fetchDialogData(); },
         close: function() { $(this).data('owner').deleteDialog(); }
     });
-}
+};
 
 /**
  * Fetches the dialog's content using an Ajax request.
@@ -82,7 +83,7 @@ ReferencePicker.prototype.fetchDialogData = function() {
         error: function(response) { this.instance.dialogAjaxError(response); },
         success: function(data) { this.instance.dialogAjaxSuccess(data); }
     });
-}
+};
 
 /**
  * Removes dialog's reference in the instance and in the DOM.
@@ -92,7 +93,7 @@ ReferencePicker.prototype.fetchDialogData = function() {
 ReferencePicker.prototype.deleteDialog = function() {
     $(this.dialog).dialog('destroy').remove();
     this.dialog = null;
-}
+};
 
 /**
  * Adds the "Please wait" message to the dialog to be shown while the actual data is loading.
@@ -100,8 +101,8 @@ ReferencePicker.prototype.deleteDialog = function() {
  * @internal
  */
 ReferencePicker.prototype.dialogAjaxInProgress = function() {
-    $(this.dialog).html('Please wait...').append($('<div/>').progressbar({value: false}));
-}
+    $(this.dialog).html('Please wait...').append($('<div></div>').progressbar({value: false}));
+};
 
 /**
  * If an error occurs while loading the dialog's data, this handler is called.
@@ -114,7 +115,7 @@ ReferencePicker.prototype.dialogAjaxError = function(response) {
     new CMSPage(this.dialog);
     this.preemptLinkActions();
     this.preemptFormSubmits();
-}
+};
 
 /**
  * Handler called on successful load of the dialog's data.
@@ -127,7 +128,7 @@ ReferencePicker.prototype.dialogAjaxSuccess = function(data) {
     new CMSPage(this.dialog);
     this.preemptLinkActions();
     this.preemptFormSubmits();
-}
+};
 
 /**
  * Preempts all links in the dialog so their actions are bound only to the dialog, and not the whole page.
@@ -148,7 +149,7 @@ ReferencePicker.prototype.preemptLinkActions = function() {
             success: function(data) { this.instance.dialogAjaxSuccess(data); }
         });
     });
-}
+};
 
 /**
  * Preempts all forms in the dialog so they are bound only to the dialog, and not the whole page.
@@ -156,8 +157,7 @@ ReferencePicker.prototype.preemptLinkActions = function() {
  *
  * @internal
  */
-ReferencePicker.prototype.preemptFormSubmits = function ()
-{
+ReferencePicker.prototype.preemptFormSubmits = function () {
     $('form', $(this.dialog)).submit({instance: this}, function(e) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -172,7 +172,7 @@ ReferencePicker.prototype.preemptFormSubmits = function ()
             success: function(data) { this.instance.dialogAjaxSuccess(data); }
         });
     });
-}
+};
 
 /**
  * Updates form data with data selected by the dialog.
@@ -207,7 +207,7 @@ ReferencePicker.prototype.updateData = function(primaryKey, caption) {
     } else {
         this.clearButton.hide();
     }
-}
+};
 
 /**
  * Clears all previously selected data and resets the caption.
@@ -221,4 +221,4 @@ ReferencePicker.prototype.clearData = function() {
     }
     this.values = {};
     this.clearButton.hide();
-}
+};

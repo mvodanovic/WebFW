@@ -2,7 +2,6 @@
 
 namespace WebFW\CMS\Classes;
 
-use WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
 use WebFW\Externals\PHPTemplate;
 
 class Tooltip

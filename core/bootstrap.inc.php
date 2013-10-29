@@ -19,7 +19,7 @@ define ('WebFW\Core\CMP_TEMPLATE_PATH', realpath(GENERAL_TEMPLATE_PATH . '/compo
 spl_autoload_extensions('.class.php,.interface.php');
 spl_autoload_register(function ($class)
 {
-    return spl_autoload(str_replace('\\', '/', $class));
+    spl_autoload(str_replace('\\', '/', $class));
 });
 
 set_include_path(get_include_path() . ':' . \WebFW\Core\BASE_PATH);

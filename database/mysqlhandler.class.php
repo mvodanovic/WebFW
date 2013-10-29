@@ -3,10 +3,19 @@
 namespace WebFW\Database;
 
 use WebFW\Core\Exceptions\DBException;
+use mysqli;
+use mysqli_result;
 
 class MySQLHandler extends BaseHandler
 {
-    protected $conntectionResource = false;
+    /**
+     * @var mysqli
+     */
+    protected $connectionResource = false;
+
+    /**
+     * @var mysqli_result
+     */
     protected $lastQueryResource = false;
 
     const DEFAULT_PORT = 3306;
@@ -41,7 +50,7 @@ class MySQLHandler extends BaseHandler
 
     public function getLastError()
     {
-        return $this->lastQueryResource->error;
+        return $this->connectionResource->error;
     }
 
     public function fetchAssoc($queryResource = false, $row = null)
@@ -104,6 +113,7 @@ class MySQLHandler extends BaseHandler
 
     public function getLimitAndOffset($limit, $offset = 0)
     {
+
         if ($offset > 0) {
             $limit = $offset . ', ' . $limit;
         }
@@ -127,5 +137,10 @@ class MySQLHandler extends BaseHandler
     public function returningClauseIsSupported()
     {
         return false;
+    }
+
+    public function getLastInsertedRowID()
+    {
+        return $this->connectionResource->insert_id;
     }
 }

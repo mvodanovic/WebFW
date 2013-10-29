@@ -2,12 +2,21 @@
 
 namespace WebFW\Database;
 
+use WebFW\Core\Exception;
 use WebFW\Core\Exceptions\DBException;
 
 class PgSQLHandler extends BaseHandler
 {
+    /**
+     * @var resource
+     */
     protected $connectionResource = false;
+
     protected $connectionString = '';
+
+    /**
+     * @var resource
+     */
     protected $lastQueryResource = false;
 
     const DEFAULT_PORT = 5432;
@@ -157,5 +166,10 @@ class PgSQLHandler extends BaseHandler
     public function returningClauseIsSupported()
     {
         return true;
+    }
+
+    public function getLastInsertedRowID()
+    {
+        throw new Exception('Method not supported');
     }
 }

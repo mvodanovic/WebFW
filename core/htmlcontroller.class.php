@@ -3,7 +3,6 @@
 namespace WebFW\Core;
 
 use WebFW\Externals\PHPTemplate;
-use WebFW\Core\Framework;
 
 abstract class HTMLController extends Controller
 {

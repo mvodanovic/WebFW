@@ -26,6 +26,8 @@ abstract class ItemController extends Controller implements iValidate
 
     protected $editTabs = array();
     protected $editActions = array();
+
+    /** @var FormStart */
     protected $editForm = null;
 
     /** @var TableGateway */
@@ -292,6 +294,8 @@ abstract class ItemController extends Controller implements iValidate
         if ($this->tableGateway instanceof iValidate) {
             return $this->tableGateway->hasValidationErrors();
         }
+
+        return array();
     }
 
     public function getValidationErrors($field = null)
@@ -299,6 +303,8 @@ abstract class ItemController extends Controller implements iValidate
         if ($this->tableGateway instanceof iValidate) {
             return $this->tableGateway->getValidationErrors($field);
         }
+
+        return array();
     }
 
     public function clearValidationErrors()

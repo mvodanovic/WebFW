@@ -214,4 +214,5 @@ abstract class BaseHandler
     abstract public function getLimitAndOffset($limit, $offset = 0);
     abstract public function convertBoolean($value);
     abstract public function returningClauseIsSupported();
+    abstract public function getLastInsertedRowID();
 }

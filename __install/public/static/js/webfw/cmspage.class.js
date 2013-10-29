@@ -43,7 +43,7 @@ CMSPage.prototype.initializeLinkDataEvents = function() {
         }
         $(this).removeAttr('data-events');
     });
-}
+};
 
 /**
  * Initializes the "select all" checkbox in the list view.
@@ -56,7 +56,7 @@ CMSPage.prototype.initializeListSelectAllCheckbox = function() {
             $('table.list tbody td input.row_selector[type=checkbox]').prop('checked', null);
         }
     });
-}
+};
 
 /**
  * Initializes mass action buttons of the list view.
@@ -65,7 +65,7 @@ CMSPage.prototype.initializeMassActionButtons = function() {
     $('table.list tfoot button', this.scope).click({instance: this}, function(e) {
         e.data.instance.executeMassAction(this);
     });
-}
+};
 
 /**
  * Initializes all tooltips on the page.
@@ -92,7 +92,7 @@ CMSPage.prototype.initializeTooltips = function() {
                 html += '<span style="font-weight: bold;">' + title + '</span>';
                 html += '<br />';
             }
-            html += $('<div/>').text($(this).data('text')).html();
+            html += $('<div></div>').text($(this).data('text')).html();
 
             return html;
         },
@@ -103,7 +103,7 @@ CMSPage.prototype.initializeTooltips = function() {
     }).each(function() {
         $(this).tooltip("option", "tooltipClass", $(this).data('class'));
     });
-}
+};
 
 /**
  * Initializes the sorting functionality of the list view, if it's enabled.
@@ -140,7 +140,7 @@ CMSPage.prototype.initializeListSorting = function () {
             }
         });
     }
-}
+};
 
 /**
  * Initializes an unsaved changes check on edit view.
@@ -148,6 +148,7 @@ CMSPage.prototype.initializeListSorting = function () {
  */
 CMSPage.prototype.initializeEditUnsavedChangesCheck = function() {
     if (this.scope.get(0) instanceof Document) {
+        //noinspection FunctionWithInconsistentReturnsJS
         $(window).bind('beforeunload', {instance: this}, function(e) {
             if (e.data.instance.contentHasChanged && !e.data.instance.contentChangedConfirmSkipped) {
                 return e.data.instance.unsavedChangesExistMessage;
@@ -167,7 +168,7 @@ CMSPage.prototype.initializeEditUnsavedChangesCheck = function() {
     $(".editor input, .editor select, .editor textarea", this.scope).change({instance: this}, function(e) {
         e.data.instance.contentHasChanged = true;
     });
-}
+};
 
 /**
  * Initializes all date-, time- and datetime-pickers on the page.
@@ -199,7 +200,7 @@ CMSPage.prototype.initializeDateTimePickers = function() {
         $.extend(settings, $(this).data('settings'));
         $(this).timepicker(settings);
     });
-}
+};
 
 /**
  * Initializes all reference-pickers on the page.
@@ -224,7 +225,7 @@ CMSPage.prototype.initializeReferencePickers = function() {
             $(this).html(CMSPage.createErrorMessage('ReferencePicker JS class definition missing!'));
         }
     });
-}
+};
 
 /**
  * Initializes all jQuery UI buttons and button sets on the page.
@@ -255,7 +256,7 @@ CMSPage.prototype.initializeUIButtons = function() {
             }
         });
     });
-}
+};
 
 /**
  * An event handler used for confirming the action before continuing.
@@ -267,7 +268,7 @@ CMSPage.prototype.confirmAction = function(e) {
         e.preventDefault();
         e.stopImmediatePropagation();
     }
-}
+};
 
 /**
  * An event handler used for confirming deletion in the edit view.
@@ -285,7 +286,7 @@ CMSPage.prototype.confirmDeleteInEdit = function(e)
         e.stopImmediatePropagation();
         this.contentChangedConfirmSkipped = false;
     }
-}
+};
 
 /**
  * An event handler for mass action button in list view.
@@ -305,7 +306,7 @@ CMSPage.prototype.executeMassAction = function(button) {
     });
 
     if (this.scope.get(0) instanceof Document) {
-        $('<form/>').prop('action', buttonData.url).prop('method', 'post')
+        $('<form></form>').prop('action', buttonData.url).prop('method', 'post')
             .html($('<input/>').prop('type', 'hidden').prop('name', 'keys').prop('value', JSON.stringify(checkboxData)))
             .appendTo(document.body).submit();
     } else {
@@ -319,7 +320,7 @@ CMSPage.prototype.executeMassAction = function(button) {
             success: function(data) { this.instance.scope.data('owner').dialogAjaxSuccess(data); }
         });
     }
-}
+};
 
 /**
  * An event handler triggered before the form is submitted in edit view.
@@ -327,7 +328,7 @@ CMSPage.prototype.executeMassAction = function(button) {
  */
 CMSPage.prototype.beforeSubmitEdit = function() {
     this.contentChangedConfirmSkipped = true;
-}
+};
 
 /**
  * An event handler triggered when a tab button is clicked in edit view.
@@ -345,7 +346,7 @@ CMSPage.prototype.switchEditTab = function(e) {
     $('.editor .body[data-tab-id=' + e.data.params.id + ']', this.scope).show();
     $('.editor .header button[data-id=' + e.data.params.id + ']', this.scope)
         .addClass('ui-state-active').addClass('ui-state-persist');
-}
+};
 
 /**
  * Creates an error message DIV, styled as an alert tooltip, ready to be inserted into DOM.
@@ -354,12 +355,12 @@ CMSPage.prototype.switchEditTab = function(e) {
  * @returns jQuery The message DIV ready for displaying to the user
  */
 CMSPage.createErrorMessage = function(message) {
-    var messageDiv = $('<div/>').addClass('message ui-widget ui-widget-content ui-corner-all ui-state-error');
-    $('<span/>').addClass('ui-icon ui-icon-alert').appendTo(messageDiv);
-    $('<span/>').html(message).appendTo(messageDiv);
+    var messageDiv = $('<div></div>').addClass('message ui-widget ui-widget-content ui-corner-all ui-state-error');
+    $('<span></span>').addClass('ui-icon ui-icon-alert').appendTo(messageDiv);
+    $('<span></span>').html(message).appendTo(messageDiv);
 
     return messageDiv;
-}
+};
 
 /**
  * Selects a button in the CMS navigation with the given ID.
@@ -390,7 +391,7 @@ CMSPage.selectNavElement = function(id)
         $('div.nav ul[data-parent-id='+itemId+']').show();
         $('div.nav ul li[data-id='+itemId+'] a').addClass('ui-state-active').addClass('ui-state-persist');
     }
-}
+};
 
 /**
  * Selects a button in the CMS navigation with the given ID.
@@ -419,7 +420,7 @@ CMSPage.selectNavElementByName = function(name, preserveSelection)
     }
 
     CMSPage.selectNavElement(id);
-}
+};
 
 /**
  * Page initialization, fires when the whole page is ready.

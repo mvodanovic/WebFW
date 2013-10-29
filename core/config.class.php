@@ -2,8 +2,6 @@
 
 namespace WebFW\Core;
 
-use WebFW\Core\Exception;
-
 class Config
 {
     protected static $configData = array();

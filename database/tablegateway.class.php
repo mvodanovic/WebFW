@@ -3,12 +3,9 @@
 namespace WebFW\Database;
 
 use WebFW\Core\Interfaces\iValidate;
-use WebFW\Database\BaseHandler;
-use WebFW\Database\Table;
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\TableConstraints\ForeignKey;
 use WebFW\Database\Query\Select;
-use WebFW\Database\Query\Join;
 use WebFW\Database\Query\Insert;
 use WebFW\Database\Query\Update;
 use WebFW\Database\Query\Delete;
@@ -468,13 +465,17 @@ abstract class TableGateway extends ArrayAccess implements iValidate
             throw new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql));
         }
 
-        $row = BaseHandler::getInstance()->fetchAssoc($result);
-        if ($row === false) {
-            throw new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql));
-        }
+        if (!BaseHandler::getInstance()->returningClauseIsSupported()) {
+            $this->recordData[$primaryKeyColumns[0]] = BaseHandler::getInstance()->getLastInsertedRowID();
+        } else {
+            $row = BaseHandler::getInstance()->fetchAssoc($result);
+            if ($row === false) {
+                throw new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql));
+            }
 
-        foreach ($row as $key => $value) {
-            $this->recordData[$key] = Table::castValueToType($value, $this->table->getColumn($key)->getType());
+            foreach ($row as $key => $value) {
+                $this->recordData[$key] = Table::castValueToType($value, $this->table->getColumn($key)->getType());
+            }
         }
 
         $this->oldValues = $this->recordData;
