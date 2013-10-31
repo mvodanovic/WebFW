@@ -36,16 +36,9 @@ abstract class ListFetcher
         }
     }
 
-    protected function setTable($table, $namespace = '\\Application\\DBLayer\\Tables\\')
+    protected function setTable(Table $table)
     {
-        $table = $namespace . $table;
-        if (!class_exists($table)) {
-            throw new Exception(
-                'Class doesn\'t exist: ' . $table
-            );
-        }
-        /** @var table Table */
-        $this->table = new $table;
+        $this->table = $table;
     }
 
     /**
@@ -228,7 +221,7 @@ abstract class ListFetcher
         if ($result === false) {
             throw new DBException(
                 'Error while trying to read data from the database.',
-                new DBException(BaseHandler::getInstance()->getLastError())
+                new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql))
             );
         }
 

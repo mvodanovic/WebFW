@@ -12,7 +12,7 @@ use WebFW\Database\TableConstraints\Unique;
 
 class User extends Table
 {
-    public function __construct()
+    protected function __construct()
     {
         $this->setName('cms_user');
 

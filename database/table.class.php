@@ -14,6 +14,8 @@ abstract class Table
     protected $constraints = array();
     protected $primaryKeyConstraintIndex = null;
 
+    protected static $instances = array();
+
     const INDEX_PLAIN = 1;
     const INDEX_UNIQUE = 2;
     const INDEX_FULLTEXT = 3;
@@ -156,4 +158,19 @@ abstract class Table
                 return $value;
         }
     }
+
+    /**
+     * @return Table
+     */
+    public static function getInstance()
+    {
+        $className = get_called_class();
+        if (!array_key_exists($className, static::$instances)) {
+            static::$instances[$className] = new static();
+        }
+
+        return static::$instances[$className];
+    }
+
+    protected function __construct() {}
 }

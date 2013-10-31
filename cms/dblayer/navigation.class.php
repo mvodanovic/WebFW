@@ -3,6 +3,7 @@
 namespace WebFW\CMS\DBLayer;
 
 use WebFW\CMS\DBLayer\ListFetchers\Navigation as NavigationLF;
+use WebFW\CMS\DBLayer\Tables\Navigation as NavigationT;
 use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Route;
 use WebFW\Database\TreeTableGateway;
@@ -14,7 +15,7 @@ class Navigation extends TreeTableGateway
 
     public function __construct()
     {
-        $this->setTable('Navigation', '\\WebFW\\CMS\\DBLayer\\Tables\\');
+        $this->setTable(NavigationT::getInstance());
         $this->nodeLevelColumn = 'node_level';
         $this->parentNodeKeyColumns = array('parent_node_id' => 'node_id');
         $this->maximumTreeDepth = 3;

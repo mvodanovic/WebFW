@@ -11,7 +11,7 @@ use WebFW\Database\TableConstraints\ForeignKey;
 
 class Navigation extends Table
 {
-    public function __construct()
+    protected function __construct()
     {
         $this->setName('cms_navigation');
 

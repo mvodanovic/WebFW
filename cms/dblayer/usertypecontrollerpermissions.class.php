@@ -4,6 +4,7 @@ namespace WebFW\CMS\DBLayer;
 
 use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Database\TableGateway;
+use WebFW\CMS\DBLayer\Tables\UserTypeControllerPermissions as UTCPT;
 
 class UserTypeControllerPermissions extends TableGateway
 {
@@ -20,7 +21,7 @@ class UserTypeControllerPermissions extends TableGateway
 
     public function __construct()
     {
-        $this->setTable('UserTypeControllerPermissions', '\\WebFW\\CMS\\DBLayer\\Tables\\');
+        $this->setTable(UTCPT::getInstance());
         parent::__construct();
     }
 

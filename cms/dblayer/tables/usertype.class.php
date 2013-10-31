@@ -11,7 +11,7 @@ use WebFW\Database\TableConstraints\Unique;
 
 class UserType extends Table
 {
-    public function __construct()
+    protected function __construct()
     {
         $this->setName('cms_user_type');
 

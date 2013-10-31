@@ -120,11 +120,19 @@ class SQLite3Handler extends BaseHandler
 
     public function getLimitAndOffset($limit, $offset = 0)
     {
-        if ($offset > 0) {
-            $limit = $offset . ', ' . $limit;
+        if ($limit <= 0) {
+            return '';
         }
 
-        return 'LIMIT ' . $limit;
+        $return = 'LIMIT ' . $limit;
+
+        if ($offset <= 0) {
+            return $return;
+        }
+
+        $return .= ' OFFSET ' . $offset;
+
+        return $return;
     }
 
     public function convertBoolean($value)

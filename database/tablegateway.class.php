@@ -44,16 +44,9 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         }
     }
 
-    protected function setTable($table, $namespace = '\\Application\\DBLayer\\Tables\\')
+    protected function setTable(Table $table)
     {
-        $table = $namespace . $table;
-        if (!class_exists($table)) {
-            throw new Exception('Cannot instantiate table: ' . $table);
-        }
-        $this->table = new $table();
-        if (!($this->table instanceof Table)) {
-            throw new Exception('Class ' . $table . ' not an instance of WebFW\\Database\\Table');
-        }
+        $this->table = $table;
     }
 
     /**

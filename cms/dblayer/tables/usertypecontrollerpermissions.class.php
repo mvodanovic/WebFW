@@ -10,7 +10,7 @@ use WebFW\Database\TableConstraints\ForeignKey;
 
 class UserTypeControllerPermissions extends Table
 {
-    public function __construct()
+    protected function __construct()
     {
         $this->setName('cms_user_type_ctl_perms');
 

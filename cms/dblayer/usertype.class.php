@@ -3,12 +3,13 @@
 namespace WebFW\CMS\DBLayer;
 
 use WebFW\Database\TableGateway;
+use WebFW\CMS\DBLayer\Tables\UserType as UserTypeT;
 
 class UserType extends TableGateway
 {
     public function __construct()
     {
-        $this->setTable('UserType', '\\WebFW\\CMS\\DBLayer\\Tables\\');
+        $this->setTable(UserTypeT::getInstance());
         parent::__construct();
     }
 }
