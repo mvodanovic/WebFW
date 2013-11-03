@@ -11,17 +11,15 @@ use WebFW\Database\TableConstraints\Unique;
 
 class UserType extends Table
 {
-    protected function __construct()
+    protected function init()
     {
         $this->setName('cms_user_type');
 
-        $this->addColumn(new IntegerColumn('user_type_id', false));
-        $this->addColumn(new VarcharColumn('caption', false, 100));
-        $this->addColumn(new BooleanColumn('is_root', false));
+        $this->addColumn(IntegerColumn::spawn($this, 'user_type_id', false)->setDefaultValue(null, true));
+        $this->addColumn(VarcharColumn::spawn($this, 'caption', false, 100));
+        $this->addColumn(BooleanColumn::spawn($this, 'is_root', false));
 
-        $this->getColumn('user_type_id')->setDefaultValue(null, true);
-
-        $this->addConstraint(new PrimaryKey('user_type_id'));
-        $this->addConstraint(new Unique('caption'));
+        $this->addConstraint(PrimaryKey::spawn($this)->addColumn($this->getColumn('user_type_id')));
+        $this->addConstraint(Unique::spawn($this)->addColumn($this->getColumn('caption')));
     }
 }

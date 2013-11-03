@@ -5,6 +5,7 @@ namespace WebFW\Database;
 use WebFW\Core\Exception;
 use WebFW\Core\Exceptions\DBException;
 use WebFW\Database\Query\Join;
+use WebFW\Database\TableConstraints\Constraint;
 use WebFW\Database\TableConstraints\ForeignKey;
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\Query\Select;
@@ -32,7 +33,7 @@ abstract class ListFetcher
         }
 
         foreach ($this->table->getPrimaryKeyColumns() as $column) {
-            $this->sort[$column] = 'DESC';
+            $this->sort[$column->getName()] = 'DESC';
         }
     }
 
@@ -74,24 +75,9 @@ abstract class ListFetcher
         return $this->tableGateway;
     }
 
-    protected function addJoin($tableFieldNames, $table, $namespace = '\\Application\\DBLayer\\Tables\\', $joinType = Join::TYPE_INNER)
+    protected function addJoin(ForeignKey $foreignKey, $joinType = Join::TYPE_INNER)
     {
-        $table = $namespace . $table;
-        if (!class_exists($table)) {
-            throw new Exception('Cannot instantiate table: ' . $table);
-        }
-        /** @var $tableInstance Table */
-        $tableInstance = new $table();
-        if (!($tableInstance instanceof Table)) {
-            throw new Exception('Class ' . $table . ' not an instance of WebFW\\Database\\Table');
-        }
-
-        $foreignKey = $tableInstance->getConstraint($tableFieldNames);
-        if (!($foreignKey instanceof ForeignKey)) {
-            throw new Exception('No foreign keys defined on table ' . $table . ' with fields: ' . implode(', ', $tableFieldNames));
-        }
         $this->tableJoins[] = array(
-            'table' => $tableInstance,
             'foreignKey' => $foreignKey,
             'joinType' => $joinType,
         );
@@ -132,17 +118,20 @@ abstract class ListFetcher
         $select->appendSemicolon();
 
         foreach ($this->tableJoins as &$joinDef) {
-            /** @var $foreignTable Table */
-            $foreignTable = &$joinDef['table'];
             /** @var $foreignKey ForeignKey */
             $foreignKey = &$joinDef['foreignKey'];
+            $foreignTable = $foreignKey->getReferencedTable();
             $join = new Join($foreignTable->getName(), $foreignTable->getAlias(), $joinDef['joinType']);
-            foreach ($foreignKey->getReferences() as $column => $foreignColumn) {
+            foreach ($foreignKey->getReferences() as $columns) {
+                /** @var Column $localColumn */
+                $localColumn = $columns['local'];
+                /** @var Column $referencedColumn */
+                $referencedColumn = $columns['referenced'];
                 $join->addJoinTerm(
                     $this->table->getAliasedName(),
-                    $column,
+                    $localColumn->getName(),
                     $foreignTable->getAliasedName(),
-                    $foreignColumn
+                    $referencedColumn->getName()
                 );
             }
             $select->addJoin($join);

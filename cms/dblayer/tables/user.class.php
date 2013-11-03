@@ -12,35 +12,29 @@ use WebFW\Database\TableConstraints\Unique;
 
 class User extends Table
 {
-    protected function __construct()
+    protected function init()
     {
         $this->setName('cms_user');
 
-        $this->addColumn(new IntegerColumn('user_id', false));
-        $this->addColumn(new IntegerColumn('user_type_id', false));
-        $this->addColumn(new VarcharColumn('username', true, 50));
-        $this->addColumn(new VarcharColumn('email', false, 100));
-        $this->addColumn(new VarcharColumn('password_username', false, 64));
-        $this->addColumn(new VarcharColumn('password_email', false, 64));
-        $this->addColumn(new VarcharColumn('first_name', true, 100));
-        $this->addColumn(new VarcharColumn('last_name', true, 100));
-        $this->addColumn(new VarcharColumn('address', true, 200));
-        $this->addColumn(new BooleanColumn('active', false));
+        $this->addColumn(IntegerColumn::spawn($this, 'user_id', false)->setDefaultValue(null, true));
+        $this->addColumn(IntegerColumn::spawn($this, 'user_type_id', false));
+        $this->addColumn(VarcharColumn::spawn($this, 'username', true, 50));
+        $this->addColumn(VarcharColumn::spawn($this, 'email', false, 100));
+        $this->addColumn(VarcharColumn::spawn($this, 'password_username', false, 64));
+        $this->addColumn(VarcharColumn::spawn($this, 'password_email', false, 64));
+        $this->addColumn(VarcharColumn::spawn($this, 'first_name', true, 100)->setDefaultValue(null));
+        $this->addColumn(VarcharColumn::spawn($this, 'last_name', true, 100)->setDefaultValue(null));
+        $this->addColumn(VarcharColumn::spawn($this, 'address', true, 200)->setDefaultValue(null));
+        $this->addColumn(BooleanColumn::spawn($this, 'active', false)->setDefaultValue(false));
 
-        $this->getColumn('user_id')->setDefaultValue(null, true);
-        $this->getColumn('active')->setDefaultValue(false);
-        $this->getColumn('first_name')->setDefaultValue(null);
-        $this->getColumn('last_name')->setDefaultValue(null);
-        $this->getColumn('address')->setDefaultValue(null);
-
-        $this->addConstraint(new PrimaryKey('user_id'));
-        $this->addConstraint(new ForeignKey(
-            'cms_user_type',
-            array('user_type_id' => 'user_type_id'),
+        $this->addConstraint(PrimaryKey::spawn($this)->addColumn($this->getColumn('user_id')));
+        $this->addConstraint(ForeignKey::spawn(
+            $this,
             ForeignKey::ACTION_CASCADE,
-            ForeignKey::ACTION_RESTRICT
-        ));
-        $this->addConstraint(new Unique('username'));
-        $this->addConstraint(new Unique('email'));
+            ForeignKey::ACTION_RESTRICT,
+            'fk_cms_user_user_type_id'
+        )->addReference($this->getColumn('user_type_id'), UserType::getInstance()->getColumn('user_type_id')));
+        $this->addConstraint(Unique::spawn($this)->addColumn($this->getColumn('username')));
+        $this->addConstraint(Unique::spawn($this)->addColumn($this->getColumn('email')));
     }
 }

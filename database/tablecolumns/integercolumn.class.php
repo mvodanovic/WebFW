@@ -2,10 +2,12 @@
 
 namespace WebFW\Database\TableColumns;
 
+use WebFW\Database\Table;
+
 class IntegerColumn extends Column
 {
-    public function __construct($name, $nullable = true, $precision = null)
+    public function __construct(Table $table, $name, $nullable = true, $precision = null)
     {
-        parent::__construct($name, static::TYPE_INTEGER, $nullable, $precision);
+        parent::__construct($table, $name, static::TYPE_INTEGER, $nullable, $precision);
     }
 }

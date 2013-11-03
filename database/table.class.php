@@ -12,6 +12,7 @@ abstract class Table
     protected $alias = null;
     protected $columns = array();
     protected $constraints = array();
+    protected $namedConstraints = array();
     protected $primaryKeyConstraintIndex = null;
 
     protected static $instances = array();
@@ -33,7 +34,10 @@ abstract class Table
 
     protected function addConstraint(Constraint $constraint)
     {
-        $this->constraints[] = &$constraint;
+        $this->constraints[] = $constraint;
+        if ($constraint->getName() !== null) {
+            $this->namedConstraints[$constraint->getName()] = $constraint;
+        }
 
         if ($constraint->getType() === Constraint::TYPE_PRIMARY_KEY) {
             if ($this->primaryKeyConstraintIndex !== null) {
@@ -47,30 +51,13 @@ abstract class Table
     }
 
     /**
-     * @param $constraintFieldNames
+     * @param $name
      * @return null|Constraint
      */
-    public function getConstraint($constraintFieldNames)
+    public function getConstraint($name)
     {
-        if (!is_array($constraintFieldNames)) {
-            $constraintFieldNames = array($constraintFieldNames);
-        }
-
-        foreach ($this->constraints as $constraint) {
-            /** @var $constraint Constraint */
-            if (count ($constraintFieldNames) !== count($constraint->getColumns())) {
-                continue;
-            }
-            $isMatch = true;
-            foreach ($constraint->getColumns() as $column) {
-                if (!in_array($column, $constraintFieldNames)) {
-                    $isMatch = false;
-                    break;
-                }
-            }
-            if ($isMatch) {
-                return $constraint;
-            }
+        if (array_key_exists($name, $this->namedConstraints)) {
+            return $this->namedConstraints[$name];
         }
 
         return null;
@@ -167,10 +154,13 @@ abstract class Table
         $className = get_called_class();
         if (!array_key_exists($className, static::$instances)) {
             static::$instances[$className] = new static();
+            static::$instances[$className]->init();
         }
 
         return static::$instances[$className];
     }
 
     protected function __construct() {}
+
+    abstract protected function init();
 }

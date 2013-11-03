@@ -10,26 +10,24 @@ use WebFW\Database\TableConstraints\ForeignKey;
 
 class UserTypeControllerPermissions extends Table
 {
-    protected function __construct()
+    protected function init()
     {
         $this->setName('cms_user_type_ctl_perms');
 
-        $this->addColumn(new IntegerColumn('user_type_id', false));
-        $this->addColumn(new VarcharColumn('controller', false, 100));
-        $this->addColumn(new VarcharColumn('namespace', false, 200));
-        $this->addColumn(new IntegerColumn('permissions', false));
+        $this->addColumn(IntegerColumn::spawn($this, 'user_type_id', false)->setDefaultValue(null));
+        $this->addColumn(VarcharColumn::spawn($this, 'controller', false, 100)->setDefaultValue(null));
+        $this->addColumn(VarcharColumn::spawn($this, 'namespace', false, 200)->setDefaultValue(null));
+        $this->addColumn(IntegerColumn::spawn($this, 'permissions', false)->setDefaultValue(0));
 
-        $this->getColumn('user_type_id')->setDefaultValue(null);
-        $this->getColumn('controller')->setDefaultValue(null);
-        $this->getColumn('namespace')->setDefaultValue(null);
-        $this->getColumn('permissions')->setDefaultValue(0);
-
-        $this->addConstraint(new PrimaryKey(array('user_type_id', 'controller', 'namespace')));
-        $this->addConstraint(new ForeignKey(
-            'cms_user_type',
-            array('user_type_id' => 'user_type_id'),
+        $this->addConstraint(PrimaryKey::spawn($this)
+            ->addColumn($this->getColumn('user_type_id'))
+            ->addColumn($this->getColumn('controller'))
+            ->addColumn($this->getColumn('namespace'))
+        );
+        $this->addConstraint(ForeignKey::spawn(
+            $this,
             ForeignKey::ACTION_CASCADE,
             ForeignKey::ACTION_CASCADE
-        ));
+        )->addReference($this->getColumn('user_type_id'), UserType::getInstance()->getColumn('user_type_id')));
     }
 }

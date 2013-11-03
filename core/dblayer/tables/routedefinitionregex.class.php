@@ -11,28 +11,26 @@ use WebFW\Database\TableConstraints\Unique;
 
 class RouteDefinitionRegex extends Table
 {
-    public function __construct()
+    protected function init()
     {
         $this->setName('webfw_route_definition_regex');
 
-        $this->addColumn(new IntegerColumn('item_id', false));
-        $this->addColumn(new IntegerColumn('route_definition_id', false));
-        $this->addColumn(new VarcharColumn('variable', false, 50));
-        $this->addColumn(new VarcharColumn('regex', true, 200));
+        $this->addColumn(IntegerColumn::spawn($this, 'item_id', false)->setDefaultValue(null, true));
+        $this->addColumn(IntegerColumn::spawn($this, 'route_definition_id', false)->setDefaultValue(null));
+        $this->addColumn(VarcharColumn::spawn($this, 'variable', false, 50)->setDefaultValue(null));
+        $this->addColumn(VarcharColumn::spawn($this, 'regex', true, 200)->setDefaultValue(null));
 
-        $this->getColumn('item_id')->setDefaultValue(null, true);
-        $this->getColumn('route_definition_id')->setDefaultValue(null);
-        $this->getColumn('variable')->setDefaultValue(null);
-        $this->getColumn('regex')->setDefaultValue(null);
-
-
-        $this->addConstraint(new PrimaryKey('item_id'));
-        $this->addConstraint(new ForeignKey(
-            'webfw_route_definition',
-            array('route_definition_id' => 'route_definition_id'),
-            ForeignKey::ACTION_CASCADE,
-            ForeignKey::ACTION_CASCADE
-        ));
-        $this->addConstraint(new Unique(array('route_definition_id', 'variable')));
+        $this->addConstraint(PrimaryKey::spawn($this)->addColumn($this->getColumn('item_id')));
+        $this->addConstraint(ForeignKey::spawn(
+                $this,
+                ForeignKey::ACTION_CASCADE,
+                ForeignKey::ACTION_CASCADE,
+                'fk_webfw_route_def_regex'
+            )->addReference(
+                $this->getColumn('route_definition_id'),
+                RouteDefinition::getInstance()->getColumn('route_definition_id'))
+        );
+        $this->addConstraint(Unique::spawn($this)
+            ->addColumn($this->getColumn('route_definition_id'))->addColumn($this->getColumn('variable')));
     }
 }

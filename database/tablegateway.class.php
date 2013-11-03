@@ -60,18 +60,18 @@ abstract class TableGateway extends ArrayAccess implements iValidate
     /**
      * Adds a foreign list fetcher to the table gateway.
      *
-     * @note The list fetcher is used for fetching lists of data from dependant tables.
-     * @note The list fetcher must have a table gateway defined, the list will be populated with table gateways.
-     * @note The list fetcher's table must have a foreign key referencing this table gateway's table.
+     * The list fetcher is used for fetching lists of data from dependant tables.
+     * The list fetcher must have a table gateway defined, the list will be populated with table gateways.
+     * The foreign key must be defined inside the table of list fetcher's table gateway.
      *
-     * @param string $collectionFieldName - name under which the list will be stored in the table gateway
-     * @param array|string $tableFieldNames - name of dependant table's fields which compose the foreign key
-     * @param string $listFetcher - name of the list fetcher
-     * @param string $namespace - namespace of the list fetcher
-     * @throws \WebFW\Core\Exception - if called with invalid parameters
+     * @param string $collectionFieldName Name under which the list will be stored in the table gateway
+     * @param ForeignKey $foreignKey The foreign key instance
+     * @param string $listFetcher Name of the list fetcher
+     * @param string $namespace Namespace of the list fetcher
+     * @throws \WebFW\Core\Exception If called with invalid parameters
      * @see useForeignListFetchers
      */
-    public function addForeignListFetcher($collectionFieldName, $tableFieldNames, $listFetcher, $namespace = '\\Application\\DBLayer\\ListFetchers\\')
+    public function addForeignListFetcher($collectionFieldName, ForeignKey $foreignKey, $listFetcher, $namespace = '\\Application\\DBLayer\\ListFetchers\\')
     {
         $listFetcher = $namespace . $listFetcher;
         if (!class_exists($listFetcher)) {
@@ -87,9 +87,9 @@ abstract class TableGateway extends ArrayAccess implements iValidate
             throw new Exception('Foreign list fetcher ' . $listFetcher . ' has no table gateway specified');
         }
 
-        $foreignKey = $listFetcherInstance->getTable()->getConstraint($tableFieldNames);
-        if (!($foreignKey instanceof ForeignKey)) {
-            throw new Exception('No foreign keys defined for list fetcher ' . $listFetcher . ' with fields: ' . implode(', ', $tableFieldNames));
+        if (get_class($listFetcherInstance->getTableGateway()->getTable()) !== $foreignKey->getReferencedTable()) {
+            throw new Exception('Foreign key not specified in table '
+                . $listFetcherInstance->getTableGateway()->getTable()->getAliasedName());
         }
 
         $this->foreignListFetchers[$collectionFieldName] = array(
@@ -281,7 +281,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         }
 
         try {
-            $this->loadBy(array($primaryKey[0] => $primaryKeyValue));
+            $this->loadBy(array($primaryKey[0]->getName() => $primaryKeyValue));
         } catch (NotFoundException $e) {
             throw $e;
         } catch (Exception $e) {
@@ -575,9 +575,9 @@ abstract class TableGateway extends ArrayAccess implements iValidate
     {
         $values = array();
         foreach ($this->getPrimaryKeyColumns() as $column) {
-            $key = $column;
+            $key = $column->getName();
             if ($usePrefix === true) {
-                $key = static::PRIMARY_KEY_PREFIX . $column;
+                $key = static::PRIMARY_KEY_PREFIX . $column->getName();
             }
             $values[$key] = $this->$column;
         }
