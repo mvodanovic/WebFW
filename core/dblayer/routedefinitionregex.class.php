@@ -12,4 +12,9 @@ class RouteDefinitionRegex extends TableGateway
         $this->setTable(TRouteDefinitionRegex::getInstance());
         parent::__construct();
     }
+
+    public function getCaption()
+    {
+        return $this->variable;
+    }
 }

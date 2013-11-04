@@ -40,4 +40,9 @@ class User extends TableGateway
     {
         return implode(' ', array($this->firstName, $this->lastName));
     }
+
+    public function getCaption()
+    {
+        return $this->username === null ? $this->email : $this->username;
+    }
 }

@@ -12,4 +12,9 @@ class UserType extends TableGateway
         $this->setTable(UserTypeT::getInstance());
         parent::__construct();
     }
+
+    public function getCaption()
+    {
+        return $this->caption;
+    }
 }

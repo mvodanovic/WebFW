@@ -26,4 +26,9 @@ class RouteDefinition extends TableGateway
         );
         parent::__construct();
     }
+
+    public function getCaption()
+    {
+        return $this->pattern;
+    }
 }

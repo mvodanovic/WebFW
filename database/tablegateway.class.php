@@ -788,4 +788,6 @@ abstract class TableGateway extends ArrayAccess implements iValidate
     {
         $this->validationErrors = array();
     }
+
+    abstract public function getCaption();
 }

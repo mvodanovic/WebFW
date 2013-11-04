@@ -47,4 +47,9 @@ class UserTypeControllerPermissions extends TableGateway
     {
         return ($this->permissions & $type) === $type;
     }
+
+    public function getCaption()
+    {
+        return $this->getUserTypeCaption() . ' - ' . $this->getControllerCaption();
+    }
 }

@@ -12,4 +12,9 @@ class RouteDefinitionParam extends TableGateway
         $this->setTable(TRouteDefinitionParam::getInstance());
         parent::__construct();
     }
+
+    public function getCaption()
+    {
+        return $this->key;
+    }
 }

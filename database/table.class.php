@@ -3,8 +3,10 @@ namespace WebFW\Database;
 
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\TableConstraints\Constraint;
+use WebFW\Database\TableConstraints\ForeignKey;
 use WebFW\Database\TableConstraints\PrimaryKey;
 use WebFW\Core\Exception;
+use WebFW\Database\TableConstraints\Unique;
 
 abstract class Table
 {
@@ -52,7 +54,7 @@ abstract class Table
 
     /**
      * @param $name
-     * @return null|Constraint
+     * @return null|Constraint|PrimaryKey|ForeignKey|Unique
      */
     public function getConstraint($name)
     {
