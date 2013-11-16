@@ -10,6 +10,7 @@ class Config
     {
         static::loadConfig();
         static::parseConfigData();
+        date_default_timezone_set(Config::get('General', 'timezone'));
     }
 
     protected static function loadConfig()
