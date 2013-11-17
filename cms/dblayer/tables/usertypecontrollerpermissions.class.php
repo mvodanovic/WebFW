@@ -15,16 +15,14 @@ class UserTypeControllerPermissions extends Table
         $this->setName('cms_user_type_ctl_perms');
 
         $this->addColumn(new IntegerColumn('user_type_id', false));
-        $this->addColumn(new VarcharColumn('controller', false, 100));
-        $this->addColumn(new VarcharColumn('namespace', false, 200));
+        $this->addColumn(new VarcharColumn('controller', false, 150));
         $this->addColumn(new IntegerColumn('permissions', false));
 
         $this->getColumn('user_type_id')->setDefaultValue(null);
         $this->getColumn('controller')->setDefaultValue(null);
-        $this->getColumn('namespace')->setDefaultValue(null);
         $this->getColumn('permissions')->setDefaultValue(0);
 
-        $this->addConstraint(new PrimaryKey(array('user_type_id', 'controller', 'namespace')));
+        $this->addConstraint(new PrimaryKey(array('user_type_id', 'controller')));
         $this->addConstraint(new ForeignKey(
             'cms_user_type',
             array('user_type_id' => 'user_type_id'),

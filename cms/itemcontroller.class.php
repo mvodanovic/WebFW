@@ -351,6 +351,6 @@ abstract class ItemController extends Controller implements iValidate
 
     protected function getSessionKey($operation)
     {
-        return 'webfw-' . $operation . '-' . $this->ns . $this->ctl;
+        return 'webfw-' . $operation . '-' . static::className();
     }
 }

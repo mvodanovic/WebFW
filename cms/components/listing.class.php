@@ -8,15 +8,22 @@ use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Component;
 use WebFW\Core\Exception;
 use WebFW\CMS\ListController;
+use WebFW\Database\ListFetcher;
 use WebFW\Database\TableGateway;
 
 class Listing extends Component
 {
+    /**
+     * @var ListController
+     */
+    protected $ownerObject;
+
     public function execute()
     {
         if (!($this->ownerObject instanceof ListController)) {
-            throw new Exception('Owner must be an instance of \\WebFW\\CMS\\Controller');
+            throw new Exception('Owner must be an instance of ' . ListController::className());
         }
+        /** @var ListFetcher $listFetcher */
         $listFetcher = $this->ownerObject->getListFetcher();
         $filter = $this->ownerObject->getFilter();
         $sort = $this->ownerObject->getSort();
@@ -24,14 +31,13 @@ class Listing extends Component
         $itemsPerPage = $this->ownerObject->getItemsPerPage();
         $listColumns = $this->ownerObject->getListColumns();
         $columnCount = count($listColumns);
-        $controllerName = $this->ownerObject->getName();
-        $namespace = $this->ownerObject->getNamespace();
+        $controllerName = $this->ownerObject->className();
         $filterValues = $this->ownerObject->getFilterValues();
         $messages = $this->ownerObject->getMessages();
         $listActions = $this->ownerObject->getListActions();
         $listRowActions = $this->ownerObject->getListRowActions();
         $listMassActions = $this->ownerObject->getListMassActions();
-        $hasCheckboxes = empty($listMassActions) ? false : true; //$this->ownerObject->getListHasCheckboxes();
+        $hasCheckboxes = empty($listMassActions) ? false : true;
 
         if (!empty($listRowActions)) {
             $columnCount++;
@@ -52,7 +58,6 @@ class Listing extends Component
         $this->setTplVar('page', $page);
         $this->setTplVar('itemsPerPage', $itemsPerPage);
         $this->setTplVar('controllerName', $controllerName);
-        $this->setTplVar('namespace', $namespace);
         $this->setTplVar('filterValues', $filterValues);
         $this->setTplVar('messages', $messages);
         $this->setTplVar('listActions', $listActions);

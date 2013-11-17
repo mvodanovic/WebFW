@@ -3,6 +3,8 @@
 namespace WebFW\Core;
 
 use ReflectionClass;
+use WebFW\CMS\CMSLogin;
+use WebFW\CMS\Controllers\User;
 use WebFW\Core\Classes\BaseClass;
 
 class Router extends BaseClass
@@ -32,14 +34,14 @@ class Router extends BaseClass
     protected function __construct() {
         $this->routeDefs[] = array(
             'pattern' => 'cms',
-            'route' => new Route('CMSLogin', null, '\\WebFW\\CMS\\'),
+            'route' => new Route(CMSLogin::className()),
             'variables' => array(
             ),
         );
 
         $this->routeDefs[] = array(
             'pattern' => 'cms/webfw/:ctl:/:action:',
-            'route' => new Route(null, null, '\\WebFW\\CMS\\Controllers\\'),
+            'route' => new Route(null, null, User::classNamespace()),
             'variables' => array(
             ),
         );
@@ -50,14 +52,21 @@ class Router extends BaseClass
         return $this->routeDefs;
     }
 
-    protected function getURLForRouteDef($routeDef, $controller, $action, $namespace, $params, $amp, $encodeFunction)
+    protected function getURLForRouteDef($routeDef, $controller, $action, $params, $amp, $encodeFunction)
     {
-        $controllerClass = $namespace . $controller;
         $pattern = Config::get('General', 'rewriteBase') . $routeDef['pattern'];
         $route = &$routeDef['route'];
         $variables = &$routeDef['variables'];
         if ($params === null) {
             $params = array();
+        }
+
+        if ($route->namespace !== null) {
+            if (strpos($controller, $route->namespace) !== 0) {
+                return null;
+            }
+
+            $controller = substr($controller, strlen($route->namespace) + 1);
         }
 
         /// Check parameters with route
@@ -72,12 +81,6 @@ class Router extends BaseClass
                 return null;
             }
             $action = null;
-        }
-        if ($route->namespace !== null) {
-            if ($namespace !== $route->namespace) {
-                return null;
-            }
-            $namespace = null;
         }
         foreach ($route->params as $key => $value) {
             if (!array_key_exists($key, $params) || $params[$key] !== $value) {
@@ -107,11 +110,6 @@ class Router extends BaseClass
                         return null;
                     }
                     break;
-                case 'ns':
-                    if (!preg_match("#^$paramPattern$#", $namespace)) {
-                        return null;
-                    }
-                    break;
                 default:
                     if (!array_key_exists($param, $params)) {
                         return null;
@@ -127,7 +125,7 @@ class Router extends BaseClass
         /// Those parameters which were injected are nullified
         $url = preg_replace_callback(
             "#:([a-zA-Z0-9]+):#",
-            function($matches) use (&$controller, &$action, &$namespace, &$params, $encodeFunction) {
+            function($matches) use (&$controller, &$action, &$params, $encodeFunction) {
                 switch ($matches[1]) {
                     case 'ctl':
                         $value = $encodeFunction($controller);
@@ -136,10 +134,6 @@ class Router extends BaseClass
                     case 'action':
                         $value = $encodeFunction($action);
                         $action = null;
-                        break;
-                    case 'ns':
-                        $value = $encodeFunction($namespace);
-                        $namespace = null;
                         break;
                     default:
                         $value = $encodeFunction($params[$matches[1]]);
@@ -157,10 +151,7 @@ class Router extends BaseClass
         if ($controller !== null && $controller !== Config::get('General', 'defaultController')) {
             $urlParams[] = 'ctl=' . $encodeFunction($controller);
         }
-        if ($namespace !== null && $namespace !== Config::get('General', 'defaultControllerNamespace')) {
-            $urlParams[] = 'ns=' . $encodeFunction($namespace);
-        }
-        if ($action !== null && $action !== $controllerClass::DEFAULT_ACTION_NAME) {
+        if ($action !== null && $action !== $controller::DEFAULT_ACTION_NAME) {
             $urlParams[] = 'action=' . $encodeFunction($action);
         }
         foreach ($params as $key => $value) {
@@ -177,7 +168,7 @@ class Router extends BaseClass
         return $url;
     }
 
-    public function URL($controller, $action = null, $namespace = null, $params = array(), $escapeAmps = true, $rawurlencode = true)
+    public function URL($controller, $action = null, $params = array(), $escapeAmps = true, $rawurlencode = true)
     {
         /// Set the query param delimiter
         $amp = '&amp;';
@@ -195,20 +186,16 @@ class Router extends BaseClass
         if ($controller === null) {
             $controller = Config::get('General', 'defaultController');
         }
-        if ($namespace === null) {
-            $namespace = Config::get('General', 'defaultControllerNamespace');
-        }
-        $controllerClass = $namespace . $controller;
-        if (!class_exists($controllerClass)) {
+        if (!class_exists($controller)) {
             return null;
         }
         if ($action === null) {
-            $action = $controllerClass::DEFAULT_ACTION_NAME;
+            $action = $controller::DEFAULT_ACTION_NAME;
         }
 
         /// Try to match the parameters with existing route definitions
         foreach ($this->routeDefs as &$routeDef) {
-            $url = $this->getURLForRouteDef($routeDef, $controller, $action, $namespace, $params, $amp, $encodeFunction);
+            $url = $this->getURLForRouteDef($routeDef, $controller, $action, $params, $amp, $encodeFunction);
             if ($url !== null) {
                 return $url;
             }
@@ -219,10 +206,7 @@ class Router extends BaseClass
         if ($controller !== Config::get('General', 'defaultController')) {
             $urlParams[] = 'ctl=' . $encodeFunction($controller);
         }
-        if ($namespace !== Config::get('General', 'defaultControllerNamespace')) {
-            $urlParams[] = 'ns=' . $encodeFunction($namespace);
-        }
-        if ($action !== $controllerClass::DEFAULT_ACTION_NAME) {
+        if ($action !== $controller::DEFAULT_ACTION_NAME) {
             $urlParams[] = 'action=' . $encodeFunction($action);
         }
         if (is_array($params)) {
@@ -245,13 +229,12 @@ class Router extends BaseClass
 
     public function URLFromRoute(Route $route, $escapeAmps = true, $rawurlencode = true)
     {
+        $controller = $route->controller;
+        if ($route->namespace !== null) {
+            $controller = $route->namespace . '\\' . $controller;
+        }
         return $this->URL(
-            $route->controller,
-            $route->action,
-            $route->namespace,
-            $route->params,
-            $escapeAmps,
-            $rawurlencode
+            $controller, $route->action, $route->params, $escapeAmps, $rawurlencode
         );
     }
 

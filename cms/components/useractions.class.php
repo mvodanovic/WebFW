@@ -3,6 +3,7 @@
 namespace WebFW\CMS\Components;
 
 use WebFW\CMS\Classes\PermissionsHelper;
+use WebFW\CMS\CMSLogin;
 use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
 use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Component;
@@ -24,11 +25,10 @@ class UserActions extends Component
 
         /// If the user has permissions to access LoggedUser controller, give him a link.
         if (PermissionsHelper::checkForControllerByName(
-            'LoggedUser',
-            '\\WebFW\\CMS\\Controllers\\',
+            LoggedUserCtl::className(),
             UTCP::TYPE_SELECT
         )) {
-            $url = Router::getInstance()->URL('LoggedUser', null, '\\WebFW\\CMS\\Controllers\\', null, false);
+            $url = Router::getInstance()->URL(LoggedUserCtl::className(), null, null, false);
             $options = array(
                 'icons' => array('primary' => 'ui-icon-person'),
                 'label' => $messageText,
@@ -47,7 +47,7 @@ class UserActions extends Component
             $message = new Message($messageText);
         }
 
-        $url = Router::getInstance()->URL('CMSLogin', 'doLogout', '\\WebFW\\CMS\\', null, false);
+        $url = Router::getInstance()->URL(CMSLogin::className(), 'doLogout', null, false);
         $options = array(
             'icons' => array('primary' => 'ui-icon-power'),
             'label' => 'Logout',

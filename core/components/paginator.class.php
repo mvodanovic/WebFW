@@ -80,11 +80,7 @@ class Paginator extends Component
         /// Generate URL using a controller name
         if ($this->getParam('ctl') !== null) {
             $url = Router::getInstance()->URL(
-                $this->getParam('ctl'),
-                $this->getParam('action'),
-                $this->getParam('ns'),
-                $params,
-                $this->getParam('escapeAmps')
+                $this->getParam('ctl'), $this->getParam('action'), $params, $this->getParam('escapeAmps')
             );
 
         /// Generate URL using a base URL
@@ -104,10 +100,7 @@ class Paginator extends Component
         /// Generate URL using the owner controller
         } elseif ($this->ownerObject instanceof Controller) {
             $url = Router::getInstance()->URL(
-                $this->ownerObject->className(),
-                $this->ownerObject->getAction(),
-                $params,
-                $this->getParam('escapeAmps')
+                $this->ownerObject->className(), $this->ownerObject->getAction(), $this->getParam('escapeAmps')
             );
 
         /// Fallback - generate URL using the rewriteBase

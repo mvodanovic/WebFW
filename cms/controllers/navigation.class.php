@@ -58,12 +58,7 @@ class Navigation extends TreeController
         $tab->addField(
             new Input('controller', 'text'),
             'Controller',
-            "Controller name without the namespace.\nLeave all route fields blank to use the node as a parent node."
-        );
-        $tab->addField(
-            new Input('namespace', 'text'),
-            'Namespace',
-            'Full namespace including both the starting and ending slash.'
+            "Controller name with the namespace.\nLeave blank to use the node as a parent node."
         );
         $tab->addField(
             new Input('action', 'text'),
@@ -93,6 +88,7 @@ class Navigation extends TreeController
     public function processList(&$list)
     {
         foreach ($list as &$item) {
+            /** @var TGNavigation $item */
             $item['strActive'] = static::getBooleanPrint($item['active']);
             $item['strChildrenCount'] = $item->getChildrenNodeCount();
         }
@@ -100,6 +96,7 @@ class Navigation extends TreeController
 
     public function processEdit(TableGateway &$item)
     {
+        /** @var TreeTableGateway $item */
         $parent = $item->getParentNode();
 
         if ($parent instanceof TreeTableGateway) {

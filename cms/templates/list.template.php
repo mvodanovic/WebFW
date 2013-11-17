@@ -1,9 +1,12 @@
 <?php
 
+use WebFW\CMS\ListController;
 use WebFW\Core\Framework;
+
+/** @var $controller ListController */
 
 ?>
 
-<?=Framework::runComponent('Filter', '\\WebFW\\CMS\\Components\\', null, $controller); ?>
-<?=Framework::runComponent('TreeBreadcrumbs', '\\WebFW\\CMS\\Components\\', null, $controller); ?>
-<?=Framework::runComponent('Listing', '\\WebFW\\CMS\\Components\\', null, $controller); ?>
+<?=Framework::runComponent('WebFW\\CMS\\Components\\Filter', null, $controller); ?>
+<?=Framework::runComponent('WebFW\\CMS\\Components\\TreeBreadcrumbs', null, $controller); ?>
+<?=Framework::runComponent('WebFW\\CMS\\Components\\Listing', null, $controller); ?>

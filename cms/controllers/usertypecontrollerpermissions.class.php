@@ -13,6 +13,11 @@ use WebFW\CMS\DBLayer\ListFetchers\UserType as LFUserType;
 
 class UserTypeControllerPermissions extends ListController
 {
+    /**
+     * @var TGUTCP
+     */
+    protected $tableGateway = null;
+
     protected function init()
     {
         $this->pageTitle = 'CMS Controller Permissions for User Types';
@@ -53,7 +58,17 @@ class UserTypeControllerPermissions extends ListController
             new Select('user_type_id', $userTypes),
             'User Type',
             'Root user types always have all permissions.',
-            true
+            false,
+            1,
+            2
+        );
+        $tab->addField(
+            new Input('controller', 'text'),
+            'Controller',
+            'Controller name, with the namespace.',
+            true,
+            1,
+            3
         );
         $tab->addField(
             new Input('select', 'checkbox'),
@@ -62,22 +77,10 @@ class UserTypeControllerPermissions extends ListController
             false
         );
         $tab->addField(
-            new Input('controller', 'text'),
-            'Controller',
-            'Controller name, without the namespace.',
-            true
-        );
-        $tab->addField(
             new Input('insert', 'checkbox'),
             'Insert',
             'Ability to insert new items using the controller.',
             false
-        );
-        $tab->addField(
-            new Input('namespace', 'text'),
-            'Namespace',
-            'Full namespace, both starting and ending with a slash.',
-            true
         );
         $tab->addField(
             new Input('update', 'checkbox'),
@@ -86,16 +89,16 @@ class UserTypeControllerPermissions extends ListController
             false
         );
         $tab->addField(
-            new Input('custom', 'checkbox'),
-            'Custom',
-            'Unused by default, but can be used for custom access rights.',
-            true
-        );
-        $tab->addField(
             new Input('delete', 'checkbox'),
             'Delete',
             'Ability to delete existing items using the controller.',
             false
+        );
+        $tab->addField(
+            new Input('custom', 'checkbox'),
+            'Custom',
+            'Unused by default, but can be used for custom access rights.',
+            true
         );
 
         $this->editTabs[] = $tab;
@@ -112,13 +115,13 @@ class UserTypeControllerPermissions extends ListController
             );
 
         $this->addListFilter(new Select('user_type_id', $userTypes), 'User Type');
-        $this->addListFilter(new Input('namespace', 'text'), 'Namespace');
         $this->addListFilter(new Input('controller', 'text'), 'Controller');
     }
 
     public function processList(&$list)
     {
         foreach ($list as &$item) {
+            /** @var TGUTCP $item */
             $item['strUserType'] = $item->getUserTypeCaption();
             $item['strController'] = $item->getControllerCaption();
             $item['strSelect'] = $item->checkTypePermissions(TGUTCP::TYPE_SELECT) ? 'S' : '';

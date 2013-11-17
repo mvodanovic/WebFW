@@ -21,8 +21,7 @@ class Filter extends Component
         }
 
         $filters = $ownerObject->getListFilters();
-        $ctl = $ownerObject->getName();
-        $ns = $ownerObject->getNamespace();
+        $ctl = $ownerObject->className();
 
         if (empty($filters)) {
             $this->useTemplate = false;
@@ -34,7 +33,7 @@ class Filter extends Component
             $params['popup'] = '1';
         }
 
-        $form = new FormStart('get', new Route($ctl, null, $ns, $params));
+        $form = new FormStart('get', new Route($ctl, null, null, $params));
 
         $options = array(
             'icons' => array('primary' => 'ui-icon-search'),

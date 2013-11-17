@@ -64,7 +64,7 @@ class CMSLogin extends HTMLController
         );
         $loginButton = new Button(null, 'submit', $options);
 
-        $loginForm = new FormStart('post', Router::getInstance()->URL('CMSLogin', 'doLogin', '\\WebFW\\CMS\\'));
+        $loginForm = new FormStart('post', Router::getInstance()->URL(static::className(), 'doLogin'));
 
         $usernameField = new Input('login', 'text', $username);
         $passwordField = new Input('password', 'password');
@@ -121,7 +121,7 @@ class CMSLogin extends HTMLController
     public function doLogout()
     {
         LoggedUser::getInstance()->doLogout();
-        $this->setRedirectUrl(Router::getInstance()->URL('CMSLogin', null, '\\WebFW\\CMS\\', null, false));
+        $this->setRedirectUrl(Router::getInstance()->URL(static::className(), null, null, false));
     }
 
     protected function getDefaultURL($parentNodeID = null, Navigation $listFetcher = null)
@@ -140,7 +140,7 @@ class CMSLogin extends HTMLController
 
         foreach ($listFetcher->getList($filter, $sort) as $node) {
             /** @var $node TGNavigation */
-            if ($node->controller !== null && class_exists($node->namespace . $node->controller)) {
+            if ($node->controller !== null && class_exists($node->controller)) {
                 return $node->getURL();
             }
 

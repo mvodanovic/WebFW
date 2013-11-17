@@ -87,17 +87,9 @@ class Navigation extends TreeTableGateway
             }
         }
 
-        if ($this->controller === null && $this->namespace !== null) {
-            $this->addValidationError('namespace', 'A namespace can\'t be defined without a controller');
-        }
-
-        if ($this->controller !== null && $this->namespace === null) {
-            $this->addValidationError('controller', 'A controller can\'t be defined without a namespace');
-        }
-
-        if ($this->controller === null || $this->namespace === null) {
+        if ($this->controller === null) {
             if ($this->action !== null) {
-                $this->addValidationError('action', 'An action needs both controller and namespace defined');
+                $this->addValidationError('action', 'An action needs a controller defined');
             }
 
             if ($this->params !== null) {
@@ -121,7 +113,7 @@ class Navigation extends TreeTableGateway
                     }
                 }
             }
-            $route = new Route($this->controller, $this->action, $this->namespace, $params);
+            $route = new Route($this->controller, $this->action, null, $params);
             return $route->getURL(false);
         } else {
             return 'javascript:CMSPage.selectNavElement(' . $this->node_id . ')';

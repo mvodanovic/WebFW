@@ -10,10 +10,10 @@ class PermissionsHelper
 {
     public static function checkForController(Controller $controller, $actionType)
     {
-        return static::checkForControllerByName($controller->getName(), $controller->getNamespace(), $actionType);
+        return static::checkForControllerByName($controller->className(), $actionType);
     }
 
-    public static function checkForControllerByName($ctl, $ns, $actionType)
+    public static function checkForControllerByName($ctl, $actionType)
     {
         $isOk = LoggedUser::isLoggedIn();
 
@@ -25,7 +25,6 @@ class PermissionsHelper
         $primaryKey = array(
             'user_type_id' => LoggedUser::getInstance()->user_type_id,
             'controller' => $ctl,
-            'namespace' => $ns,
         );
         $utcp = new UTCP();
         try {

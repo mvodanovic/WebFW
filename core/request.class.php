@@ -130,7 +130,7 @@ class Request extends BaseClass
                 $this->values['ctl'] = $route->controller;
             }
             if ($route->namespace !== null) {
-                $this->values['ns'] = $route->namespace;
+                $this->values['ctl'] = $route->namespace . '\\' . $this->values['ctl'];
             }
             if ($route->action !== null) {
                 $this->values['action'] = $route->action;

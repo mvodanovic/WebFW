@@ -39,7 +39,7 @@ class UserTypeControllerPermissions extends TableGateway
 
     public function getControllerCaption()
     {
-        return $this->namespace . $this->controller;
+        return $this->controller;
     }
 
     public function checkTypePermissions($type)

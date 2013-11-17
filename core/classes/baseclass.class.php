@@ -19,4 +19,24 @@ abstract class BaseClass
     {
         return get_called_class();
     }
+
+    /**
+     * Get the class name of the current class without the namespace.
+     * @return string The class name
+     */
+    public static function classShortName()
+    {
+        $reflector = new \ReflectionClass(static::className());
+        return $reflector->getShortName();
+    }
+
+    /**
+     * Get the class namespace of the current class.
+     * @return string The class namespace
+     */
+    public static function classNamespace()
+    {
+        $reflector = new \ReflectionClass(static::className());
+        return $reflector->getNamespaceName();
+    }
 }

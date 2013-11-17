@@ -14,8 +14,6 @@ abstract class Controller extends BaseClass
     protected $redirectUrl = null;
     protected $templateVariables = array();
     protected $action;
-    protected $ctl;
-    protected $ns;
     protected $output;
 
     const DEFAULT_ACTION_NAME = 'execute';
@@ -29,11 +27,6 @@ abstract class Controller extends BaseClass
         if ($this->action === null || $this->action === '') {
             $this->action = static::DEFAULT_ACTION_NAME;
         }
-
-        $className = static::className();
-        $separator = strrpos($className, '\\') + 1;
-        $this->ns = '\\' . substr($className, 0, $separator);
-        $this->ctl = substr($className, $separator);
 
         if (!method_exists($this, $this->action)) {
             $this->error404('Action not defined: ' . $this->action
@@ -125,17 +118,7 @@ abstract class Controller extends BaseClass
 
     public function getRoute($action = null, $params = array())
     {
-        return new Route($this->ctl, $action, $this->ns, $params);
-    }
-
-    public function getName()
-    {
-        return $this->ctl;
-    }
-
-    public function getNamespace()
-    {
-        return $this->ns;
+        return new Route(static::className(), $action, null, $params);
     }
 
     public function getAction()

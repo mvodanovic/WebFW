@@ -22,7 +22,7 @@ abstract class Controller extends HTMLController
 
         LoggedUser::getInstance()->doLoginByAutoloadCookie();
         if (!LoggedUser::isLoggedIn()) {
-            $this->setRedirectUrl(Router::getInstance()->URL('CMSLogin', null, '\\WebFW\\CMS\\', null, false), true);
+            $this->setRedirectUrl(Router::getInstance()->URL(CMSLogin::className(), null, null, false), true);
         }
 
         if (Request::getInstance()->popup === '1') {
@@ -72,7 +72,7 @@ abstract class Controller extends HTMLController
 
     protected function setPageTitle()
     {
-        $this->pageTitle = ($this->pageTitle === '') ? ($this->ns . $this->ctl) : $this->pageTitle;
+        $this->pageTitle = ($this->pageTitle === '') ? (static::className()) : $this->pageTitle;
         $this->pageTitle .= static::TITLE_SUFFIX;
         if (Config::get('General', 'projectName') !== null) {
             $this->pageTitle .= ' - ' . Config::get('General', 'projectName');

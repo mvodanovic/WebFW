@@ -21,10 +21,10 @@ use WebFW\CMS\Controller;
 
         <header>
             <div class="left">WebFW CMS</div>
-            <?=Framework::runComponent('UserActions', '\\WebFW\\CMS\\Components\\', null, $controller); ?>
+            <?=Framework::runComponent('WebFW\\CMS\\Components\\UserActions', null, $controller); ?>
         </header>
 
-        <?=Framework::runComponent('Navigation', '\\WebFW\\CMS\\Components\\', null, $controller); ?>
+        <?=Framework::runComponent('WebFW\\CMS\\Components\\Navigation', null, $controller); ?>
 
         <div class="content">
 

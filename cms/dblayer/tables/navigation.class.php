@@ -20,8 +20,7 @@ class Navigation extends Table
         $this->addColumn(new IntegerColumn('order_id', false));
         $this->addColumn(new IntegerColumn('node_level', false));
         $this->addColumn(new VarcharColumn('caption', false, 50));
-        $this->addColumn(new VarcharColumn('controller', true, 50));
-        $this->addColumn(new VarcharColumn('namespace', true, 100));
+        $this->addColumn(new VarcharColumn('controller', true, 150));
         $this->addColumn(new VarcharColumn('action', true, 50));
         $this->addColumn(new VarcharColumn('params', true, 500));
         $this->addColumn(new VarcharColumn('custom_url', true, 500));
@@ -33,7 +32,6 @@ class Navigation extends Table
         $this->getColumn('node_level')->setDefaultValue(0);
         $this->getColumn('caption')->setDefaultValue(null);
         $this->getColumn('controller')->setDefaultValue(null);
-        $this->getColumn('namespace')->setDefaultValue(null);
         $this->getColumn('action')->setDefaultValue(null);
         $this->getColumn('params')->setDefaultValue(null);
         $this->getColumn('custom_url')->setDefaultValue(null);
