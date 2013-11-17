@@ -2,7 +2,9 @@
 
 namespace WebFW\Core;
 
-abstract class ArrayAccess implements \ArrayAccess
+use WebFW\Core\Classes\BaseClass;
+
+abstract class ArrayAccess extends BaseClass implements \ArrayAccess
 {
     public static function keyExists($key, $object)
     {

@@ -2,6 +2,7 @@
 
 namespace WebFW\Core;
 
+use WebFW\Core\Classes\BaseClass;
 use WebFW\Core\Exceptions\NotFoundException;
 
 /**
@@ -12,7 +13,7 @@ use WebFW\Core\Exceptions\NotFoundException;
  *
  * @package WebFW\Core
  */
-class Request
+class Request extends BaseClass
 {
     /**
      * Request values reference.

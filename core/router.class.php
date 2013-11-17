@@ -3,8 +3,9 @@
 namespace WebFW\Core;
 
 use ReflectionClass;
+use WebFW\Core\Classes\BaseClass;
 
-class Router
+class Router extends BaseClass
 {
     protected static $instance;
     protected static $class = null;
@@ -18,7 +19,7 @@ class Router
     public static function getInstance()
     {
         if (static::$class === null) {
-            static::$class = get_called_class();
+            static::$class = static::className();
         }
 
         if (!isset(static::$instance)) {

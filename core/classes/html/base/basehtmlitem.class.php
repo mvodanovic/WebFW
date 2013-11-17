@@ -2,7 +2,9 @@
 
 namespace WebFW\Core\Classes\HTML\Base;
 
-abstract class BaseHTMLItem
+use WebFW\Core\Classes\BaseClass;
+
+abstract class BaseHTMLItem extends BaseClass
 {
     protected $image;
     protected $value;

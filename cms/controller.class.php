@@ -57,7 +57,7 @@ abstract class Controller extends HTMLController
 
     public function getSelectedMenuItem()
     {
-        return strtolower(str_replace('\\', '_', get_class($this)));
+        return strtolower(str_replace('\\', '_', static::className()));
     }
 
     public function getMessages()

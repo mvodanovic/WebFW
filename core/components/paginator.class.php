@@ -104,7 +104,7 @@ class Paginator extends Component
         /// Generate URL using the owner controller
         } elseif ($this->ownerObject instanceof Controller) {
             $url = Router::getInstance()->URL(
-                get_class($this->ownerObject),
+                $this->ownerObject->className(),
                 $this->ownerObject->getAction(),
                 $params,
                 $this->getParam('escapeAmps')

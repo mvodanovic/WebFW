@@ -2,7 +2,9 @@
 
 namespace WebFW\Database;
 
-class Database
+use WebFW\Core\Classes\BaseClass;
+
+class Database extends BaseClass
 {
     protected $classExtension = '.class.php';
 

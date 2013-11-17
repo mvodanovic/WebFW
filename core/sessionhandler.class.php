@@ -2,7 +2,9 @@
 
 namespace WebFW\Core;
 
-class SessionHandler
+use WebFW\Core\Classes\BaseClass;
+
+class SessionHandler extends BaseClass
 {
     public static function get($key)
     {

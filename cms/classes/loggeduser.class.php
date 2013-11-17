@@ -5,7 +5,6 @@ namespace WebFW\CMS\Classes;
 use WebFW\CMS\DBLayer\UserType;
 use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Core\Exceptions\UnauthorizedException;
-use WebFW\Core\Exception;
 use WebFW\Core\SessionHandler;
 use WebFW\CMS\DBLayer\User;
 
@@ -111,10 +110,6 @@ class LoggedUser
 
     public function doLoginByUser(User $user, $remember = false)
     {
-        if (!($user instanceof User)) {
-            throw new Exception('Class . ' . get_class($user) . 'not an instance of WebFW\\CMS\\DBLayer\\User');
-        }
-
         if ($user->active !== true) {
             throw new UnauthorizedException('Invalid credentials supplied');
         }

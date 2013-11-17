@@ -2,6 +2,7 @@
 
 namespace WebFW\Core;
 
+use WebFW\CMS\Controller;
 use WebFW\Core\Exceptions\NotFoundException;
 
 /**
@@ -83,7 +84,7 @@ final class Framework
         /** @var $controller Controller */
         $controller = new $ctl();
         if (!($controller instanceof Controller)) {
-            throw new Exception('Class ' . $ctl . 'is not an instance of WebFW\\Core\\Controller.');
+            throw new Exception('Class ' . $ctl . 'is not an instance of ' . Controller::className() . '.');
         }
         $controller->executeAction();
         $controller->processOutput();
@@ -117,7 +118,7 @@ final class Framework
         /** @var $component Component */
         $component = new $name($params, $ownerObject);
         if (!($component instanceof Component)) {
-            throw new Exception('Class ' . $name . 'is not an instance of WebFW\\Core\\Component.');
+            throw new Exception('Class ' . $name . 'is not an instance of ' . Component::className() . '.');
         }
 
         return $component->run();

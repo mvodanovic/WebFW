@@ -2,18 +2,18 @@
 
 namespace WebFW\Core;
 
+use WebFW\Core\Classes\BaseClass;
 use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Externals\PHPTemplate;
 use ReflectionMethod;
 
-abstract class Controller
+abstract class Controller extends BaseClass
 {
     protected $template = 'default';
     protected $useTemplate = true;
     protected $redirectUrl = null;
     protected $templateVariables = array();
     protected $action;
-    protected $className;
     protected $ctl;
     protected $ns;
     protected $output;
@@ -30,22 +30,25 @@ abstract class Controller
             $this->action = static::DEFAULT_ACTION_NAME;
         }
 
-        $this->className = get_class($this);
-        $separator = strrpos($this->className, '\\') + 1;
-        $this->ns = '\\' . substr($this->className, 0, $separator);
-        $this->ctl = substr($this->className, $separator);
+        $className = static::className();
+        $separator = strrpos($className, '\\') + 1;
+        $this->ns = '\\' . substr($className, 0, $separator);
+        $this->ctl = substr($className, $separator);
 
         if (!method_exists($this, $this->action)) {
-            $this->error404('Action not defined: ' . $this->action . ' (in controller ' . $this->className . ')');
+            $this->error404('Action not defined: ' . $this->action
+                . ' (in controller ' . static::className() . ')');
         }
 
         $reflection = new ReflectionMethod($this, $this->action);
         if (!$reflection->isPublic()) {
-            $this->error404('Action not declared as public: ' . $this->action . ' (in controller ' . $this->className . ')');
+            $this->error404('Action not declared as public: ' . $this->action
+                . ' (in controller ' . static::className() . ')');
         }
 
         if ($reflection->isStatic()) {
-            $this->error404('Action declared as static: ' . $this->action . ' (in controller ' . $this->className . ')');
+            $this->error404('Action declared as static: ' . $this->action
+                . ' (in controller ' . static::className() . ')');
         }
 
         if ($this->action !== static::DEFAULT_ACTION_NAME) {
@@ -65,7 +68,7 @@ abstract class Controller
             return;
         }
 
-        $templateDir = explode('\\', $this->className);
+        $templateDir = explode('\\', static::className());
         $templateDir = strtolower(end($templateDir));
         $templateDir = \WebFW\Core\CTL_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDir . DIRECTORY_SEPARATOR;
 

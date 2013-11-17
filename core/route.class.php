@@ -2,7 +2,9 @@
 
 namespace WebFW\Core;
 
-class Route
+use WebFW\Core\Classes\BaseClass;
+
+class Route extends BaseClass
 {
     protected $controller;
     protected $action;

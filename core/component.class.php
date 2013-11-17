@@ -2,9 +2,10 @@
 
 namespace WebFW\Core;
 
+use WebFW\Core\Classes\BaseClass;
 use WebFW\Externals\PHPTemplate;
 
-abstract class Component
+abstract class Component extends BaseClass
 {
     protected $useTemplate = true;
     protected $params = array();
@@ -63,7 +64,7 @@ abstract class Component
 
     protected function setDefaultParams()
     {
-        $templateDirectory = explode('\\', get_class($this));
+        $templateDirectory = explode('\\', static::className());
         $templateDirectory = strtolower(end($templateDirectory));
         $templateDirectory = \WebFW\Core\CMP_TEMPLATE_PATH
             . DIRECTORY_SEPARATOR

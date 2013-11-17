@@ -2,7 +2,9 @@
 
 namespace WebFW\Core;
 
-class Config
+use WebFW\Core\Classes\BaseClass;
+
+class Config extends BaseClass
 {
     protected static $configData = array();
 

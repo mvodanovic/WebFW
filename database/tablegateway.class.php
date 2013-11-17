@@ -32,9 +32,9 @@ abstract class TableGateway extends ArrayAccess implements iValidate
     public function __construct()
     {
         if ($this->table === null) {
-            throw new Exception('Table not set in table gateway ' . get_class($this));
+            throw new Exception('Table not set in table gateway ' . static::className());
         } elseif (!($this->table instanceof Table)) {
-            throw new Exception('Table not an instance of WebFW\\Database\\Table: ' . $this->table);
+            throw new Exception('Table not an instance of ' . Table::className() . ': ' . $this->table);
         }
 
         foreach ($this->table->getColumns() as $key => $column) {
@@ -52,7 +52,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         }
         $this->table = new $table();
         if (!($this->table instanceof Table)) {
-            throw new Exception('Class ' . $table . ' not an instance of WebFW\\Database\\Table');
+            throw new Exception('Class ' . $table . ' not an instance of' . Table::className());
         }
     }
 
@@ -224,7 +224,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
             $listFetcher = $listFetcherDef['listFetcher'];
             $tableGateway = $listFetcher->getTableGateway();
             if (!($item instanceof $tableGateway)) {
-                throw new Exception('Item must be an instance of ' . get_class($tableGateway));
+                throw new Exception('Item must be an instance of ' . $tableGateway->className());
             }
 
             /** @var $foreignKey ForeignKey */

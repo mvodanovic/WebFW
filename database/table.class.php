@@ -1,12 +1,13 @@
 <?php
 namespace WebFW\Database;
 
+use WebFW\Core\Classes\BaseClass;
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\TableConstraints\Constraint;
 use WebFW\Database\TableConstraints\PrimaryKey;
 use WebFW\Core\Exception;
 
-abstract class Table
+abstract class Table extends BaseClass
 {
     protected $name = null;
     protected $alias = null;

@@ -2,10 +2,11 @@
 
 namespace WebFW\Database;
 
+use WebFW\Core\Classes\BaseClass;
 use WebFW\Core\Exception;
 use WebFW\Core\Config;
 
-abstract class BaseHandler
+abstract class BaseHandler extends BaseClass
 {
     protected static $instances = array();
     protected static $activeInstanceID = null;

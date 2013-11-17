@@ -2,6 +2,7 @@
 
 namespace WebFW\Database;
 
+use WebFW\Core\Classes\BaseClass;
 use WebFW\Core\Exception;
 use WebFW\Core\Exceptions\DBException;
 use WebFW\Database\Query\Join;
@@ -9,7 +10,7 @@ use WebFW\Database\TableConstraints\ForeignKey;
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\Query\Select;
 
-abstract class ListFetcher
+abstract class ListFetcher extends BaseClass
 {
     /** @var Table  */
     protected $table = null;
@@ -26,7 +27,7 @@ abstract class ListFetcher
     public function __construct()
     {
         if ($this->table === null) {
-            throw new Exception('Table not set in list fetcher ' . get_class($this));
+            throw new Exception('Table not set in list fetcher ' . static::className());
         } elseif (!($this->table instanceof Table)) {
             throw new Exception('Table not an instance of WebFW\\Database\\Table: ' . $this->table);
         }
