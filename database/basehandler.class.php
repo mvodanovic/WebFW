@@ -43,7 +43,7 @@ abstract class BaseHandler extends BaseClass
             if ($dbName !== null) {
                 /** @var $handler BaseHandler */
                 $handler = Config::get('Database', 'handlerClass');
-                if (class_exists($handler) && is_subclass_of($handler, '\\WebFW\\Database\\BaseHandler')) {
+                if (class_exists($handler) && is_subclass_of($handler, static::className())) {
                     $instanceID = $handler::createNewConnection($dbUsername, $dbPassword, $dbName, $dbHost, $dbPort);
                 } else {
                     throw new Exception('DB handler \'' . $handler . '\' does not exist.');
