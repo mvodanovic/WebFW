@@ -7,15 +7,25 @@ use WebFW\CMS\CMSLogin;
 use WebFW\CMS\Controllers\User;
 use WebFW\Core\Classes\BaseClass;
 
+/**
+ * Class Router
+ *
+ * Handles route-to-URL conversions.
+ *
+ * @package WebFW\Core
+ */
 class Router extends BaseClass
 {
+    /** @var Router */
     protected static $instance;
     protected static $class = null;
-    protected $routeDefs = array();
+    protected $routeDefinitions = array();
 
     const ROUTE_VARIABLE_REGEX = '[a-zA-Z0-9]+';
 
     /**
+     * Singleton instance getter.
+     *
      * @return Router
      */
     public static function getInstance()
@@ -31,15 +41,18 @@ class Router extends BaseClass
         return static::$instance;
     }
 
+    /**
+     * Class constructor.
+     */
     protected function __construct() {
-        $this->routeDefs[] = array(
+        $this->routeDefinitions[] = array(
             'pattern' => 'cms',
             'route' => new Route(CMSLogin::className()),
             'variables' => array(
             ),
         );
 
-        $this->routeDefs[] = array(
+        $this->routeDefinitions[] = array(
             'pattern' => 'cms/webfw/:ctl:/:action:',
             'route' => new Route(null, null, User::classNamespace()),
             'variables' => array(
@@ -47,16 +60,27 @@ class Router extends BaseClass
         );
     }
 
-    public function getRouteDefs()
+    public function getRouteDefinitions()
     {
-        return $this->routeDefs;
+        return $this->routeDefinitions;
     }
 
-    protected function getURLForRouteDef($routeDef, $controller, $action, $params, $amp, $encodeFunction)
+    /**
+     * /// TODO: in progress
+     * @param array $routeDefinition /// TODO: make it a table gateway
+     * @param string $controller
+     * @param null $action
+     * @param array $params
+     * @param string $amp
+     * @param string $encodeFunction
+     * @return string|null
+     */
+    protected function getURLForRouteDefinition(array $routeDefinition, $controller, $action = null,
+        array $params = null, $amp = '&', $encodeFunction = 'rawurlencode')
     {
-        $pattern = Config::get('General', 'rewriteBase') . $routeDef['pattern'];
-        $route = &$routeDef['route'];
-        $variables = &$routeDef['variables'];
+        $pattern = Config::get('General', 'rewriteBase') . $routeDefinition['pattern'];
+        $route = $routeDefinition['route'];
+        $variables = &$routeDefinition['variables'];
         if ($params === null) {
             $params = array();
         }
@@ -168,7 +192,18 @@ class Router extends BaseClass
         return $url;
     }
 
-    public function URL($controller, $action = null, $params = array(), $escapeAmps = true, $rawurlencode = true)
+    /**
+     * Get the URL for the given controller.
+     *
+     * @param string $controller The controller to get the URL for
+     * @param string $action Action of the controller, NULL for default
+     * @param array $params Additional parameters for the URL, key-value pairs
+     * @param bool $escapeAmps Should amps '&' be escaped in the URL or not
+     * @param bool $rawurlencode Should rawurlencode() be used (true) or urlencode() (false)
+     * @return string|null The URL of the controller
+     */
+    public function URL($controller, $action = null, $params = array(),
+        $escapeAmps = true, $rawurlencode = true)
     {
         /// Set the query param delimiter
         $amp = '&amp;';
@@ -187,6 +222,8 @@ class Router extends BaseClass
             $controller = Config::get('General', 'defaultController');
         }
         if (!class_exists($controller)) {
+        /** @var Controller $controllerClass */
+            /// TODO: Throw exception?
             return null;
         }
         if ($action === null) {
@@ -194,8 +231,8 @@ class Router extends BaseClass
         }
 
         /// Try to match the parameters with existing route definitions
-        foreach ($this->routeDefs as &$routeDef) {
-            $url = $this->getURLForRouteDef($routeDef, $controller, $action, $params, $amp, $encodeFunction);
+        foreach ($this->routeDefinitions as &$routeDefinition) {
+            $url = $this->getURLForRouteDefinition($routeDefinition, $controller, $action, $params, $amp, $encodeFunction);
             if ($url !== null) {
                 return $url;
             }
@@ -227,6 +264,14 @@ class Router extends BaseClass
         return $url;
     }
 
+    /**
+     * Gets the URL for a given route.
+     *
+     * @param Route $route The route for which to get the URL
+     * @param bool $escapeAmps Should amps '&' be escaped in the URL or not
+     * @param bool $rawurlencode Should rawurlencode() be used (true) or urlencode() (false)
+     * @return string The URL of the route
+     */
     public function URLFromRoute(Route $route, $escapeAmps = true, $rawurlencode = true)
     {
         $controller = $route->controller;
@@ -238,15 +283,27 @@ class Router extends BaseClass
         );
     }
 
+    /**
+     * Gets the current Router class name.
+     *
+     * @return string The currently set Router
+     */
     public static function getClass()
     {
         return static::$class;
     }
 
+    /**
+     * Set a custom router class.
+     *
+     * @param string $className Full class name of the router to use, must extend the Router class
+     * @param bool $forceNewInstance If set to true, the existing instance will be deleted
+     * @throws Exception If a valid Router class name was not given
+     */
     public static function setClass($className, $forceNewInstance = false)
     {
         if (!class_exists($className)) {
-            throw new Exception('Class ' . $className . ' doesn\'t exist');
+            throw new Exception('Class ' . $className . " doesn't exist");
         }
 
         $rc = new ReflectionClass($className);
@@ -261,5 +318,8 @@ class Router extends BaseClass
         }
     }
 
+    /**
+     * The router cannot be cloned.
+     */
     final private function __clone() {}
 }

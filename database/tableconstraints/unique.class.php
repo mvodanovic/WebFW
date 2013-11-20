@@ -2,10 +2,12 @@
 
 namespace WebFW\Database\TableConstraints;
 
+use WebFW\Database\Table;
+
 class Unique extends Constraint
 {
-    public function __construct($columns, $name = null)
+    public function __construct(Table $table, $name = null)
     {
-        parent::__construct(static::TYPE_UNIQUE, $columns, $name);
+        parent::__construct($table, static::TYPE_UNIQUE, $name);
     }
 }

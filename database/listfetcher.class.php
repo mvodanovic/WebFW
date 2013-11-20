@@ -6,6 +6,7 @@ use WebFW\Core\Classes\BaseClass;
 use WebFW\Core\Exception;
 use WebFW\Core\Exceptions\DBException;
 use WebFW\Database\Query\Join;
+use WebFW\Database\TableConstraints\Constraint;
 use WebFW\Database\TableConstraints\ForeignKey;
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\Query\Select;
@@ -33,20 +34,13 @@ abstract class ListFetcher extends BaseClass
         }
 
         foreach ($this->table->getPrimaryKeyColumns() as $column) {
-            $this->sort[$column] = 'DESC';
+            $this->sort[$column->getName()] = 'DESC';
         }
     }
 
-    protected function setTable($table, $namespace = '\\Application\\DBLayer\\Tables\\')
+    protected function setTable(Table $table)
     {
-        $table = $namespace . $table;
-        if (!class_exists($table)) {
-            throw new Exception(
-                'Class doesn\'t exist: ' . $table
-            );
-        }
-        /** @var table Table */
-        $this->table = new $table;
+        $this->table = $table;
     }
 
     /**
@@ -82,24 +76,9 @@ abstract class ListFetcher extends BaseClass
         return $this->tableGateway;
     }
 
-    protected function addJoin($tableFieldNames, $table, $namespace = '\\Application\\DBLayer\\Tables\\', $joinType = Join::TYPE_INNER)
+    protected function addJoin(ForeignKey $foreignKey, $joinType = Join::TYPE_INNER)
     {
-        $table = $namespace . $table;
-        if (!class_exists($table)) {
-            throw new Exception('Cannot instantiate table: ' . $table);
-        }
-        /** @var $tableInstance Table */
-        $tableInstance = new $table();
-        if (!($tableInstance instanceof Table)) {
-            throw new Exception('Class ' . $table . ' not an instance of WebFW\\Database\\Table');
-        }
-
-        $foreignKey = $tableInstance->getConstraint($tableFieldNames);
-        if (!($foreignKey instanceof ForeignKey)) {
-            throw new Exception('No foreign keys defined on table ' . $table . ' with fields: ' . implode(', ', $tableFieldNames));
-        }
         $this->tableJoins[] = array(
-            'table' => $tableInstance,
             'foreignKey' => $foreignKey,
             'joinType' => $joinType,
         );
@@ -140,17 +119,20 @@ abstract class ListFetcher extends BaseClass
         $select->appendSemicolon();
 
         foreach ($this->tableJoins as &$joinDef) {
-            /** @var $foreignTable Table */
-            $foreignTable = &$joinDef['table'];
             /** @var $foreignKey ForeignKey */
             $foreignKey = &$joinDef['foreignKey'];
+            $foreignTable = $foreignKey->getReferencedTable();
             $join = new Join($foreignTable->getName(), $foreignTable->getAlias(), $joinDef['joinType']);
-            foreach ($foreignKey->getReferences() as $column => $foreignColumn) {
+            foreach ($foreignKey->getReferences() as $columns) {
+                /** @var Column $localColumn */
+                $localColumn = $columns['local'];
+                /** @var Column $referencedColumn */
+                $referencedColumn = $columns['referenced'];
                 $join->addJoinTerm(
                     $this->table->getAliasedName(),
-                    $column,
+                    $localColumn->getName(),
                     $foreignTable->getAliasedName(),
-                    $foreignColumn
+                    $referencedColumn->getName()
                 );
             }
             $select->addJoin($join);
@@ -229,7 +211,7 @@ abstract class ListFetcher extends BaseClass
         if ($result === false) {
             throw new DBException(
                 'Error while trying to read data from the database.',
-                new DBException(BaseHandler::getInstance()->getLastError())
+                new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql))
             );
         }
 

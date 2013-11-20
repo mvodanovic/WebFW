@@ -94,5 +94,4 @@ abstract class TreeTableGateway extends TableGateway
 
     abstract public function getChildrenNodes($forceReload = false);
     abstract public function getChildrenNodeCount($forceReload = false);
-    abstract public function getCaption();
 }

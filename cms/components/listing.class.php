@@ -9,15 +9,17 @@ use WebFW\Core\Component;
 use WebFW\Core\Exception;
 use WebFW\CMS\ListController;
 use WebFW\Database\ListFetcher;
+use WebFW\Database\TableColumns\Column;
 use WebFW\Database\TableGateway;
 
 class Listing extends Component
 {
-    /**
-     * @var ListController
-     */
+    /** @var ListController */
     protected $ownerObject;
 
+    /**
+     * @throws \WebFW\Core\Exception
+     */
     public function execute()
     {
         if (!($this->ownerObject instanceof ListController)) {
@@ -100,11 +102,12 @@ class Listing extends Component
             $primaryKeyColumns = $this->ownerObject->getPrimaryKeyColumns();
             if (is_array($primaryKeyColumns)) {
                 foreach ($primaryKeyColumns as $column) {
-                    if (!ArrayAccess::keyExists($column, $listRow)) {
+                    /** @var Column $column */
+                    if (!ArrayAccess::keyExists($column->getName(), $listRow)) {
                         $params = array();
                         break;
                     }
-                    $params[$column] = $listRow[$column];
+                    $params[$column->getName()] = $listRow[$column->getName()];
                 }
             }
         }
@@ -127,11 +130,12 @@ class Listing extends Component
                 $primaryKeyColumns = $this->ownerObject->getPrimaryKeyColumns();
                 if (is_array($primaryKeyColumns)) {
                     foreach ($primaryKeyColumns as $column) {
-                        if (!ArrayAccess::keyExists($column, $listRow)) {
+                        /** @var Column $column */
+                        if (!ArrayAccess::keyExists($column->getName(), $listRow)) {
                             $params = array();
                             break;
                         }
-                        $params[$column] = $listRow[$column];
+                        $params[$column->getName()] = $listRow[$column->getName()];
                     }
                 }
             }
@@ -142,6 +146,7 @@ class Listing extends Component
             if (!empty($sortingDef['groupColumns'])) {
                 $group = array();
                 foreach ($sortingDef['groupColumns'] as $column) {
+                    /** @var string $column */
                     $group[$column] = $listRow[$column];
                 }
                 $group = json_encode($group, JSON_FORCE_OBJECT);

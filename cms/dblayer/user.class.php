@@ -4,6 +4,7 @@ namespace WebFW\CMS\DBLayer;
 
 use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Database\TableGateway;
+use WebFW\CMS\DBLayer\Tables\User as UserT;
 use WebFW\CMS\Classes\LoggedUser;
 
 class User extends TableGateway
@@ -12,7 +13,7 @@ class User extends TableGateway
 
     public function __construct()
     {
-        $this->setTable('User', '\\WebFW\\CMS\\DBLayer\\Tables\\');
+        $this->setTable(UserT::getInstance());
         parent::__construct();
     }
 
@@ -38,5 +39,10 @@ class User extends TableGateway
     public function getFullName()
     {
         return implode(' ', array($this->firstName, $this->lastName));
+    }
+
+    public function getCaption()
+    {
+        return $this->username === null ? $this->email : $this->username;
     }
 }

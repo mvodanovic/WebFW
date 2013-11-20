@@ -96,9 +96,9 @@ class Request extends BaseClass
         }
 
         /// Iterate through route definitions provided by the router
-        foreach (Router::getInstance()->getRouteDefs() as $routeDef) {
-            $pattern = Config::get('General', 'rewriteBase') . $routeDef['pattern'];
-            $variables = &$routeDef['variables'];
+        foreach (Router::getInstance()->getRouteDefinitions() as $routeDefinition) {
+            $pattern = Config::get('General', 'rewriteBase') . $routeDefinition['pattern'];
+            $variables = &$routeDefinition['variables'];
             $parameters = array();
 
             /// Replace parameters in pattern with regex blocks & extract parameter names
@@ -107,6 +107,7 @@ class Request extends BaseClass
                 if (array_key_exists($matches[1], $variables)) {
                     $replacement = $variables[$matches[1]];
                 } else {
+                    /** @var Router $routerClassName */
                     $routerClassName = Router::getClass();
                     $replacement = $routerClassName::ROUTE_VARIABLE_REGEX;
                 }
@@ -125,7 +126,7 @@ class Request extends BaseClass
             }
 
             /// Append corresponding route values to request values
-            $route = &$routeDef['route'];
+            $route = &$routeDefinition['route'];
             if ($route->controller !== null) {
                 $this->values['ctl'] = $route->controller;
             }

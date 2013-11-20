@@ -4,8 +4,10 @@ namespace WebFW\Database;
 use WebFW\Core\Classes\BaseClass;
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\TableConstraints\Constraint;
+use WebFW\Database\TableConstraints\ForeignKey;
 use WebFW\Database\TableConstraints\PrimaryKey;
 use WebFW\Core\Exception;
+use WebFW\Database\TableConstraints\Unique;
 
 abstract class Table extends BaseClass
 {
@@ -13,7 +15,10 @@ abstract class Table extends BaseClass
     protected $alias = null;
     protected $columns = array();
     protected $constraints = array();
+    protected $namedConstraints = array();
     protected $primaryKeyConstraintIndex = null;
+
+    protected static $instances = array();
 
     const INDEX_PLAIN = 1;
     const INDEX_UNIQUE = 2;
@@ -32,7 +37,10 @@ abstract class Table extends BaseClass
 
     protected function addConstraint(Constraint $constraint)
     {
-        $this->constraints[] = &$constraint;
+        $this->constraints[] = $constraint;
+        if ($constraint->getName() !== null) {
+            $this->namedConstraints[$constraint->getName()] = $constraint;
+        }
 
         if ($constraint->getType() === Constraint::TYPE_PRIMARY_KEY) {
             if ($this->primaryKeyConstraintIndex !== null) {
@@ -46,30 +54,13 @@ abstract class Table extends BaseClass
     }
 
     /**
-     * @param $constraintFieldNames
-     * @return null|Constraint
+     * @param $name
+     * @return null|Constraint|PrimaryKey|ForeignKey|Unique
      */
-    public function getConstraint($constraintFieldNames)
+    public function getConstraint($name)
     {
-        if (!is_array($constraintFieldNames)) {
-            $constraintFieldNames = array($constraintFieldNames);
-        }
-
-        foreach ($this->constraints as $constraint) {
-            /** @var $constraint Constraint */
-            if (count ($constraintFieldNames) !== count($constraint->getColumns())) {
-                continue;
-            }
-            $isMatch = true;
-            foreach ($constraint->getColumns() as $column) {
-                if (!in_array($column, $constraintFieldNames)) {
-                    $isMatch = false;
-                    break;
-                }
-            }
-            if ($isMatch) {
-                return $constraint;
-            }
+        if (array_key_exists($name, $this->namedConstraints)) {
+            return $this->namedConstraints[$name];
         }
 
         return null;
@@ -157,4 +148,22 @@ abstract class Table extends BaseClass
                 return $value;
         }
     }
+
+    /**
+     * @return Table
+     */
+    public static function getInstance()
+    {
+        $className = get_called_class();
+        if (!array_key_exists($className, static::$instances)) {
+            static::$instances[$className] = new static();
+            static::$instances[$className]->init();
+        }
+
+        return static::$instances[$className];
+    }
+
+    protected function __construct() {}
+
+    abstract protected function init();
 }

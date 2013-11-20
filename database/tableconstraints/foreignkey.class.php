@@ -3,6 +3,8 @@
 namespace WebFW\Database\TableConstraints;
 
 use WebFW\Core\Exception;
+use WebFW\Database\Table;
+use WebFW\Database\TableColumns\Column;
 
 class ForeignKey extends Constraint
 {
@@ -12,12 +14,13 @@ class ForeignKey extends Constraint
     const ACTION_SET_NULL = 4;
     const ACTION_SET_DEFAULT = 5;
 
-    protected $foreignTable;
-    protected $references;
+    protected $references = array();
+    /** @var Table */
+    protected $referencedTable = null;
     protected $onUpdate;
     protected $onDelete;
 
-    public function __construct($foreignTable, $references, $onUpdate, $onDelete, $name = null)
+    public function __construct(Table $table, $onUpdate, $onDelete, $name = null)
     {
         if (!$this->actionIsValid($onUpdate)) {
             throw new Exception('Invalid update action supplied for foreign key constraint.');
@@ -27,25 +30,38 @@ class ForeignKey extends Constraint
             throw new Exception('Invalid delete action supplied for foreign key constraint.');
         }
 
-        if (!is_array($references)) {
-            throw new Exception('Foreign key constraint references must be [column => foreignColumn] pairs.');
-        }
-
-        parent::__construct(static::TYPE_FOREIGN_KEY, array_keys($references), $name);
-        $this->foreignTable = $foreignTable;
-        $this->references =  $references;
         $this->onUpdate = $onUpdate;
         $this->onDelete = $onDelete;
+
+        parent::__construct($table, static::TYPE_FOREIGN_KEY, $name);
     }
 
-    public function getForeignTable()
+    public function addReference(Column $localColumn, Column $referencedColumn)
     {
-        return $this->foreignTable;
+        if ($this->referencedTable === null) {
+            $this->referencedTable = $referencedColumn->getTable();
+        } else {
+            if (get_class($this->referencedTable) !== get_class($referencedColumn->getTable())) {
+                throw new Exception('Cannot add a reference to a ' . $referencedColumn->getTable()->getAliasedName()
+                    . ' column in a foreign key referencing ' . $this->referencedTable->getAliasedName());
+            }
+        }
+
+        $this->references[] = array(
+            'local' => $localColumn,
+            'referenced' => $referencedColumn,
+        );
+        return $this->addColumn($localColumn);
     }
 
     public function getReferences()
     {
         return $this->references;
+    }
+
+    public function getReferencedTable()
+    {
+        return $this->referencedTable;
     }
 
     public function getOnUpdate()

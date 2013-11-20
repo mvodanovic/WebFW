@@ -2,6 +2,8 @@
 
 namespace WebFW\Database\TableColumns;
 
+use WebFW\Database\Table;
+
 class Column
 {
     const TYPE_BOOLEAN = 111;
@@ -24,6 +26,7 @@ class Column
     const TIME_TZ = 414;
     const DATETIME_TZ = 415;
 
+    protected $table;
     protected $name;
     protected $type;
     protected $precision;
@@ -32,8 +35,18 @@ class Column
     protected $defaultValueIsSet = false;
     protected $hasAutoIncrement = false;
 
-    public function __construct($name, $type, $nullable = true, $precision = null)
+    /**
+     * @return static
+     */
+    public static function spawn()
     {
+        $rc = new \ReflectionClass(get_called_class());
+        return $rc->newInstanceArgs(func_get_args());
+    }
+
+    public function __construct(Table $table, $name, $type, $nullable = true, $precision = null)
+    {
+        $this->table = $table;
         $this->name = $name;
         $this->type = $type;
         $this->precision = $precision;
@@ -45,6 +58,8 @@ class Column
         $this->defaultValue = $value;
         $this->hasAutoIncrement = (boolean) $hasAutoIncrement;
         $this->defaultValueIsSet = true;
+
+        return $this;
     }
 
     public function getDefaultValue()
@@ -67,6 +82,14 @@ class Column
         return $this->type;
     }
 
+    /**
+     * @return Table
+     */
+    public function getTable()
+    {
+        return $this->table;
+    }
+
     public function isNullable()
     {
         return $this->nullable;
@@ -80,5 +103,10 @@ class Column
     public function hasAutoIncrement()
     {
         return $this->hasAutoIncrement;
+    }
+
+    public function __toString()
+    {
+        return $this->getName();
     }
 }

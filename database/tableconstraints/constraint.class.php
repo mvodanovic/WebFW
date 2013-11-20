@@ -3,6 +3,8 @@
 namespace WebFW\Database\TableConstraints;
 
 use WebFW\Core\Exception;
+use WebFW\Database\Table;
+use WebFW\Database\TableColumns\Column;
 
 abstract class Constraint
 {
@@ -10,19 +12,36 @@ abstract class Constraint
     const TYPE_FOREIGN_KEY = 2;
     const TYPE_UNIQUE = 3;
 
+    protected $table;
     protected $name;
     protected $type;
-    protected $columns;
+    protected $columns = array();
 
-    public function __construct($type, $columns, $name = null)
+    /**
+     * @return static
+     */
+    public static function spawn()
+    {
+        $rc = new \ReflectionClass(get_called_class());
+        return $rc->newInstanceArgs(func_get_args());
+    }
+
+    public function __construct(Table $table, $type, $name = null)
     {
         if (!$this->typeIsValid($type)) {
             throw new Exception('Invalid constraint type supplied.');
         }
 
+        $this->table = $table;
         $this->type = $type;
-        $this->columns = is_array($columns) ? $columns : array($columns);
         $this->name = $name;
+    }
+
+    public function addColumn(Column $column)
+    {
+        $this->columns[] = $column;
+
+        return $this;
     }
 
     public function getName()
