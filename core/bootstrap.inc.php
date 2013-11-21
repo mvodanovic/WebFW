@@ -16,7 +16,7 @@ define ('WebFW\Core\CTL_TEMPLATE_PATH', realpath(GENERAL_TEMPLATE_PATH . '/contr
 define ('WebFW\Core\BASE_TEMPLATE_PATH', realpath(GENERAL_TEMPLATE_PATH . '/base'));
 define ('WebFW\Core\CMP_TEMPLATE_PATH', realpath(GENERAL_TEMPLATE_PATH . '/components'));
 
-spl_autoload_extensions('.class.php,.interface.php');
+spl_autoload_extensions('.class.php,.interface.php,.trait.php');
 spl_autoload_register(function ($class)
 {
     spl_autoload(str_replace('\\', '/', $class));

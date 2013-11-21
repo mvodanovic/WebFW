@@ -1,6 +1,7 @@
 <?php
 namespace WebFW\Database;
 
+use WebFW\Cache\Classes\Cacheable;
 use WebFW\Core\Classes\BaseClass;
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\TableConstraints\Constraint;
@@ -11,6 +12,8 @@ use WebFW\Database\TableConstraints\Unique;
 
 abstract class Table extends BaseClass
 {
+    use Cacheable;
+
     protected $name = null;
     protected $alias = null;
     protected $columns = array();

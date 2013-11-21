@@ -2,17 +2,24 @@
 
 namespace WebFW\Database;
 
+use WebFW\Cache\Cache;
+use WebFW\Cache\Classes\Cacheable;
+use WebFW\Cache\Classes\CacheGroupHelper;
 use WebFW\Core\Classes\BaseClass;
 use WebFW\Core\Exception;
 use WebFW\Core\Exceptions\DBException;
 use WebFW\Database\Query\Join;
-use WebFW\Database\TableConstraints\Constraint;
 use WebFW\Database\TableConstraints\ForeignKey;
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\Query\Select;
 
 abstract class ListFetcher extends BaseClass
 {
+    use Cacheable {
+        getCacheExpirationTime as private getCacheExpirationTimeFromCacheable;
+        isCacheEnabled as private isCacheEnabledFromCacheable;
+    }
+
     /** @var Table  */
     protected $table = null;
     /** @var TableGateway  */
@@ -30,7 +37,7 @@ abstract class ListFetcher extends BaseClass
         if ($this->table === null) {
             throw new Exception('Table not set in list fetcher ' . static::className());
         } elseif (!($this->table instanceof Table)) {
-            throw new Exception('Table not an instance of WebFW\\Database\\Table: ' . $this->table);
+            throw new Exception('Table not an instance of ' . Table::className() . ': ' . $this->table);
         }
 
         foreach ($this->table->getPrimaryKeyColumns() as $column) {
@@ -51,9 +58,8 @@ abstract class ListFetcher extends BaseClass
         return $this->table;
     }
 
-    protected function setTableGateway($tableGateway, $namespace = '\\Application\\DBLayer\\')
+    protected function setTableGateway($tableGateway)
     {
-        $tableGateway = $namespace . $tableGateway;
         if (!class_exists($tableGateway)) {
             throw new Exception(
                 'Class doesn\'t exist: ' . $tableGateway
@@ -63,7 +69,7 @@ abstract class ListFetcher extends BaseClass
         $this->tableGateway = new $tableGateway();
         if (!($this->tableGateway instanceof TableGateway)) {
             throw new Exception(
-                'Table gateway not an instance of WebFW\\Database\\TableGateway: ' . $tableGateway
+                'Table gateway not an instance of ' . TableGateway::className() . ': ' . $tableGateway
             );
         }
     }
@@ -100,6 +106,13 @@ abstract class ListFetcher extends BaseClass
 
         if ($offset === null) {
             $offset = $this->offset;
+        }
+
+        if ($this->isCacheEnabled()) {
+            $cacheKey = $this->getListCacheKey($filter, $sort, $limit, $offset);
+            if (Cache::getInstance()->exists($cacheKey)) {
+                return Cache::getInstance()->get($cacheKey);
+            }
         }
 
         $select = new Select($this->table->getName(), $this->table->getAlias());
@@ -169,6 +182,12 @@ abstract class ListFetcher extends BaseClass
             $list = &$objectsList;
         }
 
+        if ($this->isCacheEnabled()) {
+            $cacheKey = $this->getListCacheKey($filter, $sort, $limit, $offset);
+            Cache::getInstance()->set($cacheKey, $list, $this->getCacheExpirationTime());
+            CacheGroupHelper::append($this->table->className(), $cacheKey, $this->table->getCacheExpirationTime());
+        }
+
         return $list;
     }
 
@@ -176,6 +195,13 @@ abstract class ListFetcher extends BaseClass
     {
         if ($filter === null) {
             $filter = $this->filter;
+        }
+
+        if ($this->isCacheEnabled()) {
+            $cacheKey = $this->getCountCacheKey($filter);
+            if (Cache::getInstance()->exists($cacheKey)) {
+                return Cache::getInstance()->get($cacheKey);
+            }
         }
 
         $select = new Select($this->table->getName(), $this->table->getAlias());
@@ -223,11 +249,55 @@ abstract class ListFetcher extends BaseClass
             );
         }
 
-        return (int) $row['cnt'];
+        $count = (int) $row['cnt'];
+
+        if ($this->isCacheEnabled()) {
+            $cacheKey = $this->getCountCacheKey($filter);
+            Cache::getInstance()->set($cacheKey, $count, $this->getCacheExpirationTime());
+            CacheGroupHelper::append($this->table->className(), $cacheKey, $this->table->getCacheExpirationTime());
+        }
+
+        return $count;
     }
 
     public function setGetObjectListFlag($flag)
     {
         $this->getObjectList = (boolean) $flag;
+    }
+
+    public function getCacheExpirationTime()
+    {
+        $expirationTime = static::getCacheExpirationTimeFromCacheable();
+        if ($expirationTime === null) {
+            $expirationTime = $this->table->getCacheExpirationTime();
+        }
+
+        return $expirationTime;
+    }
+
+    public function isCacheEnabled()
+    {
+        $isCacheEnabled = static::isCacheEnabledFromCacheable();
+        if ($isCacheEnabled === false) {
+            $isCacheEnabled = $this->table->isCacheEnabled();
+        }
+
+        return $isCacheEnabled;
+    }
+
+    protected function getListCacheKey($filter, $sort, $limit, $offset)
+    {
+        $cacheKey = static::className();
+        $cacheKey .= serialize($filter);
+        $cacheKey .= serialize($sort);
+        $cacheKey .= serialize($limit);
+        $cacheKey .= serialize($offset);
+
+        return $cacheKey;
+    }
+
+    protected function getCountCacheKey($filter)
+    {
+        return static::className() . serialize($filter);
     }
 }

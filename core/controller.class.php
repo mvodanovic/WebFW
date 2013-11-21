@@ -2,6 +2,7 @@
 
 namespace WebFW\Core;
 
+use WebFW\Cache\Classes\Cacheable;
 use WebFW\Core\Classes\BaseClass;
 use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Externals\PHPTemplate;
@@ -9,6 +10,8 @@ use ReflectionMethod;
 
 abstract class Controller extends BaseClass
 {
+    use Cacheable;
+
     protected $template = 'default';
     protected $useTemplate = true;
     protected $redirectUrl = null;

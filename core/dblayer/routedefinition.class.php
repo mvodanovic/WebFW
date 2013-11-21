@@ -15,14 +15,12 @@ class RouteDefinition extends TableGateway
         $this->addForeignListFetcher(
             'params',
             TRouteDefinitionParam::getInstance()->getConstraint('fk_webfw_route_def_param'),
-            'RouteDefinitionParam',
-            '\\WebFW\\Core\\DBLayer\\ListFetchers\\'
+            RouteDefinitionParam::className()
         );
         $this->addForeignListFetcher(
             'regexes',
             TRouteDefinitionRegex::getInstance()->getConstraint('fk_webfw_route_def_regex'),
-            'RouteDefinitionRegex',
-            '\\WebFW\\Core\\DBLayer\\ListFetchers\\'
+            RouteDefinitionRegex::className()
         );
         parent::__construct();
     }

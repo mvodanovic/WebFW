@@ -2,11 +2,14 @@
 
 namespace WebFW\Core;
 
+use WebFW\Cache\Classes\Cacheable;
 use WebFW\Core\Classes\BaseClass;
 use WebFW\Externals\PHPTemplate;
 
 abstract class Component extends BaseClass
 {
+    use Cacheable;
+
     protected $useTemplate = true;
     protected $params = array();
     protected $templateVariables = array();

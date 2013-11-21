@@ -2,6 +2,9 @@
 
 namespace WebFW\Database;
 
+use WebFW\Cache\Cache;
+use WebFW\Cache\Classes\Cacheable;
+use WebFW\Cache\Classes\CacheGroupHelper;
 use WebFW\Core\Interfaces\iValidate;
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\TableConstraints\ForeignKey;
@@ -16,6 +19,11 @@ use WebFW\Core\ArrayAccess;
 
 abstract class TableGateway extends ArrayAccess implements iValidate
 {
+    use Cacheable {
+        getCacheExpirationTime as private getCacheExpirationTimeFromCacheable;
+        isCacheEnabled as private isCacheEnabledFromCacheable;
+    }
+
     const PRIMARY_KEY_PREFIX = 'pk_';
 
     /** @var Table */
@@ -67,20 +75,18 @@ abstract class TableGateway extends ArrayAccess implements iValidate
      * @param string $collectionFieldName Name under which the list will be stored in the table gateway
      * @param ForeignKey $foreignKey The foreign key instance
      * @param string $listFetcher Name of the list fetcher
-     * @param string $namespace Namespace of the list fetcher
      * @throws \WebFW\Core\Exception If called with invalid parameters
      * @see useForeignListFetchers
      */
-    public function addForeignListFetcher($collectionFieldName, ForeignKey $foreignKey, $listFetcher, $namespace = '\\Application\\DBLayer\\ListFetchers\\')
+    public function addForeignListFetcher($collectionFieldName, ForeignKey $foreignKey, $listFetcher)
     {
-        $listFetcher = $namespace . $listFetcher;
         if (!class_exists($listFetcher)) {
             throw new Exception('Cannot instantiate list fetcher: ' . $listFetcher);
         }
         /** @var $listFetcherInstance ListFetcher */
         $listFetcherInstance = new $listFetcher();
         if (!($listFetcherInstance instanceof ListFetcher)) {
-            throw new Exception('Class ' . $listFetcher . ' not an instance of WebFW\\Database\\ListFetcher');
+            throw new Exception('Class ' . $listFetcher . ' not an instance of ' . ListFetcher::className());
         }
 
         if (!($listFetcherInstance->getTableGateway() instanceof TableGateway)) {
@@ -297,34 +303,47 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 
         $this->beforeLoad();
 
-        $select = new Select($this->table->getName(), $this->table->getAlias());
-        $columns = array();
-        foreach ($this->table->getColumns() as $column) {
-            /** @var $column Column */
-            $columns[] = $column->getName();
-        }
-        $select->addSelections($columns, $this->table->getAliasedName());
-        foreach ($unique as $column => $value) {
-            $select->addCondition($column, $value, $this->table->getAliasedName());
-        }
-        $select->setLimit(1);
-        $select->appendSemicolon();
+        if ($this->isCacheEnabled() && Cache::getInstance()->exists($this->getCacheKey($unique))) {
+            $this->recordData = Cache::getInstance()->get($this->getCacheKey($unique));
+        } else {
+            $select = new Select($this->table->getName(), $this->table->getAlias());
+            $columns = array();
+            foreach ($this->table->getColumns() as $column) {
+                /** @var $column Column */
+                $columns[] = $column->getName();
+            }
+            $select->addSelections($columns, $this->table->getAliasedName());
+            foreach ($unique as $column => $value) {
+                $select->addCondition($column, $value, $this->table->getAliasedName());
+            }
+            $select->setLimit(1);
+            $select->appendSemicolon();
 
-        $sql = $select->getSQL();
-        unset($select);
+            $sql = $select->getSQL();
+            unset($select);
 
-        $result = BaseHandler::getInstance()->query($sql);
-        if ($result === false) {
-            throw new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql));
-        }
+            $result = BaseHandler::getInstance()->query($sql);
+            if ($result === false) {
+                throw new DBException(BaseHandler::getInstance()->getLastError(), new DBException($sql));
+            }
 
-        $row = BaseHandler::getInstance()->fetchAssoc($result);
-        if ($row === false) {
-            throw new NotFoundException('No records found for query: ' . $sql);
-        }
+            $row = BaseHandler::getInstance()->fetchAssoc($result);
+            if ($row === false) {
+                throw new NotFoundException('No records found for query: ' . $sql);
+            }
 
-        foreach ($row as $key => $value) {
-            $this->recordData[$key] = Table::castValueToType($value, $this->table->getColumn($key)->getType());
+            foreach ($row as $key => $value) {
+                $this->recordData[$key] = Table::castValueToType($value, $this->table->getColumn($key)->getType());
+            }
+
+            if ($this->isCacheEnabled() === true) {
+                $cacheKey = $this->getCacheKey($unique);
+                Cache::getInstance()->set($cacheKey, $this->recordData, $this->getCacheExpirationTime());
+                CacheGroupHelper::append($this->table->className(), $cacheKey, $this->table->getCacheExpirationTime());
+                $cacheKey = $this->getCacheKey();
+                Cache::getInstance()->set($cacheKey, $this->recordData, $this->getCacheExpirationTime());
+                CacheGroupHelper::append($this->table->className(), $cacheKey, $this->table->getCacheExpirationTime());
+            }
         }
         $this->oldValues = $this->recordData;
 
@@ -423,6 +442,10 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         $this->commit();
 
         $this->afterSave();
+
+        if ($this->isCacheEnabled()) {
+            CacheGroupHelper::delete($this->table->className());
+        }
     }
 
     public function saveNew()
@@ -555,6 +578,10 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         $this->recordSetIsNew = true;
 
         $this->afterDelete();
+
+        if ($this->isCacheEnabled()) {
+            CacheGroupHelper::delete($this->table->className());
+        }
     }
 
     public function getValues($appendAdditionalData = false)
@@ -790,4 +817,32 @@ abstract class TableGateway extends ArrayAccess implements iValidate
     }
 
     abstract public function getCaption();
+
+    public function getCacheExpirationTime()
+    {
+        $expirationTime = static::getCacheExpirationTimeFromCacheable();
+        if ($expirationTime === null) {
+            $expirationTime = $this->table->getCacheExpirationTime();
+        }
+
+        return $expirationTime;
+    }
+
+    public function isCacheEnabled()
+    {
+        $isCacheEnabled = static::isCacheEnabledFromCacheable();
+        if ($isCacheEnabled === false) {
+            $isCacheEnabled = $this->table->isCacheEnabled();
+        }
+
+        return $isCacheEnabled;
+    }
+
+    protected function getCacheKey(array $unique = null)
+    {
+        if ($unique === null) {
+            $unique = $this->getPrimaryKeyValues(false);
+        }
+        return static::className() . serialize($unique);
+    }
 }

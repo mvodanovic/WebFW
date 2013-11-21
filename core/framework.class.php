@@ -2,6 +2,7 @@
 
 namespace WebFW\Core;
 
+use WebFW\Cache\Cache;
 use WebFW\Core\Exceptions\NotFoundException;
 
 /**
@@ -37,6 +38,7 @@ final class Framework
             Router::setClass(Config::get('General', 'routerClass'));
         }
 
+        /** @var Controller $ctl */
         $ctl = Request::getInstance()->ctl;
         if ($ctl === null || $ctl === '') {
             $ctl = Config::get('General', 'defaultController');
@@ -46,8 +48,16 @@ final class Framework
             return;
         }
 
-        if (!class_exists($ctl)) {
-            throw new NotFoundException('Controller missing: ' . $ctl);
+        if (!is_subclass_of($ctl, Controller::className())) {
+            throw new NotFoundException($ctl . ' is not an instance of ' . Controller::className());
+        }
+
+        if ($ctl::isCacheEnabled()) {
+            $cacheKey = $ctl::className() . serialize(Request::getInstance()->getValues());
+            if (Cache::getInstance()->exists($cacheKey)) {
+                echo Cache::getInstance()->get($cacheKey);
+                return;
+            }
         }
 
         /** @var $controller Controller */
@@ -57,7 +67,14 @@ final class Framework
         }
         $controller->executeAction();
         $controller->processOutput();
-        echo $controller->getOutput();
+        $controllerOutput = $controller->getOutput();
+
+        if ($ctl::isCacheEnabled()) {
+            $cacheKey = $ctl::className() . serialize(Request::getInstance()->getValues());
+            Cache::getInstance()->set($cacheKey, $controllerOutput, $ctl::getCacheExpirationTime());
+        }
+
+        echo $controllerOutput;
     }
 
     /**
@@ -73,9 +90,16 @@ final class Framework
      */
     public static function runComponent($name, $params = null, $ownerObject = null)
     {
+        /** @var Component $name */
+        if (!is_subclass_of($name, Component::className())) {
+            throw new Exception($name . ' is not an instance of ' . Component::className());
+        }
 
-        if (!class_exists($name)) {
-            throw new Exception('Component missing: ' . $name);
+        if ($name::isCacheEnabled()) {
+            $cacheKey = $name::className() . serialize($params);
+            if (Cache::getInstance()->exists($cacheKey)) {
+                return Cache::getInstance()->get($cacheKey);
+            }
         }
 
         /** @var $component Component */
@@ -84,7 +108,14 @@ final class Framework
             throw new Exception('Class ' . $name . 'is not an instance of ' . Component::className() . '.');
         }
 
-        return $component->run();
+        $componentOutput = $component->run();
+
+        if ($name::isCacheEnabled()) {
+            $cacheKey = $name::className() . serialize($params);
+            Cache::getInstance()->set($cacheKey, $componentOutput, $name::getCacheExpirationTime());
+        }
+
+        return $componentOutput;
     }
 
     /**
