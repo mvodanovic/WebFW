@@ -518,7 +518,8 @@ abstract class TableGateway extends ArrayAccess implements iValidate
             return;
         }
         foreach ($this->table->getPrimaryKeyColumns() as $column) {
-            $update->addCondition($column, $this->oldValues[$column]);
+            /** @var Column $column */
+            $update->addCondition($column->getName(), $this->oldValues[$column->getName()]);
         }
         $update->appendSemicolon();
 
