@@ -1,5 +1,7 @@
 <?php
 
+use WebFW\CMS\Components\Navigation;
+use WebFW\CMS\Components\UserActions;
 use WebFW\Core\Framework;
 use WebFW\CMS\Controller;
 
@@ -21,10 +23,10 @@ use WebFW\CMS\Controller;
 
         <header>
             <div class="left">WebFW CMS</div>
-            <?=Framework::runComponent('WebFW\\CMS\\Components\\UserActions', null, $controller); ?>
+            <?=Framework::runComponent(UserActions::className(), null, $controller); ?>
         </header>
 
-        <?=Framework::runComponent('WebFW\\CMS\\Components\\Navigation', null, $controller); ?>
+        <?=Framework::runComponent(Navigation::className(), null, $controller); ?>
 
         <div class="content">
 

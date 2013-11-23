@@ -3,7 +3,11 @@
 namespace WebFW\Core;
 
 use WebFW\Cache\Cache;
+use WebFW\Core\Classes\GeneralHelper;
 use WebFW\Core\Exceptions\NotFoundException;
+use WebFW\Dev\Classes\DevHelper;
+use WebFW\Dev\Controller as DevController;
+use WebFW\Dev\InfoBox;
 
 /**
  * Class Framework
@@ -52,6 +56,8 @@ final class Framework
             throw new NotFoundException($ctl . ' is not an instance of ' . Controller::className());
         }
 
+        $cacheKey = null;
+
         if ($ctl::isCacheEnabled()) {
             $cacheKey = $ctl::className() . serialize(Request::getInstance()->getValues());
             if (Cache::getInstance()->exists($cacheKey)) {
@@ -70,8 +76,21 @@ final class Framework
         $controllerOutput = $controller->getOutput();
 
         if ($ctl::isCacheEnabled()) {
-            $cacheKey = $ctl::className() . serialize(Request::getInstance()->getValues());
             Cache::getInstance()->set($cacheKey, $controllerOutput, $ctl::getCacheExpirationTime());
+        }
+
+        if (DevHelper::isDevRequest() && $controller instanceof HTMLController) {
+            DevHelper::requestAuthentication(DevController::REALM_MESSAGE);
+            $infobox = new InfoBox();
+            $infobox->setTitle($controller::className() . '->' . $controller->getAction() . '()');
+            if ($cacheKey !== null) {
+                $infobox->addData('Cache key', $cacheKey);
+            }
+            if ($controller::isCacheEnabled()) {
+                $infobox->addData('Cache duration', $controller::getCacheExpirationTime());
+            }
+            $infobox->addData('Request', Request::getInstance());
+            $controllerOutput = preg_replace('#<body([^>]*)>#', '<body$1>' . $infobox->parse(), $controllerOutput);
         }
 
         echo $controllerOutput;
@@ -95,6 +114,8 @@ final class Framework
             throw new Exception($name . ' is not an instance of ' . Component::className());
         }
 
+        $cacheKey = null;
+
         if ($name::isCacheEnabled()) {
             $cacheKey = $name::className() . serialize($params);
             if (Cache::getInstance()->exists($cacheKey)) {
@@ -111,8 +132,24 @@ final class Framework
         $componentOutput = $component->run();
 
         if ($name::isCacheEnabled()) {
-            $cacheKey = $name::className() . serialize($params);
             Cache::getInstance()->set($cacheKey, $componentOutput, $name::getCacheExpirationTime());
+        }
+
+        if (DevHelper::isDevRequest()) {
+            $infobox = new InfoBox();
+            $infobox->setTitle('CMP: ' . $component::className());
+            $infobox->setContent($componentOutput);
+            $infobox->addData('Params', GeneralHelper::toString($params));
+            if ($ownerObject !== null) {
+                $infobox->addData('Owner', $ownerObject::className());
+            }
+            if ($cacheKey !== null) {
+                $infobox->addData('Cache key', $cacheKey);
+            }
+            if ($component::isCacheEnabled()) {
+                $infobox->addData('Cache duration', $component::getCacheExpirationTime());
+            }
+            $componentOutput = $infobox->parse();
         }
 
         return $componentOutput;

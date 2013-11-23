@@ -3,6 +3,7 @@
 namespace WebFW\Core;
 
 use WebFW\Core\Classes\BaseClass;
+use WebFW\Core\Classes\GeneralHelper;
 use WebFW\Core\Exceptions\NotFoundException;
 
 /**
@@ -156,9 +157,20 @@ class Request extends BaseClass
      * @param string $key The key to check the request for
      * @return bool True if the key exists, false otherwise
      */
-    public function __isset($key)
+    public function exists($key)
     {
         return array_key_exists($key, $this->values);
+    }
+
+    /**
+     * Checks if a request value with the given key exists and is not NULL.
+     *
+     * @param string $key The key to check the request for
+     * @return bool True if the key exists, false otherwise
+     */
+    public function __isset($key)
+    {
+        return isset($this->values[$key]);
     }
 
     /**
@@ -273,5 +285,10 @@ class Request extends BaseClass
     public function removeValue($key)
     {
         $this->__unset($key);
+    }
+
+    public function __toString()
+    {
+        return GeneralHelper::toString($this->values);
     }
 }

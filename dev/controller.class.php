@@ -2,10 +2,8 @@
 
 namespace WebFW\Dev;
 
-use WebFW\Core\Config;
-use WebFW\Core\Exceptions\ForbiddenException;
 use WebFW\Core\HTMLController;
-use WebFW\Dev\Classes\AuthenticationHelper;
+use WebFW\Dev\Classes\DevHelper;
 
 /**
  * Class Controller
@@ -17,29 +15,13 @@ use WebFW\Dev\Classes\AuthenticationHelper;
 abstract class Controller extends HTMLController
 {
     /**
-     * @var string The realm message which will be displayed to users for authentication
+     * The realm message which will be displayed to users for authentication
      */
-    protected $realmMessage = 'Developer area';
+    const REALM_MESSAGE = 'Developer area';
 
     public function __construct()
     {
-        if (Config::get('Developer', 'devModeEnabled') !== true) {
-            $this->authenticate();
-        }
-
+        DevHelper::requestAuthentication(static::REALM_MESSAGE);
         parent::__construct();
-    }
-
-    protected function authenticate()
-    {
-        if (Config::get('Developer', 'authUsername') === null || Config::get('Developer', 'authPassword') === null) {
-            throw new ForbiddenException($this->realmMessage);
-        }
-
-        AuthenticationHelper::authenticate(
-            $this->realmMessage,
-            Config::get('Developer', 'authUsername'),
-            Config::get('Developer', 'authPassword')
-        );
     }
 }
