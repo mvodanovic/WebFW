@@ -5,6 +5,7 @@ namespace WebFW\Database;
 use WebFW\Core\Classes\BaseClass;
 use WebFW\Core\Exception;
 use WebFW\Core\Config;
+use WebFW\Dev\Profiler;
 
 abstract class BaseHandler extends BaseClass
 {
@@ -131,7 +132,13 @@ abstract class BaseHandler extends BaseClass
         if (array_key_exists('db_debug', $_REQUEST) && $_REQUEST['db_debug'] == 1) {
             trigger_error('Query: ' . $query);
         }
+        Profiler::getInstance()->addQuery($query);
         return null;
+    }
+
+    public function completeQuery()
+    {
+        Profiler::getInstance()->completeQuery();
     }
 
     /**

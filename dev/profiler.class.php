@@ -17,6 +17,7 @@ class Profiler extends BaseClass
 {
     protected static $instance = null;
     protected $moments = array();
+    protected $queries = array();
     protected $startTime = null;
     protected $endTime = null;
     protected $templateDir;
@@ -43,18 +44,38 @@ class Profiler extends BaseClass
      */
     public function addMoment($description)
     {
-        $time = explode(' ', microtime());
-        $time = $time[0] + ($time[1] % 10000);
+        $time = $this->getTime();
         if ($this->startTime === null) {
             $this->startTime = $time;
         }
         $this->endTime = $time;
 
         $this->moments[] = array(
-            'time' => number_format($time - $this->startTime, 6),
+            'time' => $this->formatTime($time - $this->startTime),
             'memory' => memory_get_usage(true),
+            'queryCount' => $this->getQueryCount(),
             'description' => $description,
         );
+    }
+
+    /**
+     * Adds a new query to the list of executed queries
+     *
+     * @param string $query The query
+     */
+    public function addQuery($query)
+    {
+        $this->queries[] = array(
+            'query' => $query,
+            'time' => $this->getTime(),
+        );
+    }
+
+    public function completeQuery()
+    {
+        $queryDef = array_pop($this->queries);
+        $queryDef['time'] = $this->formatTime($this->getTime() - $queryDef['time']);
+        $this->queries[] = $queryDef;
     }
 
     /**
@@ -65,7 +86,7 @@ class Profiler extends BaseClass
      */
     public function getTotalTime()
     {
-        return number_format($this->endTime - $this->startTime, 6);
+        return $this->formatTime($this->endTime - $this->startTime);
     }
 
     /**
@@ -90,6 +111,26 @@ class Profiler extends BaseClass
     }
 
     /**
+     * Return the list of executed queries.
+     *
+     * @return array The list of queries
+     */
+    public function getQueries()
+    {
+        return $this->queries;
+    }
+
+    /**
+     * Returns the total number of executed queries.
+     *
+     * @return int The number of executed queries
+     */
+    public function getQueryCount()
+    {
+        return count($this->queries);
+    }
+
+    /**
      * Returns Profiler's HTML formatted output so it could be human-readable easily.
      *
      * @return string Profiler output in HTML
@@ -97,8 +138,18 @@ class Profiler extends BaseClass
     public function getHTMLOutput()
     {
         $template = new PHPTemplate($this->templateName, $this->templateDir);
-        $template->set('profiler', $this);
         return $template->fetch();
+    }
+
+    protected function getTime()
+    {
+        $time = explode(' ', microtime());
+        return $time[0] + ($time[1] % 10000);
+    }
+
+    protected function formatTime($time)
+    {
+        return number_format($time, 6);
     }
 
     protected function __construct()

@@ -77,6 +77,7 @@ class PgSQLHandler extends BaseHandler
     {
         parent::query($query);
         $ok = pg_send_query($this->connectionResource, $query);
+        parent::completeQuery();
         if (!$ok) {
             return false;
         }

@@ -7,6 +7,7 @@ use WebFW\Core\Classes\GeneralHelper;
 use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Dev\Classes\DevHelper;
 use WebFW\Dev\Controller as DevController;
+use WebFW\Dev\DBProfiler;
 use WebFW\Dev\InfoBox;
 use WebFW\Dev\Profiler;
 

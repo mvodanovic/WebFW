@@ -54,6 +54,7 @@ class SQLite3Handler extends BaseHandler
         } else {
             $this->lastQueryResource = $this->connectionResource->exec($query);
         }
+        parent::completeQuery();
         return $this->lastQueryResource;
     }
 

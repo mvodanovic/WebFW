@@ -45,6 +45,7 @@ class MySQLHandler extends BaseHandler
     {
         parent::query($query);
         $this->lastQueryResource = $this->connectionResource->query($query);
+        parent::completeQuery();
         return $this->lastQueryResource;
     }
 
