@@ -6,6 +6,7 @@ use ReflectionClass;
 use WebFW\CMS\CMSLogin;
 use WebFW\CMS\Controllers\User;
 use WebFW\Core\Classes\BaseClass;
+use WebFW\Dev\Profiler;
 
 /**
  * Class Router
@@ -35,7 +36,8 @@ class Router extends BaseClass
         }
 
         if (!isset(static::$instance)) {
-            static::$instance = new static::$class;
+            static::$instance = new static::$class();
+            Profiler::getInstance()->addMoment('After router construction');
         }
 
         return static::$instance;

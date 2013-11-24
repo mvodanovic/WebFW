@@ -63,51 +63,57 @@ final class Framework
 
         Profiler::getInstance()->addMoment('After controller detection');
 
+        if (DevHelper::isDevRequest()) {
+            DevHelper::requestAuthentication(DevController::REALM_MESSAGE);
+        }
+
         $cacheKey = null;
+        $controllerOutput = null;
+        $controller = null;
 
         if ($ctl::isCacheEnabled()) {
             $cacheKey = $ctl::className() . serialize(Request::getInstance()->getValues());
             if (Cache::getInstance()->exists($cacheKey)) {
                 $controllerOutput = Cache::getInstance()->get($cacheKey);
                 Profiler::getInstance()->addMoment('After reading controller output from cache');
-                echo $controllerOutput;
-                return;
             }
         }
 
-        if (DevHelper::isDevRequest()) {
-            DevHelper::requestAuthentication(DevController::REALM_MESSAGE);
+        if ($controllerOutput === null) {
+            /** @var $controller Controller */
+            $controller = new $ctl();
+            if (!($controller instanceof Controller)) {
+                throw new Exception('Class ' . $ctl . ' is not an instance of ' . Controller::className() . '.');
+            }
+
+            Profiler::getInstance()->addMoment('After controller construction');
+
+            $controller->executeAction();
+
+            Profiler::getInstance()->addMoment('After controller action execution');
+
+            $controller->processOutput();
+            $controllerOutput = $controller->getOutput();
+
+            Profiler::getInstance()->addMoment('After controller template processing');
+
+            if ($ctl::isCacheEnabled()) {
+                Cache::getInstance()->set($cacheKey, $controllerOutput, $ctl::getCacheExpirationTime());
+            }
         }
 
-        /** @var $controller Controller */
-        $controller = new $ctl();
-        if (!($controller instanceof Controller)) {
-            throw new Exception('Class ' . $ctl . ' is not an instance of ' . Controller::className() . '.');
-        }
-
-        Profiler::getInstance()->addMoment('After controller construction');
-
-        $controller->executeAction();
-
-        Profiler::getInstance()->addMoment('After controller action execution');
-
-        $controller->processOutput();
-        $controllerOutput = $controller->getOutput();
-
-        Profiler::getInstance()->addMoment('After controller template processing');
-
-        if ($ctl::isCacheEnabled()) {
-            Cache::getInstance()->set($cacheKey, $controllerOutput, $ctl::getCacheExpirationTime());
-        }
-
-        if (DevHelper::isDevRequest() && $controller instanceof HTMLController) {
+        if (DevHelper::isDevRequest() && is_subclass_of($ctl, HTMLController::className())) {
             $infobox = new InfoBox();
-            $infobox->setTitle($controller::className() . '->' . $controller->getAction() . '()');
+            if ($controller === null) {
+                $infobox->setTitle($ctl);
+            } else {
+                $infobox->setTitle($ctl . '->' . $controller->getAction() . '()');
+            }
             if ($cacheKey !== null) {
                 $infobox->addData('Cache key', $cacheKey);
             }
-            if ($controller::isCacheEnabled()) {
-                $infobox->addData('Cache duration', $controller::getCacheExpirationTime());
+            if ($ctl::isCacheEnabled()) {
+                $infobox->addData('Cache duration', $ctl::getCacheExpirationTime());
             }
             $infobox->addData('Request', Request::getInstance());
             $controllerOutput = preg_replace('#<body([^>]*)>#', '<body$1>' . $infobox->parse(), $controllerOutput, 1);
@@ -140,35 +146,38 @@ final class Framework
         }
 
         $cacheKey = null;
+        $componentOutput = null;
 
         if ($name::isCacheEnabled()) {
             $cacheKey = $name . serialize($params);
             if (Cache::getInstance()->exists($cacheKey)) {
-                return Cache::getInstance()->get($cacheKey);
+                $componentOutput = Cache::getInstance()->get($cacheKey);
             }
         }
 
-        Profiler::getInstance()->addMoment('CMP: ' . $name . ' - before construction');
+        if ($componentOutput === null) {
+            Profiler::getInstance()->addMoment('CMP: ' . $name . ' - before construction');
 
-        /** @var $component Component */
-        $component = new $name($params, $ownerObject);
-        if (!($component instanceof Component)) {
-            throw new Exception('Class ' . $name . 'is not an instance of ' . Component::className() . '.');
-        }
+            /** @var $component Component */
+            $component = new $name($params, $ownerObject);
+            if (!($component instanceof Component)) {
+                throw new Exception('Class ' . $name . 'is not an instance of ' . Component::className() . '.');
+            }
 
-        Profiler::getInstance()->addMoment('CMP: ' . $name . ' - after construction');
+            Profiler::getInstance()->addMoment('CMP: ' . $name . ' - after construction');
 
-        $componentOutput = $component->run();
+            $componentOutput = $component->run();
 
-        Profiler::getInstance()->addMoment('CMP: ' . $name . ' - after execution');
+            Profiler::getInstance()->addMoment('CMP: ' . $name . ' - after execution');
 
-        if ($name::isCacheEnabled()) {
-            Cache::getInstance()->set($cacheKey, $componentOutput, $name::getCacheExpirationTime());
+            if ($name::isCacheEnabled()) {
+                Cache::getInstance()->set($cacheKey, $componentOutput, $name::getCacheExpirationTime());
+            }
         }
 
         if (DevHelper::isDevRequest()) {
             $infobox = new InfoBox();
-            $infobox->setTitle('CMP: ' . $component::className());
+            $infobox->setTitle('CMP: ' . $name);
             $infobox->setContent($componentOutput);
             $infobox->addData('Params', GeneralHelper::toString($params));
             if ($ownerObject !== null) {
@@ -177,8 +186,8 @@ final class Framework
             if ($cacheKey !== null) {
                 $infobox->addData('Cache key', $cacheKey);
             }
-            if ($component::isCacheEnabled()) {
-                $infobox->addData('Cache duration', $component::getCacheExpirationTime());
+            if ($name::isCacheEnabled()) {
+                $infobox->addData('Cache duration', $name::getCacheExpirationTime());
             }
             $componentOutput = $infobox->parse();
         }
