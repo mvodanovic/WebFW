@@ -8,6 +8,7 @@ use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Dev\Classes\DevHelper;
 use WebFW\Dev\Controller as DevController;
 use WebFW\Dev\InfoBox;
+use WebFW\Dev\Profiler;
 
 /**
  * Class Framework
@@ -26,7 +27,11 @@ final class Framework
      */
     public static function start()
     {
+        Profiler::getInstance()->addMoment('Framework start');
+
         Config::init();
+
+        Profiler::getInstance()->addMoment('After configuration load');
 
         Request::handleIncomingRedirection();
 
@@ -56,14 +61,22 @@ final class Framework
             throw new NotFoundException($ctl . ' is not an instance of ' . Controller::className());
         }
 
+        Profiler::getInstance()->addMoment('After controller detection');
+
         $cacheKey = null;
 
         if ($ctl::isCacheEnabled()) {
             $cacheKey = $ctl::className() . serialize(Request::getInstance()->getValues());
             if (Cache::getInstance()->exists($cacheKey)) {
-                echo Cache::getInstance()->get($cacheKey);
+                $controllerOutput = Cache::getInstance()->get($cacheKey);
+                Profiler::getInstance()->addMoment('After reading controller output from cache');
+                echo $controllerOutput;
                 return;
             }
+        }
+
+        if (DevHelper::isDevRequest()) {
+            DevHelper::requestAuthentication(DevController::REALM_MESSAGE);
         }
 
         /** @var $controller Controller */
@@ -71,16 +84,23 @@ final class Framework
         if (!($controller instanceof Controller)) {
             throw new Exception('Class ' . $ctl . ' is not an instance of ' . Controller::className() . '.');
         }
+
+        Profiler::getInstance()->addMoment('After controller construction');
+
         $controller->executeAction();
+
+        Profiler::getInstance()->addMoment('After controller action execution');
+
         $controller->processOutput();
         $controllerOutput = $controller->getOutput();
+
+        Profiler::getInstance()->addMoment('After controller template processing');
 
         if ($ctl::isCacheEnabled()) {
             Cache::getInstance()->set($cacheKey, $controllerOutput, $ctl::getCacheExpirationTime());
         }
 
         if (DevHelper::isDevRequest() && $controller instanceof HTMLController) {
-            DevHelper::requestAuthentication(DevController::REALM_MESSAGE);
             $infobox = new InfoBox();
             $infobox->setTitle($controller::className() . '->' . $controller->getAction() . '()');
             if ($cacheKey !== null) {
@@ -90,7 +110,12 @@ final class Framework
                 $infobox->addData('Cache duration', $controller::getCacheExpirationTime());
             }
             $infobox->addData('Request', Request::getInstance());
-            $controllerOutput = preg_replace('#<body([^>]*)>#', '<body$1>' . $infobox->parse(), $controllerOutput);
+            $controllerOutput = preg_replace('#<body([^>]*)>#', '<body$1>' . $infobox->parse(), $controllerOutput, 1);
+
+            $infobox = new InfoBox();
+            $infobox->setTitle('Profiler');
+            $infobox->setContent(Profiler::getInstance()->getHTMLOutput());
+            $controllerOutput = preg_replace('#</body>#', $infobox->parse() . '</body>', $controllerOutput, 1);
         }
 
         echo $controllerOutput;
@@ -117,11 +142,13 @@ final class Framework
         $cacheKey = null;
 
         if ($name::isCacheEnabled()) {
-            $cacheKey = $name::className() . serialize($params);
+            $cacheKey = $name . serialize($params);
             if (Cache::getInstance()->exists($cacheKey)) {
                 return Cache::getInstance()->get($cacheKey);
             }
         }
+
+        Profiler::getInstance()->addMoment('CMP: ' . $name . ' - before construction');
 
         /** @var $component Component */
         $component = new $name($params, $ownerObject);
@@ -129,7 +156,11 @@ final class Framework
             throw new Exception('Class ' . $name . 'is not an instance of ' . Component::className() . '.');
         }
 
+        Profiler::getInstance()->addMoment('CMP: ' . $name . ' - after construction');
+
         $componentOutput = $component->run();
+
+        Profiler::getInstance()->addMoment('CMP: ' . $name . ' - after execution');
 
         if ($name::isCacheEnabled()) {
             Cache::getInstance()->set($cacheKey, $componentOutput, $name::getCacheExpirationTime());
