@@ -293,14 +293,19 @@ abstract class ListController extends ItemController
 
         if ($formItem instanceof SimpleFormItem) {
             $prefixedName = static::LIST_FILTER_PREFIX . $formItem->getName();
-            if (Request::getInstance()->$prefixedName !== null) {
-                $formItem->setValue(Request::getInstance()->$prefixedName);
+            $value = $this->tableGateway->castValueToColumnType(
+                $formItem->getName(),
+                Request::getInstance()->$prefixedName
+            );
+            if ($value !== null) {
+                $formItem->setValue($value);
             }
         } elseif ($formItem instanceof CompoundFormItem) {
             foreach ($formItem->getNames() as $name) {
                 $prefixedName = static::LIST_FILTER_PREFIX . $name;
-                if (Request::getInstance()->$prefixedName !== null) {
-                    $formItem->setValue($name, Request::getInstance()->$prefixedName);
+                $value = $this->tableGateway->castValueToColumnType($name, Request::getInstance()->$prefixedName);
+                if ($value !== null) {
+                    $formItem->setValue($name, $value);
                 }
             }
         }

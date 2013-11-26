@@ -46,7 +46,7 @@ class User extends ListController
         $tab = new EditTab('default');
 
         $userTypeLf = new LFUserType();
-        $userTypes = ListHelper::GetKeyValueList(
+        $userTypes = ListHelper::getKeyValueList(
             $userTypeLf->getList(null, array('user_type_id' => 'ASC')),
             'user_type_id',
             'caption'
@@ -109,7 +109,7 @@ class User extends ListController
     protected function initListFilters()
     {
         $userTypeLf = new LFUserType();
-        $userTypes = ListHelper::GetKeyValueList(
+        $userTypes = ListHelper::getKeyValueList(
             $userTypeLf->getList(null, array('user_type_id' => 'ASC')),
             'user_type_id',
             'caption',

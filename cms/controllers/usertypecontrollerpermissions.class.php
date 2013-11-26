@@ -52,7 +52,11 @@ class UserTypeControllerPermissions extends ListController
         $tab = new EditTab('default');
 
         $userTypeLf = new LFUserType();
-        $userTypes = ListHelper::GetKeyValueList($userTypeLf->getList(null, array('user_type_id' => 'ASC')), 'user_type_id', 'caption');
+        $userTypes = ListHelper::getKeyValueList(
+            $userTypeLf->getList(null, array('user_type_id' => 'ASC')),
+            'user_type_id',
+            'caption'
+        );
 
         $tab->addField(
             new Select('user_type_id', $userTypes),
@@ -107,7 +111,7 @@ class UserTypeControllerPermissions extends ListController
     protected function initListFilters()
     {
         $userTypeLf = new LFUserType();
-        $userTypes = ListHelper::GetKeyValueList(
+        $userTypes = ListHelper::getKeyValueList(
                 $userTypeLf->getList(null, array('user_type_id' => 'ASC')),
                 'user_type_id',
                 'caption',

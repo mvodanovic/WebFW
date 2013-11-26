@@ -678,6 +678,15 @@ abstract class TableGateway extends ArrayAccess implements iValidate
         }
     }
 
+    public function castValueToColumnType($columnName, $value)
+    {
+        if ($this->table->hasColumn($columnName)) {
+            return Table::castValueToType($value, $this->table->getColumn($columnName)->getType());
+        } else {
+            return $value;
+        }
+    }
+
     public function validateData() {}
 
     protected function validateDataUsingTableDefinition()

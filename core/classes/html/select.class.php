@@ -25,16 +25,15 @@ class Select extends SimpleFormItem
     public function parse()
     {
         $optionsHTML = '';
-        foreach ($this->options as $value => $caption) {
-            $value = (string) $value;
+        foreach ($this->options as &$valueCaptionList) {
             $selected = false;
-            if (is_array($this->selectedOptionValue) && in_array($value, $this->selectedOptionValue)) {
+            if (is_array($this->selectedOptionValue) && in_array($valueCaptionList['key'], $this->selectedOptionValue)) {
                 $selected = true;
-            } elseif ($value === $this->selectedOptionValue) {
+            } elseif ($valueCaptionList['key'] === $this->selectedOptionValue) {
                 $selected = true;
             }
 
-            $optionObject = new Option($selected, $value, $caption);
+            $optionObject = new Option($selected, $valueCaptionList['key'], $valueCaptionList['value']);
             $optionsHTML .= $optionObject->parse();
         }
 
