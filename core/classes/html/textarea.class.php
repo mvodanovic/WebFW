@@ -2,19 +2,13 @@
 
 namespace WebFW\Core\Classes\HTML;
 
-use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Base\SimpleFormItem;
 
-class Textarea extends BaseFormItem
+class Textarea extends SimpleFormItem
 {
-    protected $tagName = 'textarea';
-    protected $skipInnerHTMLDecoration = true;
-
-    public function __construct($name = null, $value = null, $class = null)
+    public function __construct($name = null, $value = null)
     {
-        parent::__construct($name, $value);
-
-        if ($class !== null) {
-            $this->classes[] = $class;
-        }
+        $this->setInnerHTML($value);
+        parent::__construct(SimpleFormItem::TYPE_TEXTAREA, $name);
     }
 }

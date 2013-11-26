@@ -2,25 +2,23 @@
 
 namespace WebFW\Core\Classes\HTML;
 
-use WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
+use WebFW\Core\Classes\HTML\Base\GeneralHTMLItem;
 use WebFW\Core\Route;
 
-class FormStart extends BaseHTMLItem
+class FormStart extends GeneralHTMLItem
 {
-    protected $tagName = 'form';
-    protected $skipInnerHTMLDecoration = true;
     protected $method;
     protected $action;
 
     public function __construct($method = null, $action = null)
     {
-        parent::__construct(null);
+        parent::__construct('form');
 
         $this->method = $method;
         $this->action = $action;
     }
 
-    public function prepareHTMLChunks()
+    public function parse()
     {
         $urlParamSeparator = '&';
         if ($this->action instanceof Route) {
@@ -39,28 +37,18 @@ class FormStart extends BaseHTMLItem
                 $paramPair = explode('=', $paramPair);
                 $paramPair[0] = rawurldecode($paramPair[0]);
                 $paramPair[1] = rawurldecode($paramPair[1]);
-                $hidden = new Input($paramPair[0], 'hidden', $paramPair[1]);
+                $hidden = new Input($paramPair[0], Input::INPUT_HIDDEN, $paramPair[1]);
                 $hiddenDiv .= $hidden->parse();
             }
             if ($hiddenDiv !== '') {
                 $hiddenDiv = '<div class="hidden">' . $hiddenDiv . '</div>';
             }
-            $this->innerHTMLElements[] = $hiddenDiv;
+            $this->setInnerHTML($hiddenDiv);
         }
 
-        if ($this->method !== null) {
-            $this->addCustomAttribute('method', $this->method);
-        }
+        $this->setAttribute('method', $this->method);
+        $this->setAttribute('action', $this->action);
 
-        if ($this->action !== null) {
-            $this->addCustomAttribute('action', $this->action);
-        }
-
-        parent::prepareHTMLChunks();
-    }
-
-    public function parse()
-    {
         return substr(parent::parse(), 0, -7);
     }
 }

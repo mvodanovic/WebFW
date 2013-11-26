@@ -3,6 +3,8 @@
 namespace WebFW\CMS\Classes;
 
 use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Base\CompoundFormItem;
+use WebFW\Core\Classes\HTML\Base\SimpleFormItem;
 use WebFW\Core\Classes\HTML\Button;
 use WebFW\Core\Classes\HTML\Input;
 use WebFW\Database\TableGateway;
@@ -27,11 +29,19 @@ class EditTab
 
     public function addField(BaseFormItem $formItem, $label, $description = null, $newLine = true, $rowspan = 1, $colspan = 1)
     {
-        if (!in_array($formItem->getName(), $this->fieldNames)) {
-            $this->fieldNames[] = $formItem->getName();
+        $formItem->setNamePrefix(static::FIELD_PREFIX);
+        $formItem->disableAutocomplete();
+        if ($formItem instanceof SimpleFormItem) {
+            if (!in_array($formItem->getName(), $this->fieldNames)) {
+                $this->fieldNames[] = $formItem->getName();
+            }
+        } elseif ($formItem instanceof CompoundFormItem) {
+            foreach ($formItem->getNames() as $name) {
+                if (!in_array($name, $this->fieldNames)) {
+                    $this->fieldNames[] = $name;
+                }
+            }
         }
-
-        $formItem->setName(static::FIELD_PREFIX . $formItem->getName());
 
         if ($formItem instanceof Input && $formItem->getType() === 'hidden') {
             $this->hiddenFields[] = $formItem;
@@ -86,46 +96,30 @@ class EditTab
         foreach ($values as $name => $value) {
             foreach ($this->fields as &$fieldRow) {
                 foreach ($fieldRow as &$field) {
-                    /** @var $formItem BaseFormItem */
                     $formItem = &$field['formItem'];
-                    if ($formItem->getName() === static::FIELD_PREFIX . $name) {
-                        if ($formItem instanceof Input) {
-                            /** @var $formItem Input */
-                            if ($formItem->getType() === 'checkbox' && $value === true) {
+                    if ($formItem instanceof SimpleFormItem) {
+                        if ($formItem->getName() === $name) {
+                            if ($formItem instanceof Input
+                                    && in_array($formItem->getType(), array(Input::INPUT_CHECKBOX, Input::INPUT_RADIO))
+                                    && $value === true
+                            ) {
                                 $formItem->setChecked();
-                            } elseif ($formItem->getType() === 'radio') {
-                                if ($value === $formItem->getValue()) {
-                                    $formItem->setChecked();
-                                }
                             } else {
                                 $formItem->setValue($value);
                             }
-                        } else {
-                            /** @var $formItem BaseFormItem */
-                            $formItem->setValue($value);
+                        }
+                    } elseif ($formItem instanceof CompoundFormItem) {
+                        if (in_array($name, $formItem->getNames())) {
+                            $formItem->setValue($name, $value);
                         }
                     }
                 }
             }
 
             foreach ($this->hiddenFields as &$formItem) {
-                /** @var $formItem BaseFormItem */
-                if ($formItem->getName() === static::FIELD_PREFIX . $name) {
-                    if ($formItem instanceof Input) {
-                        /** @var $formItem Input */
-                        if ($formItem->getType() === 'checkbox' && $value === true) {
-                            $formItem->setChecked();
-                        } elseif ($formItem->getType() === 'radio') {
-                            if ($value === $formItem->getValue()) {
-                                $formItem->setChecked();
-                            }
-                        } else {
-                            $formItem->setValue($value);
-                        }
-                    } else {
-                        /** @var $formItem BaseFormItem */
-                        $formItem->setValue($value);
-                    }
+                /** @var $formItem Input */
+                if ($formItem->getName() === $name) {
+                    $formItem->setValue($value);
                 }
             }
         }
@@ -139,9 +133,15 @@ class EditTab
         foreach ($this->fields as &$fieldRow) {
             foreach ($fieldRow as &$field) {
                 $formItem = &$field['formItem'];
-                /** @var $formItem BaseFormItem */
-                $fieldName = substr($formItem->getName(), strlen(static::FIELD_PREFIX));
-                $errors = $tableGateway->getValidationErrors($fieldName);
+                $errors = array();
+                if ($formItem instanceof SimpleFormItem) {
+                    $errors = $tableGateway->getValidationErrors($formItem->getName());
+                } elseif ($formItem instanceof CompoundFormItem) {
+                    $errors = array();
+                    foreach ($formItem->getNames() as $name) {
+                        $errors = array_merge($errors, $tableGateway->getValidationErrors($name));
+                    }
+                }
                 if (!empty($errors)) {
                     $field['error'] = '';
                 }
@@ -220,9 +220,10 @@ class EditTab
     {
         $class = $isActive ? ' ui-state-active ui-state-persist' : null;
 
-        $button = new Button($this->getName(), 'button', null, $class);
-        $button->addCustomAttribute('data-id', $this->getID());
-        $button->addEvent('click', 'switchEditTab', array('id' => $this->getID()));
+        $button = new Button($this->getName());
+        $button->addClass($class);
+        $button->setAttribute('data-id', $this->getID());
+        $button->setEvent('click', 'switchEditTab', array('id' => $this->getID()));
 
         return $button->parse();
     }

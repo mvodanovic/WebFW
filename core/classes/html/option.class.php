@@ -2,27 +2,18 @@
 
 namespace WebFW\Core\Classes\HTML;
 
-use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Base\SimpleFormItem;
 
-class Option extends BaseFormItem
+class Option extends SimpleFormItem
 {
-    protected $tagName = 'option';
-    protected $skipInnerHTMLDecoration = true;
-
-    public function __construct($selected = false, $value = null, $caption = null, $class = null)
+    public function __construct($selected = false, $value = null, $caption = null)
     {
-        parent::__construct(null, $caption);
-
-        if ($class !== null) {
-            $this->classes[] = $class;
-        }
+        $this->setInnerHTML(htmlspecialchars($caption));
 
         if ($selected === true) {
-            $this->addCustomAttribute('selected', $selected);
+            $this->setAttribute('selected', $selected);
         }
 
-        if ($value !== null) {
-            $this->addCustomAttribute('value', $value);
-        }
+        parent::__construct(SimpleFormItem::TYPE_OPTION, null, $value);
     }
 }

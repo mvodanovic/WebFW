@@ -133,7 +133,7 @@ class Navigation extends TreeTableGateway
         }
         $link = new Link(null, $this->getURL(), $options);
         if ($this->custom_url !== null) {
-            $link->addCustomAttribute('target', '_blank');
+            $link->setAttribute('target', '_blank');
         }
         return $link->parse();
     }

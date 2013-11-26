@@ -35,6 +35,6 @@ class TinyMCE extends Textarea
                 . ' | link unlink anchor image table blockquote media',
         ), $options);
 
-        $this->addCustomAttribute('data-options', json_encode($options, JSON_FORCE_OBJECT));
+        $this->setAttribute('data-options', json_encode($options, JSON_FORCE_OBJECT));
     }
 }

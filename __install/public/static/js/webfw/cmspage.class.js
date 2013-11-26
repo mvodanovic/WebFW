@@ -20,6 +20,7 @@ function CMSPage(scope) {
     this.initializeEditUnsavedChangesCheck();
     this.initializeDateTimePickers();
     this.initializeReferencePickers();
+    this.initializeTinyMCEs();
     this.initializeUIButtons();
 }
 
@@ -224,6 +225,16 @@ CMSPage.prototype.initializeReferencePickers = function() {
         } else {
             $(this).html(CMSPage.createErrorMessage('ReferencePicker JS class definition missing!'));
         }
+    });
+};
+
+/**
+ * Initializes all TinyMCE rich-text editors on the page.
+ */
+CMSPage.prototype.initializeTinyMCEs = function() {
+    $('textarea.tinymce', this.scope).each(function() {
+        var options = $(this).data('options');
+        $(this).tinymce(options);
     });
 };
 

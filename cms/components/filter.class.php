@@ -39,7 +39,7 @@ class Filter extends Component
             'icons' => array('primary' => 'ui-icon-search'),
             'label' => 'Filter',
         );
-        $submitButton = new Button(null, 'submit', $options);
+        $submitButton = new Button(null, Button::BUTTON_SUBMIT, $options);
 
         $this->setTplVar('filters', $filters);
         $this->setTplVar('form', $form);

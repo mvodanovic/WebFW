@@ -31,12 +31,13 @@ class ListRowAction
                 $params = array_merge($tableGateway->getPrimaryKeyValues(), $params);
             }
             $this->route->addParams($params);
-            $this->link->addCustomAttribute('href', $this->route->getURL(false));
+            $this->link->setAttribute('href', $this->route->getURL(false));
         }
 
         if ($this->setPrimaryKeyInDataAttribute === true && $tableGateway instanceof TableGateway) {
             $dataParams = $tableGateway->getPrimaryKeyValues(false);
-            $this->link->addCustomAttribute('data-primary-key', json_encode($dataParams, JSON_FORCE_OBJECT));
+            $this->link->setAttribute('data-primary-key', json_encode($dataParams, JSON_FORCE_OBJECT));
+            $this->link->setAttribute('data-caption', $tableGateway->getCaption());
         }
 
         return $this->link;

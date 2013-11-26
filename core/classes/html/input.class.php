@@ -2,54 +2,50 @@
 
 namespace WebFW\Core\Classes\HTML;
 
-use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Base\SimpleFormItem;
 
-class Input extends BaseFormItem
+class Input extends SimpleFormItem
 {
+    const INPUT_TEXT = 'text';
+    const INPUT_PASSWORD = 'password';
+    const INPUT_EMAIL = 'email';
+    const INPUT_RADIO = 'radio';
+    const INPUT_CHECKBOX = 'checkbox';
+    const INPUT_HIDDEN = 'hidden';
+    const INPUT_FILE = 'file';
+    const INPUT_TEL = 'tel';
+
     protected $tagName = 'input';
     protected $hasClosingTag = false;
     protected $type = null;
 
-    public function __construct($name = null, $type = null, $value = null, $class = null)
+    public function __construct($name = null, $type = null, $value = null)
     {
         $this->setType($type);
 
-        parent::__construct($name, $value);
-
-        if ($class !== null) {
-            $this->classes[] = $class;
-        }
+        parent::__construct(static::TYPE_INPUT, $name, $value);
     }
 
-    public function prepareHTMLChunks()
+    public function setValue($value)
     {
-        if ($this->value !== null) {
-            if ($this->value === true) {
-                $this->setValue('1');
-            } elseif ($this->value === false) {
-                $this->setValue('0');
-            }
-            if ($this->type !== 'checkbox') {
-                $this->addCustomAttribute('value', $this->value);
-            }
+        if ($this->type !== static::INPUT_CHECKBOX) {
+            parent::setValue($value);
         }
-
-        parent::prepareHTMLChunks();
     }
 
     public function setType($type)
     {
         $this->type = $type;
-        $this->addCustomAttribute('type', $type);
-        if ($type === 'checkbox') {
-            $this->addCustomAttribute('value', '1');
+        $this->setAttribute('type', $type);
+        if ($type === static::INPUT_CHECKBOX) {
+            parent::setValue('1');
         }
     }
 
     public function setChecked()
     {
-        if ($this->type === 'checkbox' || $this->type === 'radio') {
-            $this->addCustomAttribute('checked', 'checked');
+        if ($this->type === static::INPUT_CHECKBOX || $this->type === static::INPUT_RADIO) {
+            $this->setAttribute('checked', 'checked');
         }
     }
 

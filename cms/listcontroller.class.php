@@ -8,6 +8,8 @@ use WebFW\CMS\Classes\ListMassAction;
 use WebFW\CMS\Classes\ListRowAction;
 use WebFW\CMS\Classes\PermissionsHelper;
 use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
+use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Base\CompoundFormItem;
 use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Core\Exceptions\BadRequestException;
 use WebFW\Core\Exceptions\UnauthorizedException;
@@ -15,7 +17,7 @@ use WebFW\Core\Exception;
 use WebFW\Database\ListFetcher;
 use WebFW\Core\Request;
 use WebFW\Core\Classes\HTML\Link;
-use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Base\SimpleFormItem;
 use WebFW\Core\Classes\HTML\Button;
 use WebFW\Database\TableGateway;
 
@@ -24,6 +26,7 @@ abstract class ListController extends ItemController
     const DEFAULT_ACTION_NAME = 'listItems';
     const LIST_FILTER_PREFIX = 'f_';
 
+    /** @var ListFetcher */
     protected $listFetcher = null;
     protected $sort = array();
     protected $page = 1;
@@ -229,7 +232,7 @@ abstract class ListController extends ItemController
                 'text' => false,
             );
             $link = new Link(null, null, $options);
-            $link->addEvent('click', 'confirmAction', array('message' => "Item will be deleted.\nAre you sure?"));
+            $link->setEvent('click', 'confirmAction', array('message' => "Item will be deleted.\nAre you sure?"));
             $route = $this->getRoute('deleteItem');
             $listRowAction = new ListRowAction($link, $route);
             $this->registerListRowAction($listRowAction);
@@ -253,7 +256,8 @@ abstract class ListController extends ItemController
                 'icons' => array('primary' => 'ui-icon-check'),
                 'text' => false,
             );
-            $link = new Link(null, null, $options, 'reference_select');
+            $link = new Link(null, null, $options);
+            $link->addClass('reference_select');
             $listRowAction = new ListRowAction($link, null, true);
             $this->registerListRowAction($listRowAction);
         }
@@ -267,13 +271,14 @@ abstract class ListController extends ItemController
                 'icons' => array('primary' => 'ui-icon-trash'),
                 'label' => 'Delete',
             );
-            $button = new Button(null, 'button', $options, 'mass_delete');
-            $button->addEvent(
+            $button = new Button(null, Button::BUTTON_BUTTON, $options);
+            $button->addClass('mass_delete');
+            $button->setEvent(
                 'click',
                 'confirmAction',
                 array('message' => "Selected items will be deleted.\nAre you sure?")
             );
-            $button->addCustomAttribute('data-url', $this->getURL('massDeleteItems', false, null, false));
+            $button->setAttribute('data-url', $this->getURL('massDeleteItems', false, null, false));
             $listMassAction = new ListMassAction($button);
             $this->registerListMassAction($listMassAction);
         }
@@ -283,14 +288,21 @@ abstract class ListController extends ItemController
 
     protected function addListFilter(BaseFormItem $formItem, $label = null)
     {
-        $name = $formItem->getName();
-        if ($name !== null) {
-            $name = static::LIST_FILTER_PREFIX . $name;
-            $formItem->setName($name);
-        }
+        $formItem->setNamePrefix(static::LIST_FILTER_PREFIX);
+        $formItem->disableAutocomplete();
 
-        if (Request::getInstance()->$name !== null) {
-            $formItem->setValue(Request::getInstance()->$name);
+        if ($formItem instanceof SimpleFormItem) {
+            $prefixedName = static::LIST_FILTER_PREFIX . $formItem->getName();
+            if (Request::getInstance()->$prefixedName !== null) {
+                $formItem->setValue(Request::getInstance()->$prefixedName);
+            }
+        } elseif ($formItem instanceof CompoundFormItem) {
+            foreach ($formItem->getNames() as $name) {
+                $prefixedName = static::LIST_FILTER_PREFIX . $name;
+                if (Request::getInstance()->$prefixedName !== null) {
+                    $formItem->setValue($name, Request::getInstance()->$prefixedName);
+                }
+            }
         }
 
         $this->listFilters[] = array(
@@ -312,7 +324,7 @@ abstract class ListController extends ItemController
                 'label' => 'Delete',
             );
             $HTMLItem = new Link(null, $this->getURL('deleteItem', true, null, false), $options);
-            $HTMLItem->addEvent('click', 'confirmDeleteInEdit', array('message' => "Item will be deleted.\nAre you sure?"));
+            $HTMLItem->setEvent('click', 'confirmDeleteInEdit', array('message' => "Item will be deleted.\nAre you sure?"));
             $editAction = new EditAction($HTMLItem);
             $editAction->makeRightAligned();
             $this->registerEditAction($editAction);

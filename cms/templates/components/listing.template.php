@@ -4,6 +4,7 @@ use WebFW\CMS\Classes\ListAction;
 use WebFW\CMS\Classes\ListMassAction;
 use WebFW\CMS\Components\Listing;
 use WebFW\Core\Classes\HTML\Message;
+use WebFW\Core\Components\Paginator;
 use WebFW\Core\Framework;
 use WebFW\Core\ArrayAccess;
 
@@ -23,12 +24,17 @@ use WebFW\Core\ArrayAccess;
  * @var array $listMassActions
  * @var bool $hasCheckboxes
  * @var string $sortingDefinitionJSON
+ * @var Message $message
+ * @var ListAction $action
+ * @var array $column
+ * @var ListMassAction $massAction
+ * @var array $listRow
  */
 
 ?>
 
 <?=Framework::runComponent(
-    'WebFW\\Core\\Components\\Paginator',
+    Paginator::className(),
     array(
         'template' => 'paginator',
         'templateDirectory' => \WebFW\Core\FW_PATH . '/cms/templates/components/',
@@ -42,13 +48,11 @@ use WebFW\Core\ArrayAccess;
 ); ?>
 
 <?php foreach ($messages as &$message): ?>
-    <?php /** @var Message $message */ ?>
     <div class="left"><?=$message->parse(); ?></div>
 <?php endforeach; ?>
 
 <div class="right">
     <?php foreach ($listActions as &$action): ?>
-        <?php /** @var ListAction $action */ ?>
         <?=$action->getHTMLItem()->parse(); ?>
     <?php endforeach; ?>
 </div>
@@ -61,7 +65,6 @@ use WebFW\Core\ArrayAccess;
             <th class="shrinked"><input type="checkbox" /></th>
         <?php endif; ?>
         <?php foreach ($listColumns as &$column): ?>
-            <?php /** @var array $column */ ?>
             <th<?php if ($column['shrinked'] === true): ?> class="shrinked"<?php endif; ?>>
                 <?=htmlspecialchars($column['caption']); ?>
             </th>
@@ -74,9 +77,8 @@ use WebFW\Core\ArrayAccess;
     <tfoot>
     <tr>
         <td colspan="<?=$columnCount; ?>">
-            <?php foreach ($listMassActions as &$action): ?>
-            <?php /** @var ListMassAction $action */ ?>
-            <div class="left"><?=$action->getButton()->parse(); ?></div>
+            <?php foreach ($listMassActions as &$massAction): ?>
+            <div class="left"><?=$massAction->getButton()->parse(); ?></div>
             <?php endforeach; ?>
             <div class="right"><span>Total items count: <?=$totalCount; ?></span></div>
         </td>
@@ -84,13 +86,11 @@ use WebFW\Core\ArrayAccess;
     </tfoot>
     <tbody>
     <?php foreach ($listData as &$listRow): ?>
-        <?php /** @var array $listRow */ ?>
         <tr<?=$component->getRowMetadata($listRow); ?>>
             <?php if ($hasCheckboxes === true): ?>
                 <td class="shrinked"><?=$component->getRowCheckbox($listRow); ?></td>
             <?php endif; ?>
             <?php foreach ($listColumns as &$column): ?>
-                <?php /** @var array $column */ ?>
                 <td<?php if ($column['shrinked'] === true): ?> class="shrinked"<?php endif; ?>>
                     <?=ArrayAccess::keyExists($column['key'], $listRow) ? $listRow[$column['key']] : ''; ?>
                 </td>

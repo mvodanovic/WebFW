@@ -2,14 +2,14 @@
 
 namespace WebFW\CMS\Classes;
 
-use WebFW\Core\Classes\HTML\Base\BaseHTMLItem;
+use WebFW\Core\Classes\HTML\Base\GeneralHTMLItem;
 
 class ListAction
 {
     protected $HTMLItem = null;
     protected $permissions = null;
 
-    public function __construct(BaseHTMLItem $HTMLItem)
+    public function __construct(GeneralHTMLItem $HTMLItem)
     {
         $this->HTMLItem = $HTMLItem;
     }

@@ -16,35 +16,25 @@ function ReferencePicker(element, dialogTitle) {
         return;
     }
 
-    this.fieldName = $(this.element).data('field-name');
-    if (this.fieldName == undefined || this.fieldName == '') {
-        $(this.element).html(CMSPage.createErrorMessage("The element hasn't got a field name specified!"));
-        return;
-    }
+    this.popupSelectorPrefix = $(this.element).data('popup-selector-prefix');
 
     this.values = {};
+    var picker = this;
+    $('input[type=hidden]', $(this.element)).each(function() {
+        picker.values[$(this).attr('name')] = $(this);
+    });
 
-    this.captionDisplay = $('<span></span>').addClass('caption')
-        .css('display', 'inline-block').css('margin-right', '.3em');
+    this.captionDisplay = $('.caption', $(this.element));
 
-    this.selectButton = $('<button></button>').prop('type', 'button').data('options', {
-        icons: {primary: 'ui-icon-pencil'},
-        text: false
-    }).addClass('jquery_ui_button').click({instance: this}, function(e) {
+    this.selectButton = $('.select', $(this.element)).click({instance: this}, function(e) {
         e.data.instance.openDialog();
-    }).css('margin-right', '.3em');
+    });
 
-    this.clearButton = $('<button></button>').prop('type', 'button').data('options', {
-        icons: {primary: 'ui-icon-close'},
-        text: false
-    }).addClass('jquery_ui_button').click({instance: this}, function(e) {
+    this.clearButton = $('.clear', $(this.element)).click({instance: this}, function(e) {
         e.data.instance.clearData();
     });
 
-    $(this.element).html(this.captionDisplay).append(this.selectButton).append(this.clearButton);
-    this.updateData($(this.element).data('values'), $(this.element).data('caption'));
-
-    if (Object.keys(this.values).length == 0) {
+    if (this.captionDisplay.html() === '') {
         this.clearButton.hide();
     }
 }
@@ -58,7 +48,7 @@ ReferencePicker.prototype.openDialog = function() {
     var windowWidth = $(window).width();
     var windowHeight = $(window).height();
 
-    this.dialog = $('<div></div>').data('owner', this).dialog({
+    this.dialog = $('<div/>').data('owner', this).dialog({
         title: this.dialogTitle,
         modal: true,
         draggable: false,
@@ -78,6 +68,7 @@ ReferencePicker.prototype.openDialog = function() {
 ReferencePicker.prototype.fetchDialogData = function() {
     $.ajax({
         url: this.url,
+        data: { popup_selector_prefix: this.popupSelectorPrefix },
         instance: this,
         beforeSend: function() { this.instance.dialogAjaxInProgress(); },
         error: function(response) { this.instance.dialogAjaxError(response); },
@@ -101,7 +92,7 @@ ReferencePicker.prototype.deleteDialog = function() {
  * @internal
  */
 ReferencePicker.prototype.dialogAjaxInProgress = function() {
-    $(this.dialog).html('Please wait...').append($('<div></div>').progressbar({value: false}));
+    $(this.dialog).html('Please wait...').append($('<div/>').progressbar({value: false}));
 };
 
 /**
@@ -157,7 +148,8 @@ ReferencePicker.prototype.preemptLinkActions = function() {
  *
  * @internal
  */
-ReferencePicker.prototype.preemptFormSubmits = function () {
+ReferencePicker.prototype.preemptFormSubmits = function ()
+{
     $('form', $(this.dialog)).submit({instance: this}, function(e) {
         e.preventDefault();
         e.stopImmediatePropagation();
@@ -191,18 +183,15 @@ ReferencePicker.prototype.updateData = function(primaryKey, caption) {
     }
 
     for (var key in primaryKey) {
-        if (key in this.values) {
-            this.values[key].val(primaryKey[key]);
-        } else {
-            this.values[key] = $('<input/>').prop('type', 'hidden')
-                .prop('name', this.fieldName + '[' + key + ']').val(primaryKey[key]);
-            $(this.element).append(this.values[key]);
+        var prefixedKey = this.popupSelectorPrefix + key;
+        if (prefixedKey in this.values) {
+            this.values[prefixedKey].val(primaryKey[key]);
         }
     }
 
     this.captionDisplay.html(caption);
 
-    if (Object.keys(this.values).length > 0) {
+    if (this.captionDisplay.html() !== '') {
         this.clearButton.show();
     } else {
         this.clearButton.hide();
@@ -217,8 +206,7 @@ ReferencePicker.prototype.updateData = function(primaryKey, caption) {
 ReferencePicker.prototype.clearData = function() {
     this.captionDisplay.html('');
     for (var i in this.values) {
-        this.values[i].remove();
+        this.values[i].val('');
     }
-    this.values = {};
     this.clearButton.hide();
 };

@@ -1,3 +1,22 @@
+<?php
+
+use WebFW\CMS\Classes\EditAction;
+use WebFW\CMS\Classes\EditTab;
+use WebFW\CMS\ItemController;
+use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Message;
+
+/**
+ * @var ItemController $controller
+ * @var Message $message
+ * @var array $editTabs
+ * @var EditTab $tab
+ * @var BaseFormItem $formItem
+ * @var array $editActions
+ * @var EditAction $action
+ */
+
+?>
 <?php foreach ($controller->getMessages() as $message): ?>
     <div class="left"><?=$message->parse(); ?></div>
 <?php endforeach; ?>
@@ -29,19 +48,20 @@
                         <?php foreach ($tab->getFields() as $fieldRow): ?>
                             <tr>
                                 <?php foreach ($fieldRow as &$field): ?>
+                                <?php $formItem = $field['formItem']; ?>
                                     <td
                                         <?php if ($field['colspan'] > 1): ?> colspan="<?=$field['colspan']; ?>"<?php endif; ?>
                                         <?php if ($field['rowspan'] > 1): ?> rowspan="<?=$field['rowspan']; ?>"<?php endif; ?>
                                         <?php if ($field['rowspanFix'] === true): ?> class="rowspan_fix"<?php endif; ?>
                                     >
-                                        <?php if ($field['formItem']->useLabel()): ?>
+                                        <?php if ($formItem->useLabel()): ?>
                                         <label>
                                         <?php endif; ?>
                                             <span class="label"><?=htmlspecialchars($field['label']); ?></span>:<br />
-                                            <?=$field['formItem']->parse(); ?>
+                                            <?=$formItem->parse(); ?>
                                             <?=array_key_exists('description', $field) ? $field['description'] : ''; ?>
                                             <?=array_key_exists('error', $field) ? $field['error'] : ''; ?>
-                                        <?php if ($field['formItem']->useLabel()): ?>
+                                        <?php if ($formItem->useLabel()): ?>
                                         </label>
                                         <?php endif; ?>
                                     </td>

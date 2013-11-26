@@ -2,46 +2,29 @@
 
 namespace WebFW\Core\Classes\HTML\Base;
 
-abstract class BaseFormItem extends BaseHTMLItem
+abstract class BaseFormItem extends GeneralHTMLItem
 {
-    protected $name = null;
-    protected $useLabel = true;
-    protected $nameHTML = '';
-    protected $valueHTML = '';
+    protected $useLabel = null;
+    protected $namePrefix = null;
+    protected $isAutocompleteDisabled = false;
 
-    public function __construct($name = null, $value = null)
+    public function __construct($type, $hasClosingTag)
     {
-        parent::__construct($value);
-
-        if ($name !== null) {
-            $this->addCustomAttribute('name', $name);
-            $this->name = $name;
-        }
-    }
-
-    public function disable()
-    {
-        $this->addCustomAttribute('disabled', 'disabled');
-    }
-
-    protected function setReadOnly()
-    {
-        $this->addCustomAttribute('readonly', 'readonly');
-    }
-
-    public function setName($name)
-    {
-        $this->addCustomAttribute('name', $name);
-        $this->name = $name;
-    }
-
-    public function getName()
-    {
-        return $this->name;
+        parent::__construct($type, $hasClosingTag);
     }
 
     public function useLabel()
     {
         return $this->useLabel;
+    }
+
+    public function setNamePrefix($namePrefix)
+    {
+        $this->namePrefix = $namePrefix;
+    }
+
+    public function disableAutocomplete()
+    {
+        $this->isAutocompleteDisabled = true;
     }
 }

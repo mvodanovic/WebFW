@@ -2,7 +2,7 @@
 
 namespace WebFW\Core\Classes\HTML;
 
-use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Base\SimpleFormItem;
 
 /**
  * Class Button
@@ -11,35 +11,39 @@ use WebFW\Core\Classes\HTML\Base\BaseFormItem;
  *
  * @package WebFW\Core
  */
-class Button extends BaseFormItem
+class Button extends SimpleFormItem
 {
-    protected $tagName = 'button';
-    protected $skipInnerHTMLDecoration = true;
+    const BUTTON_BUTTON = 'button';
+    const BUTTON_SUBMIT = 'submit';
+    const BUTTON_RESET = 'reset';
+
+    protected $type = null;
 
     /**
      * @param string|null $caption Button caption
      * @param string|null $type Button's type attribute
      * @param string|object|array|null $jqueryUIOptions Parameters which will be given to jQuery UI button() function
-     * @param string|null $class Custom class to apply to the button
      */
-    public function __construct($caption = null, $type = null, $jqueryUIOptions = null, $class = null)
+    public function __construct($caption = null, $type = self::BUTTON_BUTTON, $jqueryUIOptions = null)
     {
-        parent::__construct(null, $caption);
+        $this->type = $type;
+        $this->setInnerHTML(htmlspecialchars($caption));
 
-        if ($type !== null) {
-            $this->addCustomAttribute('type', $type);
-        }
+        parent::__construct(static::TYPE_BUTTON);
 
         if ($jqueryUIOptions !== null) {
             if (is_array($jqueryUIOptions) || is_object($jqueryUIOptions)) {
                 $jqueryUIOptions = json_encode($jqueryUIOptions, JSON_FORCE_OBJECT);
             }
             $this->addClass('jquery_ui_button');
-            $this->addCustomAttribute('data-options', $jqueryUIOptions);
+            $this->setAttribute('data-options', $jqueryUIOptions);
         }
+    }
 
-        if ($class !== null) {
-            $this->addClass($class);
-        }
+    public function parse()
+    {
+        $this->setAttribute('type', $this->type);
+
+        return parent::parse();
     }
 }

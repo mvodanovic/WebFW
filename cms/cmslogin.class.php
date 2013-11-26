@@ -62,13 +62,13 @@ class CMSLogin extends HTMLController
             'icons' => array('primary' => 'ui-icon-key'),
             'label' => 'Login',
         );
-        $loginButton = new Button(null, 'submit', $options);
+        $loginButton = new Button(null, Button::BUTTON_SUBMIT, $options);
 
         $loginForm = new FormStart('post', Router::getInstance()->URL(static::className(), 'doLogin'));
 
-        $usernameField = new Input('login', 'text', $username);
-        $passwordField = new Input('password', 'password');
-        $rememberMeField = new Input('remember', 'checkbox');
+        $usernameField = new Input('login', Input::INPUT_TEXT, $username);
+        $passwordField = new Input('password', Input::INPUT_PASSWORD);
+        $rememberMeField = new Input('remember', Input::INPUT_CHECKBOX);
 
         $this->setTplVar('errorMessage', $errorMessage);
         $this->setTplVar('loginForm', $loginForm);

@@ -2,56 +2,95 @@
 
 namespace WebFW\Core\Classes\HTML;
 
-use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\CMS\Classes\EditTab;
+use WebFW\Core\Classes\HTML\Base\CompoundFormItem;
+use WebFW\Core\Classes\HTML\Base\GeneralHTMLItem;
+use WebFW\Core\Exception;
+use WebFW\Core\Exceptions\NotFoundException;
 use WebFW\Core\Route;
+use WebFW\Database\TableColumns\Column;
+use WebFW\Database\TableConstraints\ForeignKey;
+use WebFW\Database\TableGateway;
 
-class ReferencePicker extends BaseFormItem
+class ReferencePicker extends CompoundFormItem
 {
-    protected $tagName = 'div';
-    protected $useLabel = false;
-    protected $skipInnerHTMLDecoration = true;
     protected $route;
-    protected $dataName;
-    protected $dataValue;
+    protected $foreignKey;
+    protected $tableGatewayName;
+    protected $caption = null;
 
-    public function __construct(Route $route, $name = null, $value = null)
+    public function __construct(Route $route, ForeignKey $foreignKey, $tableGatewayName)
     {
+        if (!is_subclass_of($tableGatewayName, TableGateway::className())) {
+            throw new Exception('Invalid table gateway set');
+        }
+
         $this->route = $route;
-        $this->dataName = $name;
-        $this->dataValue = $value;
+        $this->foreignKey = $foreignKey;
+        $this->tableGatewayName = $tableGatewayName;
+        foreach ($foreignKey->getColumns() as $column) {
+            /** @var Column $column */
+            $this->values[$column->getName()] = null;
+        }
 
         parent::__construct();
     }
 
-    public function getName()
+    protected function getCaption()
     {
-        return $this->dataName;
+        if ($this->caption === null) {
+            /** @var TableGateway $tableGateway */
+            $tableGateway = new $this->tableGatewayName();
+            try {
+                $tableGateway->loadBy($this->values);
+                $this->caption = $tableGateway->getCaption();
+            } catch (NotFoundException $e) {}
+        }
+
+        return $this->caption;
     }
 
-    public function setName($name)
+    public function parse()
     {
-        $this->dataName = $name;
-    }
+        $formElement = new GeneralHTMLItem('span');
+        $formElement->addClass('caption');
+        $formElement->setStyle('display', 'inline-block');
+        $formElement->setStyle('margin-right', '0.3em');
+        $formElement->setInnerHTML(htmlspecialchars($this->getCaption()));
+        $innerHTML = $formElement->parse();
 
-    public function getValue()
-    {
-        return $this->dataValue;
-    }
+        $formElement = new Button(
+            null,
+            Button::BUTTON_BUTTON,
+            array('icons' => array('primary' => 'ui-icon-pencil'), 'text' => false)
+        );
+        $formElement->addClass('select');
+        $formElement->setStyle('margin-right', '0.3em');
+        $innerHTML .= $formElement->parse();
 
-    public function setValue($value)
-    {
-        $this->dataValue = $value;
-    }
+        $formElement = new Button(
+            null,
+            Button::BUTTON_BUTTON,
+            array('icons' => array('primary' => 'ui-icon-close'), 'text' => false)
+        );
+        $formElement->addClass('clear');
+        $innerHTML .= $formElement->parse();
 
-    public function prepareHTMLChunks()
-    {
+        foreach ($this->values as $name => $value) {
+            $formElement = new Input($name, Input::INPUT_HIDDEN, $value);
+            $formElement->setNamePrefix($this->namePrefix);
+            if ($this->isAutocompleteDisabled === true) {
+                $formElement->disableAutocomplete();
+            }
+            $innerHTML .= $formElement->parse();
+        }
+
         $this->route->addParams(array('popup' => 1));
-        $this->addCustomAttribute('data-url', $this->route->getURL(false));
-        $this->addCustomAttribute('data-field-name', $this->dataName);
-        $this->addCustomAttribute('data-values', json_encode($this->dataValue, JSON_FORCE_OBJECT));
-        $this->addCustomAttribute('data-caption', null);
+        $this->setAttribute('data-url', $this->route->getURL(false));
+        $this->setAttribute('data-popup-selector-prefix', $this->namePrefix);
+        $this->setInnerHTML($innerHTML);
         $this->addClass('reference_picker');
 
-        parent::prepareHTMLChunks();
+        return parent::parse();
     }
 }

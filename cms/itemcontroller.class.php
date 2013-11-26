@@ -6,6 +6,7 @@ use WebFW\CMS\Classes\EditAction;
 use WebFW\CMS\Classes\EditTab;
 use WebFW\CMS\Classes\PermissionsHelper;
 use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
+use WebFW\Core\Classes\HTML\Base\CompoundFormItem;
 use WebFW\Core\Classes\HTML\FormStart;
 use WebFW\Core\Classes\HTML\Input;
 use WebFW\Core\Classes\HTML\Message;
@@ -16,7 +17,7 @@ use WebFW\Core\Interfaces\iValidate;
 use WebFW\Core\SessionHandler;
 use WebFW\Core\Request;
 use WebFW\Core\Classes\HTML\Link;
-use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Base\SimpleFormItem;
 use WebFW\Core\Classes\HTML\Button;
 use WebFW\Database\TableGateway;
 
@@ -124,19 +125,24 @@ abstract class ItemController extends Controller implements iValidate
             foreach ($tab->getFields() as $fieldRow) {
                 foreach ($fieldRow as &$field) {
                     $formItem = &$field['formItem'];
-                    if ($formItem instanceof BaseFormItem) {
+                    if ($formItem instanceof SimpleFormItem) {
                         $formItemName = $formItem->getName();
-                        $value = Request::getInstance()->$formItemName;
-                        $formItemName = substr($formItemName, strlen(EditTab::FIELD_PREFIX));
+                        $prefixedFormItemName = EditTab::FIELD_PREFIX . $formItemName;
+                        $value = Request::getInstance()->$prefixedFormItemName;
                         /// If checkbox is left empty, it's value is FALSE, and not NULL.
                         if (
                             $value === null
                             && $formItem instanceof Input
-                            && $formItem->getType() == 'checkbox'
+                            && $formItem->getType() == Input::INPUT_CHECKBOX
                         ) {
                             $value = false;
                         }
                         $this->tableGateway->$formItemName = $value;
+                    } elseif ($formItem instanceof CompoundFormItem) {
+                        foreach ($formItem->getNames() as $formItemName) {
+                            $prefixedFormItemName = EditTab::FIELD_PREFIX . $formItemName;
+                            $this->tableGateway->$formItemName = Request::getInstance()->$prefixedFormItemName;
+                        }
                     }
                 }
             }
@@ -144,9 +150,8 @@ abstract class ItemController extends Controller implements iValidate
             foreach ($tab->getHiddenFields() as $formItem) {
                 /** @var Input $formItem */
                 $formItemName = $formItem->getName();
-                $value = Request::getInstance()->$formItemName;
-                $formItemName = substr($formItemName, strlen(EditTab::FIELD_PREFIX));
-                $this->tableGateway->$formItemName = $value;
+                $prefixedFormItemName = EditTab::FIELD_PREFIX . $formItemName;
+                $this->tableGateway->$formItemName = Request::getInstance()->$prefixedFormItemName;
             }
         }
 
@@ -175,7 +180,7 @@ abstract class ItemController extends Controller implements iValidate
         if (empty($primaryKeyValues) && PermissionsHelper::checkForController($this, UTCP::TYPE_INSERT)
             || PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
             $this->editForm = new FormStart('post', $this->getRoute('saveItem', $this->getPrimaryKeyValues()));
-            $this->editForm->addEvent('submit', 'beforeSubmitEdit');
+            $this->editForm->setEvent('submit', 'beforeSubmitEdit');
         }
     }
 
@@ -189,7 +194,7 @@ abstract class ItemController extends Controller implements iValidate
                 'icons' => array('primary' => 'ui-icon-disk'),
                 'label' => 'Save new',
             );
-            $HTMLItem = new Button(null, 'submit', $options);
+            $HTMLItem = new Button(null, Button::BUTTON_SUBMIT, $options);
             $editAction = new EditAction($HTMLItem);
             $this->registerEditAction($editAction);
         } elseif (PermissionsHelper::checkForController($this, UTCP::TYPE_UPDATE)) {
@@ -197,7 +202,7 @@ abstract class ItemController extends Controller implements iValidate
                 'icons' => array('primary' => 'ui-icon-disk'),
                 'label' => 'Update',
             );
-            $HTMLItem = new Button(null, 'submit', $options);
+            $HTMLItem = new Button(null, Button::BUTTON_SUBMIT, $options);
             $editAction = new EditAction($HTMLItem);
             $this->registerEditAction($editAction);
         }

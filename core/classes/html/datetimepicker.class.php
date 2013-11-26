@@ -4,9 +4,9 @@ namespace WebFW\Core\Classes\HTML;
 
 class DateTimePicker extends Input
 {
-    public function __construct($name = null, $value = null, $settings = null, $class = null)
+    public function __construct($name = null, $value = null, $settings = null)
     {
-        parent::__construct($name, 'text', $value, $class);
+        parent::__construct($name, Input::INPUT_TEXT, $value);
 
         $this->addClass('datetimepicker');
 
@@ -15,7 +15,7 @@ class DateTimePicker extends Input
                 $settings = json_encode($settings, JSON_FORCE_OBJECT);
             }
 
-            $this->addCustomAttribute('data-settings', $settings);
+            $this->setAttribute('data-settings', $settings);
         }
     }
 }

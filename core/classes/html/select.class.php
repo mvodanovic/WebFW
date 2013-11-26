@@ -2,43 +2,35 @@
 
 namespace WebFW\Core\Classes\HTML;
 
-use WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Core\Classes\HTML\Base\SimpleFormItem;
 
-class Select extends BaseFormItem
+class Select extends SimpleFormItem
 {
     protected $tagName = 'select';
     protected $options = null;
+    protected $selectedOptionValue = null;
 
-    public function __construct($name = null, $options = array(), $value = null, $class = null)
+    public function __construct($name = null, $options = array(), $value = null)
     {
-        parent::__construct($name, $value);
+        $this->options = $options;
 
-        $this->options = &$options;
-
-        if ($class !== null) {
-            $this->classes[] = $class;
-        }
+        parent::__construct(SimpleFormItem::TYPE_SELECT, $name, $value);
     }
 
-    public function prepareHTMLChunks()
+    public function setValue($value)
     {
-        $this->innerHTMLElements = array();
-        $this->innerHTMLElements[] = $this->generateOptionsHTML();
-        $value = $this->value;
-        $this->value = null;
-        parent::prepareHTMLChunks();
-        $this->value = $value;
+        $this->selectedOptionValue = $value;
     }
 
-    protected function generateOptionsHTML()
+    public function parse()
     {
         $optionsHTML = '';
         foreach ($this->options as $value => $caption) {
             $value = (string) $value;
             $selected = false;
-            if (is_array($this->value) && in_array($value, $this->value)) {
+            if (is_array($this->selectedOptionValue) && in_array($value, $this->selectedOptionValue)) {
                 $selected = true;
-            } elseif ($value === $this->value) {
+            } elseif ($value === $this->selectedOptionValue) {
                 $selected = true;
             }
 
@@ -46,6 +38,8 @@ class Select extends BaseFormItem
             $optionsHTML .= $optionObject->parse();
         }
 
-        return $optionsHTML;
+        $this->setInnerHTML($optionsHTML);
+
+        return parent::parse();
     }
 }

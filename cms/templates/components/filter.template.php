@@ -1,11 +1,13 @@
 <?php
 
+use WebFW\Core\Classes\HTML\Base\BaseFormItem;
 use WebFW\Core\Classes\HTML\FormStart;
 use WebFW\Core\Classes\HTML\Button;
 
-/** @var $form FormStart */
-/** @var $filters array */
-/** @var $submitButton Button */
+/** @var FormStart $form */
+/** @var array $filters */
+/** @var Button $submitButton */
+/** @var BaseFormItem $formItem */
 
 ?>
 
@@ -13,14 +15,15 @@ use WebFW\Core\Classes\HTML\Button;
     <?=$form->parse(); ?>
         <ul>
             <?php foreach ($filters as &$filterDef): ?>
+            <?php $formItem = $filterDef['formItem']; ?>
             <li>
                 <div class="filterItem">
-                    <?php if ($filterDef['formItem']->useLabel()): ?>
+                    <?php if ($formItem->useLabel()): ?>
                     <label>
                     <?php endif; ?>
                         <span class="label"><?=htmlspecialchars($filterDef['label']); ?></span>:
-                        <?=$filterDef['formItem']->parse(); ?>
-                    <?php if ($filterDef['formItem']->useLabel()): ?>
+                        <?=$formItem->parse(); ?>
+                    <?php if ($formItem->useLabel()): ?>
                     </label>
                     <?php endif; ?>
                 </div>

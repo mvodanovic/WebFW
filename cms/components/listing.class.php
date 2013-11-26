@@ -112,9 +112,10 @@ class Listing extends Component
             }
         }
 
-        $checkbox = new Input(null, 'checkbox', null, 'row_selector');
+        $checkbox = new Input(null, Input::INPUT_CHECKBOX);
+        $checkbox->addClass('row_selector');
         foreach ($params as $key => $value) {
-            $checkbox->addCustomAttribute('data-' . $key, $value);
+            $checkbox->setAttribute('data-' . $key, $value);
         }
 
         return $checkbox->parse();
