@@ -5,6 +5,7 @@ namespace WebFW\Cache;
 use WebFW\Core\Classes\BaseClass;
 use WebFW\Core\Config;
 use WebFW\Core\Exception;
+use WebFW\Dev\Classes\DevHelper;
 
 /**
  * Class Cache
@@ -72,12 +73,31 @@ abstract class Cache extends BaseClass
      * Set a new value in cache under the given key for the given time.
      * If the expiration time is 0, the value will be stored until explicitly removed.
      * If the expiration time is NULL, default system expiration time will be used.
+     * Storing in cache is disabled on dev requests. In that case this method will have no effect.
+     *
+     * An external wrapper for the internal store() method which implements cache storing logic.
      *
      * @param string $key The key under which to store the value
      * @param mixed $value The value to store
      * @param int|null $expiration Time to keep the value stored in cache
+     * @see store()
      */
-    abstract public function set($key, $value, $expiration = null);
+    final public function set($key, $value, $expiration = null)
+    {
+        if (!DevHelper::isDevRequest()) {
+            $this->store($key, $value, $expiration);
+        }
+    }
+
+    /**
+     * Store a new value in cache under the given key for the given time.
+     *
+     * @param string $key The key under which to store the value
+     * @param mixed $value The value to store
+     * @param int|null $expiration Time to keep the value stored in cache
+     * @see set()
+     */
+    abstract protected function store($key, $value, $expiration = null);
 
     /**
      * Get the value from cache with the given key.

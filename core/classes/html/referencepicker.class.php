@@ -2,7 +2,6 @@
 
 namespace WebFW\Core\Classes\HTML;
 
-use WebFW\CMS\Classes\EditTab;
 use WebFW\Core\Classes\HTML\Base\CompoundFormItem;
 use WebFW\Core\Classes\HTML\Base\GeneralHTMLItem;
 use WebFW\Core\Exception;

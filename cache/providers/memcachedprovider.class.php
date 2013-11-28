@@ -91,7 +91,7 @@ class MemcachedProvider extends Cache
             $this->defaultExpirationTime = 0;
         }
     }
-    public function set($key, $value, $expiration = null)
+    protected function store($key, $value, $expiration = null)
     {
         if ($expiration === null) {
             $expiration = $this->defaultExpirationTime;

@@ -3,6 +3,8 @@
 namespace WebFW\Dev;
 
 use WebFW\Core\Classes\BaseClass;
+use WebFW\Core\Config;
+use WebFW\Core\Exception;
 use WebFW\Externals\PHPTemplate;
 
 /**
@@ -16,6 +18,8 @@ use WebFW\Externals\PHPTemplate;
 class Profiler extends BaseClass
 {
     protected static $instance = null;
+    protected static $class = null;
+
     protected $moments = array();
     protected $queries = array();
     protected $startTime = null;
@@ -27,11 +31,23 @@ class Profiler extends BaseClass
      * Returns the Profiler instance.
      *
      * @return Profiler
+     * @throws Exception if an invalid profilerClass is set in config
      */
     public static function getInstance()
     {
+        if (static::$class === null) {
+            static::$class = static::className();
+        }
+
+        $className = Config::get('Developer', 'profilerClass');
+        if ($className === null) {
+            $className = Profiler::className();
+        } elseif (!is_subclass_of($className, Profiler::className())) {
+            throw new Exception($className . ' not an instance of ' . Profiler::className());
+        }
+
         if (static::$instance === null) {
-            static::$instance = new static();
+            static::$instance = new $className();
         }
 
         return static::$instance;

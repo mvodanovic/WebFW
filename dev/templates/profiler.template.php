@@ -1,5 +1,7 @@
 <?php
+
 use WebFW\Dev\Profiler;
+
 ?>
 <table style="color: #ffffff; background-color: #000000; width: 100%; float: left; padding: 2px 5px; text-align: left;">
     <thead>
