@@ -6,9 +6,9 @@ use WebFW\Core\Framework;
 use WebFW\CMS\Controller;
 
 /**
- * @var $htmlHead string
- * @var $htmlBody string
- * @var $controller Controller
+ * @var string $htmlHead
+ * @var string $htmlBody
+ * @var Controller $controller
  */
 
 ?>
@@ -23,10 +23,10 @@ use WebFW\CMS\Controller;
 
         <header>
             <div class="left">WebFW CMS</div>
-            <?=Framework::runComponent(UserActions::className(), null, $controller); ?>
+            <?=Framework::runComponent(UserActions::className()); ?>
         </header>
 
-        <?=Framework::runComponent(Navigation::className(), null, $controller); ?>
+        <?=Framework::runComponent(Navigation::className()); ?>
 
         <div class="content">
 

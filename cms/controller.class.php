@@ -16,7 +16,7 @@ abstract class Controller extends HTMLController
     protected $messages = array();
     protected $isPopup = false;
 
-    public function __construct()
+    protected function __construct()
     {
         parent::__construct();
 

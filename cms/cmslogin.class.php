@@ -20,7 +20,7 @@ use WebFW\CMS\Classes\LoggedUser;
 
 class CMSLogin extends HTMLController
 {
-    public function __construct()
+    protected function __construct()
     {
         parent::__construct();
 

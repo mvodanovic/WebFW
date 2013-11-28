@@ -8,20 +8,23 @@ use WebFW\Core\Component;
 use WebFW\Core\Exception;
 use WebFW\CMS\ListController;
 use WebFW\Core\Route;
+use WebFW\Dev\Controller;
 
 class Filter extends Component
 {
+    /** @var ListController */
+    protected $controller;
+
     public function execute()
     {
-        /** @var $ownerObject ListController */
-        $ownerObject = $this->ownerObject;
+        $this->controller = Controller::getInstance();
 
-        if (!($ownerObject instanceof ListController)) {
-            throw new Exception('Owner must be an instance of \\WebFW\\CMS\\ListController');
+        if (!($this->controller instanceof ListController)) {
+            throw new Exception('Controller must be an instance of \\WebFW\\CMS\\ListController');
         }
 
-        $filters = $ownerObject->getListFilters();
-        $ctl = $ownerObject->className();
+        $filters = $this->controller->getListFilters();
+        $ctl = $this->controller->className();
 
         if (empty($filters)) {
             $this->useTemplate = false;
@@ -29,7 +32,7 @@ class Filter extends Component
         }
 
         $params = array();
-        if ($ownerObject->isPopup()) {
+        if ($this->controller->isPopup()) {
             $params['popup'] = '1';
         }
 

@@ -19,7 +19,7 @@ abstract class Controller extends HTMLController
      */
     const REALM_MESSAGE = 'Developer area';
 
-    public function __construct()
+    protected function __construct()
     {
         DevHelper::requestAuthentication(static::REALM_MESSAGE);
         parent::__construct();

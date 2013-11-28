@@ -15,7 +15,7 @@ abstract class Component extends BaseClass
     protected $templateVariables = array();
     protected $ownerObject;
 
-    public function __construct(&$params, &$ownerObject)
+    public function __construct($params = null, Component $ownerObject = null)
     {
         $this->setDefaultParams();
         if (is_array($params)) {
@@ -24,7 +24,7 @@ abstract class Component extends BaseClass
             }
         }
 
-        $this->ownerObject = &$ownerObject;
+        $this->ownerObject = $ownerObject;
     }
 
     public function run()

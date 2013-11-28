@@ -404,9 +404,9 @@ abstract class ListController extends ItemController
         return $this->listFilters;
     }
 
-    public function getFilterValues()
+    public function getFilterValues($keepPrefix = false)
     {
-        return Request::getInstance()->getValuesWithPrefix(static::LIST_FILTER_PREFIX, false);
+        return Request::getInstance()->getValuesWithPrefix(static::LIST_FILTER_PREFIX, $keepPrefix);
     }
 
     public function registerListAction(ListAction $action)

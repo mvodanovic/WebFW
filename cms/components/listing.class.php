@@ -11,34 +11,37 @@ use WebFW\CMS\ListController;
 use WebFW\Database\ListFetcher;
 use WebFW\Database\TableColumns\Column;
 use WebFW\Database\TableGateway;
+use WebFW\Dev\Controller;
 
 class Listing extends Component
 {
     /** @var ListController */
-    protected $ownerObject;
+    protected $controller;
 
     /**
      * @throws \WebFW\Core\Exception
      */
     public function execute()
     {
-        if (!($this->ownerObject instanceof ListController)) {
+        $this->controller = Controller::getInstance();
+
+        if (!($this->controller instanceof ListController)) {
             throw new Exception('Owner must be an instance of ' . ListController::className());
         }
         /** @var ListFetcher $listFetcher */
-        $listFetcher = $this->ownerObject->getListFetcher();
-        $filter = $this->ownerObject->getFilter();
-        $sort = $this->ownerObject->getSort();
-        $page = $this->ownerObject->getPage();
-        $itemsPerPage = $this->ownerObject->getItemsPerPage();
-        $listColumns = $this->ownerObject->getListColumns();
+        $listFetcher = $this->controller->getListFetcher();
+        $filter = $this->controller->getFilter();
+        $sort = $this->controller->getSort();
+        $page = $this->controller->getPage();
+        $itemsPerPage = $this->controller->getItemsPerPage();
+        $listColumns = $this->controller->getListColumns();
         $columnCount = count($listColumns);
-        $controllerName = $this->ownerObject->className();
-        $filterValues = $this->ownerObject->getFilterValues();
-        $messages = $this->ownerObject->getMessages();
-        $listActions = $this->ownerObject->getListActions();
-        $listRowActions = $this->ownerObject->getListRowActions();
-        $listMassActions = $this->ownerObject->getListMassActions();
+        $controllerName = $this->controller->className();
+        $filterValues = $this->controller->getFilterValues(true);
+        $messages = $this->controller->getMessages();
+        $listActions = $this->controller->getListActions();
+        $listRowActions = $this->controller->getListRowActions();
+        $listMassActions = $this->controller->getListMassActions();
         $hasCheckboxes = empty($listMassActions) ? false : true;
 
         if (!empty($listRowActions)) {
@@ -50,7 +53,7 @@ class Listing extends Component
         }
 
         $listData = $listFetcher->getList($filter, $sort, $itemsPerPage, ($page - 1) * $itemsPerPage);
-        $this->ownerObject->processList($listData);
+        $this->controller->processList($listData);
         $totalCount = $listFetcher->getCount($filter);
 
         $this->setTplVar('listData', $listData);
@@ -66,7 +69,7 @@ class Listing extends Component
         $this->setTplVar('listRowActions', $listRowActions);
         $this->setTplVar('listMassActions', $listMassActions);
         $this->setTplVar('hasCheckboxes', $hasCheckboxes);
-        $this->setTplVar('sortingDefinitionJSON', $this->ownerObject->getJSONSortingDef());
+        $this->setTplVar('sortingDefinitionJSON', $this->controller->getJSONSortingDef());
     }
 
     protected function setDefaultParams()
@@ -82,7 +85,7 @@ class Listing extends Component
         $handlerFunction = $action->getHandlerFunction();
 
         if ($handlerFunction !== null) {
-            $params = $this->ownerObject->$handlerFunction($listRow);
+            $params = $this->controller->$handlerFunction($listRow);
             if (is_array($params)) {
                 return $action->getLink(null, $params)->parse();
             } else {
@@ -99,7 +102,7 @@ class Listing extends Component
     {
         $params = array();
         if ($listRow !== null) {
-            $primaryKeyColumns = $this->ownerObject->getPrimaryKeyColumns();
+            $primaryKeyColumns = $this->controller->getPrimaryKeyColumns();
             if (is_array($primaryKeyColumns)) {
                 foreach ($primaryKeyColumns as $column) {
                     /** @var Column $column */
@@ -125,10 +128,10 @@ class Listing extends Component
     {
         $metadata = '';
 
-        if ($this->ownerObject->isSortingEnabled()) {
+        if ($this->controller->isSortingEnabled()) {
             $params = array();
             if ($listRow !== null) {
-                $primaryKeyColumns = $this->ownerObject->getPrimaryKeyColumns();
+                $primaryKeyColumns = $this->controller->getPrimaryKeyColumns();
                 if (is_array($primaryKeyColumns)) {
                     foreach ($primaryKeyColumns as $column) {
                         /** @var Column $column */
@@ -143,7 +146,7 @@ class Listing extends Component
             $params = json_encode($params, JSON_FORCE_OBJECT);
             $metadata .= ' data-key="' . htmlspecialchars($params) . '"';
 
-            $sortingDef = $this->ownerObject->getSortingDef();
+            $sortingDef = $this->controller->getSortingDef();
             if (!empty($sortingDef['groupColumns'])) {
                 $group = array();
                 foreach ($sortingDef['groupColumns'] as $column) {

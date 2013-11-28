@@ -80,11 +80,8 @@ final class Framework
         }
 
         if ($controllerOutput === null) {
-            /** @var $controller Controller */
-            $controller = new $ctl();
-            if (!($controller instanceof Controller)) {
-                throw new Exception('Class ' . $ctl . ' is not an instance of ' . Controller::className() . '.');
-            }
+            /** @var Controller $controller */
+            $controller = $ctl::getInstance();
 
             Profiler::getInstance()->addMoment('After controller construction');
 
@@ -134,11 +131,11 @@ final class Framework
      *
      * @param string $name Name of the component class
      * @param string|null $params Parameters passed to the component
-     * @param Controller|Component|null $ownerObject Owner, or creator of the component
+     * @param Component|null $ownerObject Owner, or creator of the component
      * @return string Component's output
      * @throws Exception If the component doesn't exist or isn't an instance of Component
      */
-    public static function runComponent($name, $params = null, $ownerObject = null)
+    public static function runComponent($name, $params = null, Component $ownerObject = null)
     {
         /** @var Component $name */
         if (!is_subclass_of($name, Component::className())) {
@@ -160,9 +157,6 @@ final class Framework
 
             /** @var $component Component */
             $component = new $name($params, $ownerObject);
-            if (!($component instanceof Component)) {
-                throw new Exception('Class ' . $name . 'is not an instance of ' . Component::className() . '.');
-            }
 
             Profiler::getInstance()->addMoment('CMP: ' . $name . ' - after construction');
 

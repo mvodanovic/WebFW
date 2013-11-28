@@ -5,6 +5,7 @@ namespace WebFW\CMS\Components;
 use WebFW\CMS\Classes\PermissionsHelper as PH;
 use WebFW\CMS\CMSLogin;
 use WebFW\CMS\Classes\LoggedUser;
+use WebFW\CMS\Controller;
 use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
 use WebFW\Core\Component;
 use WebFw\CMS\DBLayer\Navigation as TGNavigation;
@@ -13,11 +14,16 @@ use \WebFW\CMS\DBLayer\Navigation as Node;
 
 class Navigation extends Component
 {
+    /** @var Controller */
+    protected $controller;
+
     protected $navList = array();
 
     public function execute()
     {
-        if ($this->ownerObject instanceof CMSLogin) {
+        $this->controller = Controller::getInstance();
+
+        if ($this->controller instanceof CMSLogin) {
             $this->useTemplate = false;
             return;
         }
@@ -86,15 +92,15 @@ class Navigation extends Component
 
     public function getSelectedMenuItem()
     {
-        if ($this->ownerObject === null) {
+        if ($this->controller === null) {
             return null;
         }
 
-        if (!method_exists($this->ownerObject, 'getSelectedMenuItem')) {
+        if (!method_exists($this->controller, 'getSelectedMenuItem')) {
             return null;
         }
 
-        return $this->ownerObject->getSelectedMenuItem();
+        return $this->controller->getSelectedMenuItem();
     }
 
     public function getNodeName(TGNavigation &$node)

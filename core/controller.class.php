@@ -12,6 +12,8 @@ abstract class Controller extends BaseClass
 {
     use Cacheable;
 
+    protected static $instance = null;
+
     protected $template = 'default';
     protected $useTemplate = true;
     protected $redirectUrl = null;
@@ -22,7 +24,19 @@ abstract class Controller extends BaseClass
     const DEFAULT_ACTION_NAME = 'execute';
     const DEFAULT_TEMPLATE_NAME = 'default';
 
-    public function __construct()
+    /**
+     * @return Controller
+     */
+    public static function getInstance()
+    {
+        if (static::$instance === null) {
+            static::$instance = new static();
+        }
+
+        return static::$instance;
+    }
+
+    protected function __construct()
     {
         if (array_key_exists('action', $_REQUEST)) {
             $this->action = trim($_REQUEST['action']);

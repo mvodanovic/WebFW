@@ -98,17 +98,12 @@ class Paginator extends Component
             }
 
         /// Generate URL using the owner controller
-        } elseif ($this->ownerObject instanceof Controller) {
-            $url = Router::getInstance()->URL(
-                $this->ownerObject->className(), $this->ownerObject->getAction(), $this->getParam('escapeAmps')
-            );
-
-        /// Fallback - generate URL using the rewriteBase
         } else {
-            $url = Config::get('General', 'rewriteBase');
-            if ($page > 1) {
-                $url .= '?' . $this->getParam('pageParamName') . '=' . $page;
-            }
+            $url = Router::getInstance()->URL(
+                Controller::getInstance()->className(),
+                Controller::getInstance()->getAction(),
+                $this->getParam('escapeAmps')
+            );
         }
 
         return $url;
