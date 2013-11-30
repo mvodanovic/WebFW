@@ -36,6 +36,31 @@ class ListHelper
     }
 
     /**
+     * Converts a plain list to a list  ('key' => $key, 'value' => $value) format.
+     * Both key and value values are the same and containt the value of the input list element.
+     *
+     * @param array $list Input list
+     * @param bool $prefixWithEmptyEntry If set to true, the converted list will have an empty element prefixed
+     * @return array Converted list
+     */
+    public static function toKeyValueList(array $list, $prefixWithEmptyEntry = false)
+    {
+        $newList = array();
+        foreach ($list as &$listItem) {
+            $newList[] = array(
+                'key' => $listItem,
+                'value' => $listItem,
+            );
+        }
+
+        if ($prefixWithEmptyEntry) {
+            $newList = static::prefixWithEmptyEntry($newList);
+        }
+
+        return $newList;
+    }
+
+    /**
      * Converts a list whose values are lists of key-value pairs to a list with
      * ('key' => $key, 'value' => $value) format. Primarily used for converting ListFetcher result lists.
      *

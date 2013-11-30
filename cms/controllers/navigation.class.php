@@ -2,13 +2,17 @@
 
 namespace WebFW\CMS\Controllers;
 
+use WebFW\CMS\Classes\ListHelper;
 use WebFW\CMS\DBLayer\ListFetchers\Navigation as LFNavigation;
 use WebFW\CMS\DBLayer\Navigation as TGNavigation;
 use WebFW\CMS\TreeController;
+use WebFW\Core\Classes\ClassHelper;
 use WebFW\Core\Classes\HTML\Input;
 use WebFW\CMS\Classes\EditTab;
+use WebFW\Core\Classes\HTML\Select;
 use WebFW\Database\TableGateway;
 use WebFW\Database\TreeTableGateway;
+use WebFW\CMS\Controller;
 
 class Navigation extends TreeController
 {
@@ -41,6 +45,8 @@ class Navigation extends TreeController
     {
         parent::initEdit();
 
+        $controllers = ClassHelper::getClasses(Controller::className(), false);
+
         $tab = new EditTab('default');
 
         $readonly = new Input('strParentNodeCaption', 'text');
@@ -56,9 +62,9 @@ class Navigation extends TreeController
             'Caption displayed where needed.'
         );
         $tab->addField(
-            new Input('controller', 'text'),
+            new Select('controller', ListHelper::toKeyValueList($controllers), true),
             'Controller',
-            "Controller name with the namespace.\nLeave blank to use the node as a parent node."
+            "Controller name.\nLeave blank to use the node as a parent node."
         );
         $tab->addField(
             new Input('action', 'text'),

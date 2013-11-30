@@ -3,9 +3,11 @@
 namespace WebFW\CMS\Controllers;
 
 use WebFW\CMS\Classes\ListHelper;
+use WebFW\CMS\Controller;
 use WebFW\CMS\ListController;
 use WebFW\CMS\DBLayer\ListFetchers\UserTypeControllerPermissions as LFUTCP;
 use WebFW\CMS\DBLayer\UserTypeControllerPermissions as TGUTCP;
+use WebFW\Core\Classes\ClassHelper;
 use WebFW\Core\Classes\HTML\Input;
 use WebFW\CMS\Classes\EditTab;
 use WebFW\Core\Classes\HTML\Select;
@@ -58,6 +60,8 @@ class UserTypeControllerPermissions extends ListController
             'caption'
         );
 
+        $controllers = ClassHelper::getClasses(Controller::className(), false);
+
         $tab->addField(
             new Select('user_type_id', $userTypes),
             'User Type',
@@ -67,9 +71,9 @@ class UserTypeControllerPermissions extends ListController
             2
         );
         $tab->addField(
-            new Input('controller', 'text'),
+            new Select('controller', ListHelper::toKeyValueList($controllers)),
             'Controller',
-            'Controller name, with the namespace.',
+            'Controller name.',
             true,
             1,
             3
