@@ -3,7 +3,7 @@
 namespace WebFW\CMS\Components;
 
 use WebFW\CMS\Classes\EditTab;
-use WebFW\CMS\DBLayer\Navigation;
+use WebFW\CMS\DBLayer\Navigation as TGNavigation;
 use WebFW\CMS\TreeController;
 use WebFW\Core\Classes\HTML\Link;
 use WebFW\Core\Component;
@@ -22,7 +22,7 @@ class TreeBreadcrumbs extends Component
             return;
         }
 
-        /** @var Navigation $node */
+        /** @var TGNavigation $node */
         $node = $this->controller->getTableGateway();
         $nodeColumns = $node->getParentNodeKeyColumns();
         $treeFilter = $this->controller->getParentNodeValues();

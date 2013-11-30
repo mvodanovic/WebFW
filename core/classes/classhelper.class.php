@@ -15,7 +15,7 @@ class ClassHelper extends BaseClass
 
     protected static function init()
     {
-//        static::$isCacheEnabled = true;
+        static::$isCacheEnabled = true;
         static::$cacheExpirationTime = 3600;
     }
 
@@ -118,7 +118,7 @@ class ClassHelper extends BaseClass
         if ($fp === false) {
             return null;
         }
-        while (!$class) {
+        while ($class === '') {
             if (feof($fp)) break;
 
             $buffer .= fread($fp, 128);
