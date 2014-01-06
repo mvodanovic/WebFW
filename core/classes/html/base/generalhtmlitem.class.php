@@ -23,6 +23,8 @@ class GeneralHTMLItem extends BaseClass
     public function addClass($class)
     {
         $this->classes[$class] = htmlspecialchars($class);
+
+        return $this;
     }
 
     public function setStyle($key, $value)
@@ -37,6 +39,8 @@ class GeneralHTMLItem extends BaseClass
             'functionName' => $functionName,
             'functionParameters' => $functionParameters,
         );
+
+        return $this;
     }
 
     public function setAttribute($key, $value)

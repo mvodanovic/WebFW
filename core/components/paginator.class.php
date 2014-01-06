@@ -5,7 +5,6 @@ namespace WebFW\Core\Components;
 use WebFW\Core\Component;
 use WebFW\Core\Router;
 use WebFW\Core\Controller;
-use WebFW\Core\Config;
 
 class Paginator extends Component
 {
@@ -13,6 +12,14 @@ class Paginator extends Component
 
     protected function setDefaultParams()
     {
+        parent::setDefaultParams();
+
+        $templateDirectory = \WebFW\Core\FW_PATH . DIRECTORY_SEPARATOR
+            . 'core' . DIRECTORY_SEPARATOR
+            . 'templates' . DIRECTORY_SEPARATOR;
+
+        $this->setParam('templateDirectory', $templateDirectory);
+        $this->setParam('template', 'paginator');
         $this->setParam('page', 1);
         $this->setParam('totalItemsCount', 0);
         $this->setParam('itemsPerPage', 30);
@@ -60,8 +67,6 @@ class Paginator extends Component
             $higherPages[$i] = $this->getPageURL($i);
         }
 
-        $this->templateDirectory = \WebFW\Core\FW_PATH . '/core/templates/';
-        $this->template = 'paginator';
         $this->setTplVar('firstPage', $this->getFirstPageURL());
         $this->setTplVar('lowerPages', $lowerPages);
         $this->setTplVar('currentPage', $this->getParam('page'));

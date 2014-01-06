@@ -4,7 +4,7 @@ namespace WebFW\Core;
 
 use WebFW\Externals\PHPTemplate;
 
-abstract class HTMLController extends Controller
+abstract class HTMLController extends TemplatedController
 {
     protected $baseTemplate = 'default';
     protected $pageTitle = '';
