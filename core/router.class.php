@@ -7,6 +7,7 @@ use WebFW\CMS\CMSLogin;
 use WebFW\CMS\Controllers\User;
 use WebFW\Core\Classes\BaseClass;
 use WebFW\Dev\Profiler;
+use WebFW\Media\Controllers\CMS\Image;
 
 /**
  * Class Router
@@ -57,6 +58,13 @@ class Router extends BaseClass
         $this->routeDefinitions[] = array(
             'pattern' => 'cms/webfw/:ctl:/:action:',
             'route' => new Route(null, null, User::classNamespace()),
+            'variables' => array(
+            ),
+        );
+
+        $this->routeDefinitions[] = array(
+            'pattern' => 'cms/webfw/media/:ctl:/:action:',
+            'route' => new Route(null, null, Image::classNamespace()),
             'variables' => array(
             ),
         );

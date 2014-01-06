@@ -41,6 +41,7 @@ abstract class ItemController extends Controller implements iValidate
             throw new UnauthorizedException('Insufficient privileges');
         }
 
+        $this->initForm();
         $this->initEdit();
         $this->checkTableGateway();
         $this->afterInit();
@@ -77,7 +78,6 @@ abstract class ItemController extends Controller implements iValidate
 
         $this->processEdit($this->tableGateway);
 
-        $this->initForm();
         $this->initEditActions();
 
         foreach ($this->editTabs as &$tab) {
@@ -254,6 +254,13 @@ abstract class ItemController extends Controller implements iValidate
         }
 
         return $values;
+    }
+
+    public function setFileUploadEditForm()
+    {
+        if ($this->editForm instanceof FormStart) {
+            $this->editForm->setAttribute('enctype', 'multipart/form-data');
+        }
     }
 
     public function getEditFormHTML()
