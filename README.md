@@ -25,7 +25,7 @@ Installation (for Ubuntu users)
 ----
 
   1. `mkdir ~/www/example && cd ~/www/example` (create an empty directory & enter it)
-  2. `git clone git@github.com:mvodanovic/WebFW.git webfw` (checkout the framework in the webfw/ directory)
+  2. `git clone https://github.com/mvodanovic/WebFW.git webfw` (checkout the framework in the webfw/ directory)
   3. `cp -R __install/* .` (copy everything from the __install/ directory to the current directory; don't forget the dot)
   4. `sudo vim /etc/apache/sites_available/example.conf` (setup the web server with the public/ directory as document root)
   5. `sudo a2ensite example && sudo service apache2 reload` (activate the new web site)
