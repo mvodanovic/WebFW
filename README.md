@@ -64,4 +64,4 @@ License
 [GitHub]:https://github.com/mvodanovic/WebFW
 [GitList]:http://gitlist.vodanovic.net/webfw.git/
 [example.com]:http://example.com/
-[MIT License]::https://github.com/mvodanovic/WebFW/LICENSE.txt
+[MIT License]:https://raw.github.com/mvodanovic/WebFW/master/LICENSE.txt
