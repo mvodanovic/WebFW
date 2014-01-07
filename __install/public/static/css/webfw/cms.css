@@ -105,3 +105,16 @@ div.login p {background-color: #6699ff; padding: .2em .4em; font-size: 16px; fon
 div.login div.left, div.login div.right {padding: .4em; line-height: 24px;}
 div.login div.message {position: absolute; top: -35px; left: 0;}
 div.login_min_height {height: 220px;}
+
+
+/* IMAGE CROPPER */
+.cropper {background-color: #99ccff; margin-bottom: 5px; padding: 5px; float: left; position: relative; border: 1px solid #0033ff; border-radius: 5px; -moz-border-radius: 5px; -webkit-border-radius: 5px;}
+.cropper .left_column {float: left; margin-right: 5px; padding: 3px;}
+.cropper .left_column > div {margin: 0 auto 5px auto;}
+.cropper .bottom {position: absolute; bottom: 2px;}
+.cropper .caption_block {padding: 5px;}
+.cropper .caption {font-weight: bold;}
+.cropper input[type=text] {width: 50px;}
+.cropper img {max-width: none;}
+.cropper .thumbnail_block {overflow: hidden;}
+.cropper .full_block {float: left; padding: 3px;}

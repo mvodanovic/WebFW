@@ -62,7 +62,7 @@ class Navigation extends TreeController
             'Caption displayed where needed.'
         );
         $tab->addField(
-            new Select('controller', ListHelper::toKeyValueList($controllers), true),
+            new Select('controller', ListHelper::toKeyValueList($controllers, true), true),
             'Controller',
             "Controller name.\nLeave blank to use the node as a parent node."
         );

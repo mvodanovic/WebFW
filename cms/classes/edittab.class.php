@@ -2,11 +2,13 @@
 
 namespace WebFW\CMS\Classes;
 
+use WebFW\CMS\ItemController;
 use WebFW\Core\Classes\HTML\Base\BaseFormItem;
 use WebFW\Core\Classes\HTML\Base\CompoundFormItem;
 use WebFW\Core\Classes\HTML\Base\SimpleFormItem;
 use WebFW\Core\Classes\HTML\Button;
 use WebFW\Core\Classes\HTML\Input;
+use WebFW\Core\Controller;
 use WebFW\Database\TableGateway;
 
 class EditTab
@@ -43,9 +45,13 @@ class EditTab
             }
         }
 
-        if ($formItem instanceof Input && $formItem->getType() === 'hidden') {
+        if ($formItem instanceof Input && $formItem->getType() === Input::INPUT_HIDDEN) {
             $this->hiddenFields[] = $formItem;
             return;
+        } elseif ($formItem instanceof Input && $formItem->getType() === Input::INPUT_FILE) {
+            /** @var ItemController $controller */
+            $controller = Controller::getInstance();
+            $controller->setFileUploadEditForm();
         }
 
         if ($newLine === true) {

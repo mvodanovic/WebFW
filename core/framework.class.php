@@ -92,7 +92,7 @@ final class Framework
             $controller->processOutput();
             $controllerOutput = $controller->getOutput();
 
-            Profiler::getInstance()->addMoment('After controller template processing');
+            Profiler::getInstance()->addMoment('After controller output processing');
 
             if ($ctl::isCacheEnabled()) {
                 Cache::getInstance()->set($cacheKey, $controllerOutput, $ctl::getCacheExpirationTime());
