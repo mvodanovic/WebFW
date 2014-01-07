@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Database\TableConstraints;
+namespace WebFW\Framework\Database\TableConstraints;
 
-use WebFW\Database\Table;
+use WebFW\Framework\Database\Table;
 
 class PrimaryKey extends Constraint
 {

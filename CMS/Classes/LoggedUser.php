@@ -1,12 +1,12 @@
 <?php
 
-namespace WebFW\CMS\Classes;
+namespace WebFW\Framework\CMS\Classes;
 
-use WebFW\CMS\DBLayer\UserType;
-use WebFW\Core\Exceptions\NotFoundException;
-use WebFW\Core\Exceptions\UnauthorizedException;
-use WebFW\Core\SessionHandler;
-use WebFW\CMS\DBLayer\User;
+use WebFW\Framework\CMS\DBLayer\UserType;
+use WebFW\Framework\Core\Exceptions\NotFoundException;
+use WebFW\Framework\Core\Exceptions\UnauthorizedException;
+use WebFW\Framework\Core\SessionHandler;
+use WebFW\Framework\CMS\DBLayer\User;
 
 class LoggedUser
 {

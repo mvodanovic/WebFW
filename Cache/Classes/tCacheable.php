@@ -1,18 +1,18 @@
 <?php
 
-namespace WebFW\Cache\Classes;
+namespace WebFW\Framework\Cache\Classes;
 
-use WebFW\Cache\Cache;
+use WebFW\Framework\Cache\Cache;
 
 /**
- * Trait Cacheable
+ * Trait tCacheable
  *
  * Contains logic common to all cacheable classes.
  * All cacheable classes should use this trait.
  *
- * @package WebFW\Cache
+ * @package WebFW\Framework\Cache
  */
-trait Cacheable
+trait tCacheable
 {
     /**
      * @var bool Flag indicating wheather caching is enabled for the implementing class

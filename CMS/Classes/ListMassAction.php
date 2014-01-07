@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\CMS\Classes;
+namespace WebFW\Framework\CMS\Classes;
 
-use WebFW\Core\Classes\HTML\Button;
+use WebFW\Framework\Core\Classes\HTML\Button;
 
 class ListMassAction
 {

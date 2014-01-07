@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\Media\DBLayer\ListFetchers;
+namespace WebFW\Framework\Media\DBLayer\ListFetchers;
 
-use WebFW\Database\ListFetcher;
-use WebFW\Media\DBLayer\Tables\ImageAspectRatio as ImageAspectRatioT;
-use WebFW\Media\DBLayer\ImageAspectRatio as ImageAspectRatioTG;
+use WebFW\Framework\Database\ListFetcher;
+use WebFW\Framework\Media\DBLayer\Tables\ImageAspectRatio as ImageAspectRatioT;
+use WebFW\Framework\Media\DBLayer\ImageAspectRatio as ImageAspectRatioTG;
 
 class ImageAspectRatio extends ListFetcher
 {

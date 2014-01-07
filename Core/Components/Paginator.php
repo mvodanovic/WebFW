@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\Core\Components;
+namespace WebFW\Framework\Core\Components;
 
-use WebFW\Core\Component;
-use WebFW\Core\Router;
-use WebFW\Core\Controller;
+use WebFW\Framework\Core\Component;
+use WebFW\Framework\Core\Router;
+use WebFW\Framework\Core\Controller;
 
 class Paginator extends Component
 {
@@ -14,7 +14,7 @@ class Paginator extends Component
     {
         parent::setDefaultParams();
 
-        $templateDirectory = \WebFW\Core\FW_PATH . DIRECTORY_SEPARATOR
+        $templateDirectory = \WebFW\Framework\Core\FW_PATH . DIRECTORY_SEPARATOR
             . 'core' . DIRECTORY_SEPARATOR
             . 'templates' . DIRECTORY_SEPARATOR;
 

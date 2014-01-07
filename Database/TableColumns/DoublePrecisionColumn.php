@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Database\TableColumns;
+namespace WebFW\Framework\Database\TableColumns;
 
-use WebFW\Database\Table;
+use WebFW\Framework\Database\Table;
 
 class DoublePrecisionColumn extends Column
 {

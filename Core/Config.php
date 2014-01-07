@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Core;
+namespace WebFW\Framework\Core;
 
-use WebFW\Core\Classes\BaseClass;
+use WebFW\Framework\Core\Classes\BaseClass;
 
 class Config extends BaseClass
 {
@@ -18,7 +18,7 @@ class Config extends BaseClass
     protected static function loadConfig()
     {
         /// Load the main config file, throw an exception on fail
-        $file = \WebFW\Core\BASE_PATH . DIRECTORY_SEPARATOR . 'config'
+        $file = \WebFW\Framework\Core\BASE_PATH . DIRECTORY_SEPARATOR . 'config'
             . DIRECTORY_SEPARATOR . 'config.ini';
         if (!file_exists($file)) {
             throw new Exception('Config file missing: ' . $file);
@@ -30,7 +30,7 @@ class Config extends BaseClass
         static::addData($data);
 
         /// Load the specifics definition file, return on fail
-        $file = \WebFW\Core\BASE_PATH . DIRECTORY_SEPARATOR . 'config'
+        $file = \WebFW\Framework\Core\BASE_PATH . DIRECTORY_SEPARATOR . 'config'
             . DIRECTORY_SEPARATOR . 'specifics.ini';
         if (!file_exists($file)) {
             return;
@@ -42,7 +42,7 @@ class Config extends BaseClass
         $specifics = $data['specifics'];
 
         /// Load the specifics file, return on fail
-        $file = \WebFW\Core\BASE_PATH . DIRECTORY_SEPARATOR . 'config'
+        $file = \WebFW\Framework\Core\BASE_PATH . DIRECTORY_SEPARATOR . 'config'
             . DIRECTORY_SEPARATOR . 'specifics' . DIRECTORY_SEPARATOR . $specifics . '.ini';
         if (!file_exists($file)) {
             return;

@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Database\Query;
+namespace WebFW\Framework\Database\Query;
 
-use WebFW\Database\BaseHandler;
+use WebFW\Framework\Database\BaseHandler;
 
 class Delete extends ConditionalQuery
 {

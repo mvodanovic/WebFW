@@ -1,20 +1,20 @@
 <?php
 
-namespace WebFW\Core;
+namespace WebFW\Framework\Core;
 
 use ReflectionClass;
-use WebFW\CMS\CMSLogin;
-use WebFW\CMS\Controllers\User;
-use WebFW\Core\Classes\BaseClass;
-use WebFW\Dev\Profiler;
-use WebFW\Media\Controllers\CMS\Image;
+use WebFW\Framework\CMS\CMSLogin;
+use WebFW\Framework\CMS\Controllers\User;
+use WebFW\Framework\Core\Classes\BaseClass;
+use WebFW\Framework\Dev\Profiler;
+use WebFW\Framework\Media\Controllers\CMS\Image;
 
 /**
  * Class Router
  *
  * Handles route-to-URL conversions.
  *
- * @package WebFW\Core
+ * @package WebFW\Framework\Core
  */
 class Router extends BaseClass
 {
@@ -229,10 +229,10 @@ class Router extends BaseClass
 
         /// Setup empty parameters to their default values
         if ($controller === null) {
+            /** @var Controller $controller */
             $controller = Config::get('General', 'defaultController');
         }
         if (!class_exists($controller)) {
-        /** @var Controller $controllerClass */
             /// TODO: Throw exception?
             return null;
         }
@@ -318,7 +318,7 @@ class Router extends BaseClass
 
         $rc = new ReflectionClass($className);
         if (!($rc->newInstanceWithoutConstructor() instanceof Router)) {
-            throw new Exception('Class ' . $className . ' is not an instance of WebFW\\Core\\Router');
+            throw new Exception('Class ' . $className . ' is not an instance of ' . Router::className());
         }
 
         static::$class = $className;

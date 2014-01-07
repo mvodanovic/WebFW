@@ -1,6 +1,6 @@
 <?php
 
-namespace WebFW\Core\Interfaces;
+namespace WebFW\Framework\Core\Interfaces;
 
 interface iValidate
 {

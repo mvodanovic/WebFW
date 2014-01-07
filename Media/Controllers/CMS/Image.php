@@ -1,28 +1,28 @@
 <?php
 
-namespace WebFW\Media\Controllers\CMS;
+namespace WebFW\Framework\Media\Controllers\CMS;
 
-use WebFW\CMS\Classes\ListRowAction;
-use WebFW\CMS\Classes\PermissionsHelper;
-use WebFW\CMS\ListController;
-use WebFW\Core\Classes\HTML\Link;
-use WebFW\Core\Classes\HTML\Message;
-use WebFW\Core\Config;
-use WebFW\Core\Exception;
-use WebFW\Core\Exceptions\NotFoundException;
-use WebFW\Core\Request;
-use WebFW\Media\DBLayer\ImageAspectRatioCrop;
-use WebFW\Media\DBLayer\ImageVariation;
-use WebFW\Media\DBLayer\ListFetchers\Image as LFImage;
-use WebFW\Media\DBLayer\ListFetchers\ImageAspectRatio;
-use WebFW\Media\DBLayer\Tables\Image as TImage;
-use WebFW\Media\DBLayer\Tables\ImageVariation as TImageVariation;
-use WebFW\Media\DBLayer\Image as TGImage;
-use WebFW\Core\Classes\HTML\Input;
-use WebFW\Core\Classes\HTML\Select;
-use WebFW\CMS\Classes\EditTab;
-use WebFW\CMS\Classes\ListHelper;
-use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
+use WebFW\Framework\CMS\Classes\ListRowAction;
+use WebFW\Framework\CMS\Classes\PermissionsHelper;
+use WebFW\Framework\CMS\ListController;
+use WebFW\Framework\Core\Classes\HTML\Link;
+use WebFW\Framework\Core\Classes\HTML\Message;
+use WebFW\Framework\Core\Config;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Core\Exceptions\NotFoundException;
+use WebFW\Framework\Core\Request;
+use WebFW\Framework\Media\DBLayer\ImageAspectRatioCrop;
+use WebFW\Framework\Media\DBLayer\ImageVariation;
+use WebFW\Framework\Media\DBLayer\ListFetchers\Image as LFImage;
+use WebFW\Framework\Media\DBLayer\ListFetchers\ImageAspectRatio;
+use WebFW\Framework\Media\DBLayer\Tables\Image as TImage;
+use WebFW\Framework\Media\DBLayer\Tables\ImageVariation as TImageVariation;
+use WebFW\Framework\Media\DBLayer\Image as TGImage;
+use WebFW\Framework\Core\Classes\HTML\Input;
+use WebFW\Framework\Core\Classes\HTML\Select;
+use WebFW\Framework\CMS\Classes\EditTab;
+use WebFW\Framework\CMS\Classes\ListHelper;
+use WebFW\Framework\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
 
 class Image extends ListController
 {
@@ -47,7 +47,8 @@ class Image extends ListController
     protected function initList()
     {
         parent::initList();
-        $this->template = \WebFW\Core\FW_PATH . '/media/templates/cms/images.list';
+        $this->template = 'images.list';
+        $this->templateDirectory = \WebFW\Framework\Core\FW_PATH . '/Media/Templates/CMS';
 
         $variation = Config::get('General', 'cmsImageVariation');
         $this->variationObject = new ImageVariation();
@@ -137,10 +138,11 @@ class Image extends ListController
     public function showCropper()
     {
         $this->init();
-        $this->addLinkedJS('/static/js/webfw/jquery.Jcrop.min.js');
-        $this->addLinkedJS('/static/js/webfw/imagecropper.class.js');
-        $this->addLinkedCSS('/static/css/webfw/jquery.Jcrop.min.css');
-        $this->template = \WebFW\Core\FW_PATH . '/media/templates/cms/images.cropper';
+        $this->addLinkedJS('/Static/JS/WebFW/jquery.Jcrop.min.js');
+        $this->addLinkedJS('/Static/JS/WebFW/imagecropper.class.js');
+        $this->addLinkedCSS('/Static/CSS/WebFW/jquery.Jcrop.min.css');
+        $this->template = 'images.cropper';
+        $this->templateDirectory = \WebFW\Framework\Core\FW_PATH . '/Media/Templates/CMS';
         $image = new TGImage();
         $image->loadBy($this->getPrimaryKeyValues(false));
         $LFAspectRatio = new ImageAspectRatio();

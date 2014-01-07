@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\CMS\DBLayer\ListFetchers;
+namespace WebFW\Framework\CMS\DBLayer\ListFetchers;
 
-use WebFW\Database\ListFetcher;
-use WebFW\CMS\DBLayer\Tables\UserTypeControllerPermissions as UTCPT;
-use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCPTG;
+use WebFW\Framework\Database\ListFetcher;
+use WebFW\Framework\CMS\DBLayer\Tables\UserTypeControllerPermissions as UTCPT;
+use WebFW\Framework\CMS\DBLayer\UserTypeControllerPermissions as UTCPTG;
 
 class UserTypeControllerPermissions extends ListFetcher
 {

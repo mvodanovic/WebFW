@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Dev\Controllers;
+namespace WebFW\Framework\Dev\Controllers;
 
-use WebFW\Dev\Controller;
+use WebFW\Framework\Dev\Controller;
 
 class PHPInfo extends Controller
 {

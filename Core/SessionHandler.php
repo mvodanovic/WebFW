@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Core;
+namespace WebFW\Framework\Core;
 
-use WebFW\Core\Classes\BaseClass;
+use WebFW\Framework\Core\Classes\BaseClass;
 
 class SessionHandler extends BaseClass
 {

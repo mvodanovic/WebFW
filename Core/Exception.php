@@ -1,13 +1,13 @@
 <?php
 
-namespace WebFW\Core;
+namespace WebFW\Framework\Core;
 
 /**
  * Class Exception
  *
  * Default exception class used by WebFW.
  *
- * @package WebFW\Core
+ * @package WebFW\Framework\Core
  */
 class Exception extends \Exception
 {
@@ -116,7 +116,7 @@ class Exception extends \Exception
             return;
         }
 
-        include \WebFW\Core\FW_PATH . '/core/templates/error.template.php';
+        include \WebFW\Framework\Core\FW_PATH . '/Core/Templates/error.template.php';
     }
 
     /**

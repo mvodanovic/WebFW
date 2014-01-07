@@ -1,15 +1,15 @@
 <?php
 
-use WebFW\CMS\Classes\ListAction;
-use WebFW\CMS\Classes\ListMassAction;
-use WebFW\CMS\Components\Listing;
-use WebFW\Core\Classes\HTML\Message;
-use WebFW\Core\Components\Paginator;
-use WebFW\Core\Controller;
-use WebFW\Core\Framework;
-use WebFW\Media\Controllers\CMS\Image;
-use WebFW\Media\DBLayer\Image as TGImage;
-use WebFW\Media\DBLayer\ImageVariation;
+use WebFW\Framework\CMS\Classes\ListAction;
+use WebFW\Framework\CMS\Classes\ListMassAction;
+use WebFW\Framework\CMS\Components\Listing;
+use WebFW\Framework\Core\Classes\HTML\Message;
+use WebFW\Framework\Core\Components\Paginator;
+use WebFW\Framework\Core\Controller;
+use WebFW\Framework\Core\Framework;
+use WebFW\Framework\Media\Controllers\CMS\Image;
+use WebFW\Framework\Media\DBLayer\Image as TGImage;
+use WebFW\Framework\Media\DBLayer\ImageVariation;
 
 /**
  * @var Listing $component
@@ -45,7 +45,7 @@ $variation = $controller->getVariationObject();
     Paginator::className(),
     array(
         'template' => 'paginator',
-        'templateDirectory' => \WebFW\Core\FW_PATH . '/cms/templates/components/',
+        'templateDirectory' => \WebFW\Framework\Core\FW_PATH . '/cms/templates/components/',
         'page' => $page,
         'totalItemsCount' => $totalCount,
         'itemsPerPage' => $itemsPerPage,

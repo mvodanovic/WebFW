@@ -1,25 +1,25 @@
 <?php
 
-namespace WebFW\CMS;
+namespace WebFW\Framework\CMS;
 
-use WebFW\CMS\Classes\EditAction;
-use WebFW\CMS\Classes\EditTab;
-use WebFW\CMS\Classes\PermissionsHelper;
-use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
-use WebFW\Core\Classes\HTML\Base\CompoundFormItem;
-use WebFW\Core\Classes\HTML\FormStart;
-use WebFW\Core\Classes\HTML\Input;
-use WebFW\Core\Classes\HTML\Message;
-use WebFW\Core\Exceptions\NotFoundException;
-use WebFW\Core\Exceptions\UnauthorizedException;
-use WebFW\Core\Exception;
-use WebFW\Core\Interfaces\iValidate;
-use WebFW\Core\SessionHandler;
-use WebFW\Core\Request;
-use WebFW\Core\Classes\HTML\Link;
-use WebFW\Core\Classes\HTML\Base\SimpleFormItem;
-use WebFW\Core\Classes\HTML\Button;
-use WebFW\Database\TableGateway;
+use WebFW\Framework\CMS\Classes\EditAction;
+use WebFW\Framework\CMS\Classes\EditTab;
+use WebFW\Framework\CMS\Classes\PermissionsHelper;
+use WebFW\Framework\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
+use WebFW\Framework\Core\Classes\HTML\Base\CompoundFormItem;
+use WebFW\Framework\Core\Classes\HTML\FormStart;
+use WebFW\Framework\Core\Classes\HTML\Input;
+use WebFW\Framework\Core\Classes\HTML\Message;
+use WebFW\Framework\Core\Exceptions\NotFoundException;
+use WebFW\Framework\Core\Exceptions\UnauthorizedException;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Core\Interfaces\iValidate;
+use WebFW\Framework\Core\SessionHandler;
+use WebFW\Framework\Core\Request;
+use WebFW\Framework\Core\Classes\HTML\Link;
+use WebFW\Framework\Core\Classes\HTML\Base\SimpleFormItem;
+use WebFW\Framework\Core\Classes\HTML\Button;
+use WebFW\Framework\Database\TableGateway;
 
 abstract class ItemController extends Controller implements iValidate
 {
@@ -171,7 +171,7 @@ abstract class ItemController extends Controller implements iValidate
     protected function initEdit()
     {
         $this->init();
-        $this->template = \WebFW\Core\FW_PATH . '/cms/templates/edit';
+        $this->template = 'edit';
     }
 
     protected function initForm()

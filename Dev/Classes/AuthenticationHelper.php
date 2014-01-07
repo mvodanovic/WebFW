@@ -1,9 +1,9 @@
 <?php
 
-namespace WebFW\Dev\Classes;
+namespace WebFW\Framework\Dev\Classes;
 
-use WebFW\Core\Config;
-use WebFW\Core\Exceptions\UnauthorizedException;
+use WebFW\Framework\Core\Config;
+use WebFW\Framework\Core\Exceptions\UnauthorizedException;
 
 /**
  * Class AuthenticationHelper
@@ -11,7 +11,7 @@ use WebFW\Core\Exceptions\UnauthorizedException;
  * A helper class for authenticating users for access to restricted areas.
  * Implements the HTTP Digest authentication algorithm (RFC 2617).
  *
- * @package WebFW\Dev
+ * @package WebFW\Framework\Dev
  */
 class AuthenticationHelper
 {

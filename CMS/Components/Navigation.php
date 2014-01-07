@@ -1,16 +1,16 @@
 <?php
 
-namespace WebFW\CMS\Components;
+namespace WebFW\Framework\CMS\Components;
 
-use WebFW\CMS\Classes\PermissionsHelper as PH;
-use WebFW\CMS\CMSLogin;
-use WebFW\CMS\Classes\LoggedUser;
-use WebFW\CMS\Controller;
-use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
-use WebFW\Core\Component;
-use WebFw\CMS\DBLayer\Navigation as TGNavigation;
-use WebFW\CMS\DBLayer\ListFetchers\Navigation as LFNavigation;
-use \WebFW\CMS\DBLayer\Navigation as Node;
+use WebFW\Framework\CMS\Classes\PermissionsHelper as PH;
+use WebFW\Framework\CMS\CMSLogin;
+use WebFW\Framework\CMS\Classes\LoggedUser;
+use WebFW\Framework\CMS\Controller;
+use WebFW\Framework\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
+use WebFW\Framework\Core\Component;
+use WebFW\Framework\CMS\DBLayer\Navigation as TGNavigation;
+use WebFW\Framework\CMS\DBLayer\ListFetchers\Navigation as LFNavigation;
+use \WebFW\Framework\CMS\DBLayer\Navigation as Node;
 
 class Navigation extends Component
 {
@@ -117,6 +117,6 @@ class Navigation extends Component
         parent::setDefaultParams();
 
         $this->setParam('template', 'navigation');
-        $this->setParam('templateDirectory', \WebFW\Core\FW_PATH . '/cms/templates/components/');
+        $this->setParam('templateDirectory', \WebFW\Framework\Core\FW_PATH . '/CMS/Templates/Components');
     }
 }

@@ -1,15 +1,15 @@
 <?php
 
-namespace WebFW\Core\Classes\HTML;
+namespace WebFW\Framework\Core\Classes\HTML;
 
-use WebFW\Core\Classes\HTML\Base\CompoundFormItem;
-use WebFW\Core\Classes\HTML\Base\GeneralHTMLItem;
-use WebFW\Core\Exception;
-use WebFW\Core\Exceptions\NotFoundException;
-use WebFW\Core\Route;
-use WebFW\Database\TableColumns\Column;
-use WebFW\Database\TableConstraints\ForeignKey;
-use WebFW\Database\TableGateway;
+use WebFW\Framework\Core\Classes\HTML\Base\CompoundFormItem;
+use WebFW\Framework\Core\Classes\HTML\Base\GeneralHTMLItem;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Core\Exceptions\NotFoundException;
+use WebFW\Framework\Core\Route;
+use WebFW\Framework\Database\TableColumns\Column;
+use WebFW\Framework\Database\TableConstraints\ForeignKey;
+use WebFW\Framework\Database\TableGateway;
 
 class ReferencedListPicker extends CompoundFormItem
 {

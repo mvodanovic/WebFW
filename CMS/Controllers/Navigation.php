@@ -1,18 +1,18 @@
 <?php
 
-namespace WebFW\CMS\Controllers;
+namespace WebFW\Framework\CMS\Controllers;
 
-use WebFW\CMS\Classes\ListHelper;
-use WebFW\CMS\DBLayer\ListFetchers\Navigation as LFNavigation;
-use WebFW\CMS\DBLayer\Navigation as TGNavigation;
-use WebFW\CMS\TreeController;
-use WebFW\Core\Classes\ClassHelper;
-use WebFW\Core\Classes\HTML\Input;
-use WebFW\CMS\Classes\EditTab;
-use WebFW\Core\Classes\HTML\Select;
-use WebFW\Database\TableGateway;
-use WebFW\Database\TreeTableGateway;
-use WebFW\CMS\Controller;
+use WebFW\Framework\CMS\Classes\ListHelper;
+use WebFW\Framework\CMS\DBLayer\ListFetchers\Navigation as LFNavigation;
+use WebFW\Framework\CMS\DBLayer\Navigation as TGNavigation;
+use WebFW\Framework\CMS\TreeController;
+use WebFW\Framework\Core\Classes\ClassHelper;
+use WebFW\Framework\Core\Classes\HTML\Input;
+use WebFW\Framework\CMS\Classes\EditTab;
+use WebFW\Framework\Core\Classes\HTML\Select;
+use WebFW\Framework\Database\TableGateway;
+use WebFW\Framework\Database\TreeTableGateway;
+use WebFW\Framework\CMS\Controller;
 
 class Navigation extends TreeController
 {

@@ -1,16 +1,16 @@
 <?php
 
-namespace WebFW\CMS\Controllers;
+namespace WebFW\Framework\CMS\Controllers;
 
-use WebFW\CMS\ListController;
-use WebFW\CMS\DBLayer\ListFetchers\User as LFUser;
-use WebFW\CMS\DBLayer\User as TGUser;
-use WebFW\Core\Classes\HTML\Input;
-use WebFW\Core\Classes\HTML\Textarea;
-use WebFW\Core\Classes\HTML\Select;
-use WebFW\CMS\Classes\EditTab;
-use WebFW\CMS\DBLayer\ListFetchers\UserType as LFUserType;
-use WebFW\CMS\Classes\ListHelper;
+use WebFW\Framework\CMS\ListController;
+use WebFW\Framework\CMS\DBLayer\ListFetchers\User as LFUser;
+use WebFW\Framework\CMS\DBLayer\User as TGUser;
+use WebFW\Framework\Core\Classes\HTML\Input;
+use WebFW\Framework\Core\Classes\HTML\Textarea;
+use WebFW\Framework\Core\Classes\HTML\Select;
+use WebFW\Framework\CMS\Classes\EditTab;
+use WebFW\Framework\CMS\DBLayer\ListFetchers\UserType as LFUserType;
+use WebFW\Framework\CMS\Classes\ListHelper;
 
 class User extends ListController
 {

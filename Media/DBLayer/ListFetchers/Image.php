@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\Media\DBLayer\ListFetchers;
+namespace WebFW\Framework\Media\DBLayer\ListFetchers;
 
-use WebFW\Database\ListFetcher;
-use WebFW\Media\DBLayer\Tables\Image as ImageT;
-use WebFW\Media\DBLayer\Image as ImageTG;
+use WebFW\Framework\Database\ListFetcher;
+use WebFW\Framework\Media\DBLayer\Tables\Image as ImageT;
+use WebFW\Framework\Media\DBLayer\Image as ImageTG;
 
 class Image extends ListFetcher
 {

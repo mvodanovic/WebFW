@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\Media\DBLayer\ListFetchers;
+namespace WebFW\Framework\Media\DBLayer\ListFetchers;
 
-use WebFW\Database\ListFetcher;
-use WebFW\Media\DBLayer\Tables\ImageVariation as ImageVariationT;
-use WebFW\Media\DBLayer\ImageVariation as ImageVariationTG;
+use WebFW\Framework\Database\ListFetcher;
+use WebFW\Framework\Media\DBLayer\Tables\ImageVariation as ImageVariationT;
+use WebFW\Framework\Media\DBLayer\ImageVariation as ImageVariationTG;
 
 class ImageVariation extends ListFetcher
 {

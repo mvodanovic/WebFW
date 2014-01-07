@@ -1,18 +1,18 @@
 <?php
-namespace WebFW\Database;
+namespace WebFW\Framework\Database;
 
-use WebFW\Cache\Classes\Cacheable;
-use WebFW\Core\Classes\BaseClass;
-use WebFW\Database\TableColumns\Column;
-use WebFW\Database\TableConstraints\Constraint;
-use WebFW\Database\TableConstraints\ForeignKey;
-use WebFW\Database\TableConstraints\PrimaryKey;
-use WebFW\Core\Exception;
-use WebFW\Database\TableConstraints\Unique;
+use WebFW\Framework\Cache\Classes\tCacheable;
+use WebFW\Framework\Core\Classes\BaseClass;
+use WebFW\Framework\Database\TableColumns\Column;
+use WebFW\Framework\Database\TableConstraints\Constraint;
+use WebFW\Framework\Database\TableConstraints\ForeignKey;
+use WebFW\Framework\Database\TableConstraints\PrimaryKey;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Database\TableConstraints\Unique;
 
 abstract class Table extends BaseClass
 {
-    use Cacheable;
+    use tCacheable;
 
     protected $name = null;
     protected $alias = null;

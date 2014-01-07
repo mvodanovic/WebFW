@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Media\Processors;
+namespace WebFW\Framework\Media\Processors;
 
-use WebFW\Core\Config;
+use WebFW\Framework\Core\Config;
 
 class ImageProcessorImagick extends ImageProcessor
 {

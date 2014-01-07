@@ -1,9 +1,9 @@
 <?php
 
-namespace WebFW\Database;
+namespace WebFW\Framework\Database;
 
-use WebFW\Core\Exception;
-use WebFW\Core\Exceptions\DBException;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Core\Exceptions\DBException;
 
 class PgSQLHandler extends BaseHandler
 {

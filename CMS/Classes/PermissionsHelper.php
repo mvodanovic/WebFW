@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\CMS\Classes;
+namespace WebFW\Framework\CMS\Classes;
 
-use WebFW\CMS\Controller;
-use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
-use WebFW\Core\Exceptions\NotFoundException;
+use WebFW\Framework\CMS\Controller;
+use WebFW\Framework\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
+use WebFW\Framework\Core\Exceptions\NotFoundException;
 
 class PermissionsHelper
 {

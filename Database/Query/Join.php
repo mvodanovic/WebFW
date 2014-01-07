@@ -1,9 +1,9 @@
 <?php
 
-namespace WebFW\Database\Query;
+namespace WebFW\Framework\Database\Query;
 
-use WebFW\Database\BaseHandler;
-use WebFW\Core\Exception;
+use WebFW\Framework\Database\BaseHandler;
+use WebFW\Framework\Core\Exception;
 
 class Join
 {

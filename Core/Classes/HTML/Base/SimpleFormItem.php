@@ -1,6 +1,6 @@
 <?php
 
-namespace WebFW\Core\Classes\HTML\Base;
+namespace WebFW\Framework\Core\Classes\HTML\Base;
 
 class SimpleFormItem extends BaseFormItem
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Core\Exceptions;
+namespace WebFW\Framework\Core\Exceptions;
 
-use WebFW\Core\Exception;
+use WebFW\Framework\Core\Exception;
 
 /**
  * Class UnauthorizedException
@@ -10,7 +10,7 @@ use WebFW\Core\Exception;
  * Exception intended to be thrown when the user tries to access a resource without prior authorization.
  * This exception has it's code automatically set to 401.
  *
- * @package WebFW\Core\Exceptions
+ * @package WebFW\Framework\Core\Exceptions
  * @see Exception
  */
 class UnauthorizedException extends Exception

@@ -1,11 +1,11 @@
 <?php
 
-namespace WebFW\Media\Controllers;
+namespace WebFW\Framework\Media\Controllers;
 
-use WebFW\Core\Controller;
-use WebFW\Core\Request;
-use WebFW\Media\Classes\ImageHelper;
-use WebFW\Media\Exceptions\MediaNotFoundException;
+use WebFW\Framework\Core\Controller;
+use WebFW\Framework\Core\Request;
+use WebFW\Framework\Media\Classes\ImageHelper;
+use WebFW\Framework\Media\Exceptions\MediaNotFoundException;
 
 class InternalImage extends Controller
 {

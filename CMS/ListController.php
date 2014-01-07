@@ -1,25 +1,25 @@
 <?php
 
-namespace WebFW\CMS;
+namespace WebFW\Framework\CMS;
 
-use WebFW\CMS\Classes\EditAction;
-use WebFW\CMS\Classes\ListAction;
-use WebFW\CMS\Classes\ListMassAction;
-use WebFW\CMS\Classes\ListRowAction;
-use WebFW\CMS\Classes\PermissionsHelper;
-use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
-use WebFW\Core\Classes\HTML\Base\BaseFormItem;
-use WebFW\Core\Classes\HTML\Base\CompoundFormItem;
-use WebFW\Core\Exceptions\NotFoundException;
-use WebFW\Core\Exceptions\BadRequestException;
-use WebFW\Core\Exceptions\UnauthorizedException;
-use WebFW\Core\Exception;
-use WebFW\Database\ListFetcher;
-use WebFW\Core\Request;
-use WebFW\Core\Classes\HTML\Link;
-use WebFW\Core\Classes\HTML\Base\SimpleFormItem;
-use WebFW\Core\Classes\HTML\Button;
-use WebFW\Database\TableGateway;
+use WebFW\Framework\CMS\Classes\EditAction;
+use WebFW\Framework\CMS\Classes\ListAction;
+use WebFW\Framework\CMS\Classes\ListMassAction;
+use WebFW\Framework\CMS\Classes\ListRowAction;
+use WebFW\Framework\CMS\Classes\PermissionsHelper;
+use WebFW\Framework\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
+use WebFW\Framework\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Framework\Core\Classes\HTML\Base\CompoundFormItem;
+use WebFW\Framework\Core\Exceptions\NotFoundException;
+use WebFW\Framework\Core\Exceptions\BadRequestException;
+use WebFW\Framework\Core\Exceptions\UnauthorizedException;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Database\ListFetcher;
+use WebFW\Framework\Core\Request;
+use WebFW\Framework\Core\Classes\HTML\Link;
+use WebFW\Framework\Core\Classes\HTML\Base\SimpleFormItem;
+use WebFW\Framework\Core\Classes\HTML\Button;
+use WebFW\Framework\Database\TableGateway;
 
 abstract class ListController extends ItemController
 {
@@ -200,7 +200,7 @@ abstract class ListController extends ItemController
     protected function initList()
     {
         $this->init();
-        $this->template = \WebFW\Core\FW_PATH . '/cms/templates/list';
+        $this->template = 'list';
         $this->filter += $this->getFilterValues();
 
         $page = Request::getInstance()->p;

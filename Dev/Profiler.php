@@ -1,11 +1,11 @@
 <?php
 
-namespace WebFW\Dev;
+namespace WebFW\Framework\Dev;
 
-use WebFW\Core\Classes\BaseClass;
-use WebFW\Core\Config;
-use WebFW\Core\Exception;
-use WebFW\Externals\PHPTemplate;
+use WebFW\Framework\Core\Classes\BaseClass;
+use WebFW\Framework\Core\Config;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Externals\PHPTemplate;
 
 /**
  * Class Profiler
@@ -13,7 +13,7 @@ use WebFW\Externals\PHPTemplate;
  * Used to monitor request execution from framework entry to final data output.
  * Monitors execution time and memory usage.
  *
- * @package WebFW\Dev
+ * @package WebFW\Framework\Dev
  */
 class Profiler extends BaseClass
 {
@@ -170,12 +170,9 @@ class Profiler extends BaseClass
 
     protected function __construct()
     {
-        $this->templateDir = \WebFW\Core\FW_PATH
-            . DIRECTORY_SEPARATOR
-            . 'dev'
-            . DIRECTORY_SEPARATOR
-            . 'templates'
-            . DIRECTORY_SEPARATOR;
+        $this->templateDir = \WebFW\Framework\Core\FW_PATH
+            . DIRECTORY_SEPARATOR . 'Dev'
+            . DIRECTORY_SEPARATOR . 'Templates';
         $this->templateName = 'profiler.template.php';
     }
 

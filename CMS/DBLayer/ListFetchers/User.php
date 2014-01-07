@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\CMS\DBLayer\ListFetchers;
+namespace WebFW\Framework\CMS\DBLayer\ListFetchers;
 
-use WebFW\Database\ListFetcher;
-use WebFW\CMS\DBLayer\Tables\User as UserT;
-use WebFW\CMS\DBLayer\User as UserTG;
+use WebFW\Framework\Database\ListFetcher;
+use WebFW\Framework\CMS\DBLayer\Tables\User as UserT;
+use WebFW\Framework\CMS\DBLayer\User as UserTG;
 
 class User extends ListFetcher
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\Media\DBLayer\ListFetchers;
+namespace WebFW\Framework\Media\DBLayer\ListFetchers;
 
-use WebFW\Database\ListFetcher;
-use WebFW\Media\DBLayer\Tables\ImageAspectRatioCrop as ImageAspectRatioCropT;
-use WebFW\Media\DBLayer\ImageAspectRatioCrop as ImageAspectRatioCropTG;
+use WebFW\Framework\Database\ListFetcher;
+use WebFW\Framework\Media\DBLayer\Tables\ImageAspectRatioCrop as ImageAspectRatioCropT;
+use WebFW\Framework\Media\DBLayer\ImageAspectRatioCrop as ImageAspectRatioCropTG;
 
 class ImageAspectRatioCrop extends ListFetcher
 {

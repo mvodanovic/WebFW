@@ -1,16 +1,16 @@
 <?php
 
-namespace WebFW\CMS\Components;
+namespace WebFW\Framework\CMS\Components;
 
-use WebFW\CMS\Classes\PermissionsHelper;
-use WebFW\CMS\CMSLogin;
-use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
-use WebFW\Core\Classes\HTML\Link;
-use WebFW\Core\Component;
-use WebFW\CMS\Classes\LoggedUser;
-use WebFW\CMS\Controllers\LoggedUser as LoggedUserCtl;
-use WebFW\Core\Classes\HTML\Message;
-use WebFW\Core\Router;
+use WebFW\Framework\CMS\Classes\PermissionsHelper;
+use WebFW\Framework\CMS\CMSLogin;
+use WebFW\Framework\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
+use WebFW\Framework\Core\Classes\HTML\Link;
+use WebFW\Framework\Core\Component;
+use WebFW\Framework\CMS\Classes\LoggedUser;
+use WebFW\Framework\CMS\Controllers\LoggedUser as LoggedUserCtl;
+use WebFW\Framework\Core\Classes\HTML\Message;
+use WebFW\Framework\Core\Router;
 
 class UserActions extends Component
 {
@@ -63,6 +63,6 @@ class UserActions extends Component
         parent::setDefaultParams();
 
         $this->setParam('template', 'useractions');
-        $this->setParam('templateDirectory', \WebFW\Core\FW_PATH . '/cms/templates/components/');
+        $this->setParam('templateDirectory', \WebFW\Framework\Core\FW_PATH . '/CMS/Templates/Components');
     }
 }

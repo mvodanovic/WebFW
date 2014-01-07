@@ -1,9 +1,9 @@
 <?php
 
-namespace WebFW\Database;
+namespace WebFW\Framework\Database;
 
-use WebFW\Core\Exception;
-use WebFW\Core\Exceptions\NotFoundException;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Core\Exceptions\NotFoundException;
 
 abstract class TreeTableGateway extends TableGateway
 {

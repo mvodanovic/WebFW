@@ -1,12 +1,12 @@
 <?php
 
-use WebFW\CMS\Classes\ListAction;
-use WebFW\CMS\Classes\ListMassAction;
-use WebFW\CMS\Components\Listing;
-use WebFW\Core\Classes\HTML\Message;
-use WebFW\Core\Components\Paginator;
-use WebFW\Core\Framework;
-use WebFW\Core\ArrayAccess;
+use WebFW\Framework\CMS\Classes\ListAction;
+use WebFW\Framework\CMS\Classes\ListMassAction;
+use WebFW\Framework\CMS\Components\Listing;
+use WebFW\Framework\Core\Classes\HTML\Message;
+use WebFW\Framework\Core\Components\Paginator;
+use WebFW\Framework\Core\Framework;
+use WebFW\Framework\Core\ArrayAccess;
 
 /**
  * @var Listing $component
@@ -37,7 +37,7 @@ use WebFW\Core\ArrayAccess;
     Paginator::className(),
     array(
         'template' => 'paginator',
-        'templateDirectory' => \WebFW\Core\FW_PATH . '/cms/templates/components/',
+        'templateDirectory' => \WebFW\Framework\Core\FW_PATH . '/CMS/Templates/Components',
         'page' => $page,
         'totalItemsCount' => $totalCount,
         'itemsPerPage' => $itemsPerPage,

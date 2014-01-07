@@ -1,18 +1,18 @@
 <?php
 
-namespace WebFW\Media\Classes;
+namespace WebFW\Framework\Media\Classes;
 
-use WebFW\Core\Classes\BaseClass;
-use WebFW\Core\Config;
-use WebFW\Core\Exception;
-use WebFW\Core\Exceptions\NotFoundException;
-use WebFW\Media\DBLayer\Image;
-use WebFW\Media\DBLayer\ImageAspectRatio;
-use WebFW\Media\DBLayer\ImageAspectRatioCrop;
-use WebFW\Media\DBLayer\ListFetchers\ImageVariation;
-use WebFW\Media\DBLayer\Tables\ImageVariation as TImageVariation;
-use WebFW\Media\DBLayer\ImageVariation as TGImageVariation;
-use WebFW\Media\Processors\ImageProcessor;
+use WebFW\Framework\Core\Classes\BaseClass;
+use WebFW\Framework\Core\Config;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Core\Exceptions\NotFoundException;
+use WebFW\Framework\Media\DBLayer\Image;
+use WebFW\Framework\Media\DBLayer\ImageAspectRatio;
+use WebFW\Framework\Media\DBLayer\ImageAspectRatioCrop;
+use WebFW\Framework\Media\DBLayer\ListFetchers\ImageVariation;
+use WebFW\Framework\Media\DBLayer\Tables\ImageVariation as TImageVariation;
+use WebFW\Framework\Media\DBLayer\ImageVariation as TGImageVariation;
+use WebFW\Framework\Media\Processors\ImageProcessor;
 
 class ImageHelper extends BaseClass
 {
@@ -65,7 +65,7 @@ class ImageHelper extends BaseClass
         if ($path === null) {
             $path = 'media';
         }
-        $path = \WebFW\Core\BASE_PATH . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . 'images';
+        $path = \WebFW\Framework\Core\BASE_PATH . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . 'images';
         if ($variation !== null) {
             $path .= DIRECTORY_SEPARATOR . 'variations' . DIRECTORY_SEPARATOR . $variation;
         }

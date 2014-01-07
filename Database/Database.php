@@ -1,9 +1,9 @@
 <?php
 
-namespace WebFW\Database;
+namespace WebFW\Framework\Database;
 
-use WebFW\Core\Classes\BaseClass;
-use WebFW\Core\Classes\ClassHelper;
+use WebFW\Framework\Core\Classes\BaseClass;
+use WebFW\Framework\Core\Classes\ClassHelper;
 
 class Database extends BaseClass
 {

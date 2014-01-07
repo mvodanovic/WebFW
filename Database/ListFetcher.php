@@ -1,23 +1,23 @@
 <?php
 
-namespace WebFW\Database;
+namespace WebFW\Framework\Database;
 
-use WebFW\Cache\Cache;
-use WebFW\Cache\Classes\Cacheable;
-use WebFW\Cache\Classes\CacheGroupHelper;
-use WebFW\Core\Classes\BaseClass;
-use WebFW\Core\Exception;
-use WebFW\Core\Exceptions\DBException;
-use WebFW\Database\Query\Join;
-use WebFW\Database\TableConstraints\ForeignKey;
-use WebFW\Database\TableColumns\Column;
-use WebFW\Database\Query\Select;
+use WebFW\Framework\Cache\Cache;
+use WebFW\Framework\Cache\Classes\tCacheable;
+use WebFW\Framework\Cache\Classes\CacheGroupHelper;
+use WebFW\Framework\Core\Classes\BaseClass;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Core\Exceptions\DBException;
+use WebFW\Framework\Database\Query\Join;
+use WebFW\Framework\Database\TableConstraints\ForeignKey;
+use WebFW\Framework\Database\TableColumns\Column;
+use WebFW\Framework\Database\Query\Select;
 
 abstract class ListFetcher extends BaseClass
 {
-    use Cacheable {
-        getCacheExpirationTime as private getCacheExpirationTimeFromCacheable;
-        isCacheEnabled as private isCacheEnabledFromCacheable;
+    use tCacheable {
+        getCacheExpirationTime as private getCacheExpirationTimeFromtCacheable;
+        isCacheEnabled as private isCacheEnabledFromtCacheable;
     }
 
     /** @var Table  */
@@ -267,7 +267,7 @@ abstract class ListFetcher extends BaseClass
 
     public function getCacheExpirationTime()
     {
-        $expirationTime = static::getCacheExpirationTimeFromCacheable();
+        $expirationTime = static::getCacheExpirationTimeFromtCacheable();
         if ($expirationTime === null) {
             $expirationTime = $this->table->getCacheExpirationTime();
         }
@@ -277,7 +277,7 @@ abstract class ListFetcher extends BaseClass
 
     public function isCacheEnabled()
     {
-        $isCacheEnabled = static::isCacheEnabledFromCacheable();
+        $isCacheEnabled = static::isCacheEnabledFromtCacheable();
         if ($isCacheEnabled === false) {
             $isCacheEnabled = $this->table->isCacheEnabled();
         }

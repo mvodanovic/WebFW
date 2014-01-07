@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\CMS\DBLayer;
+namespace WebFW\Framework\CMS\DBLayer;
 
-use WebFW\Core\Exceptions\NotFoundException;
-use WebFW\Database\TableGateway;
-use WebFW\CMS\DBLayer\Tables\UserTypeControllerPermissions as UTCPT;
+use WebFW\Framework\Core\Exceptions\NotFoundException;
+use WebFW\Framework\Database\TableGateway;
+use WebFW\Framework\CMS\DBLayer\Tables\UserTypeControllerPermissions as UTCPT;
 
 class UserTypeControllerPermissions extends TableGateway
 {

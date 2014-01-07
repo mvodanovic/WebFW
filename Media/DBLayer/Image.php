@@ -1,17 +1,17 @@
 <?php
 
-namespace WebFW\Media\DBLayer;
+namespace WebFW\Framework\Media\DBLayer;
 
-use WebFW\CMS\Classes\EditTab;
-use WebFW\Core\Router;
-use WebFW\Database\TableGateway;
-use WebFW\Media\Classes\ImageHelper;
-use WebFW\Media\Controllers\InternalImage;
-use WebFW\Media\DBLayer\Tables\Image as ImageT;
+use WebFW\Framework\CMS\Classes\EditTab;
+use WebFW\Framework\Core\Router;
+use WebFW\Framework\Database\TableGateway;
+use WebFW\Framework\Media\Classes\ImageHelper;
+use WebFW\Framework\Media\Controllers\InternalImage;
+use WebFW\Framework\Media\DBLayer\Tables\Image as ImageT;
 
 /**
  * Class Image
- * @package WebFW\Media\DBLayer
+ * @package WebFW\Framework\Media\DBLayer
  *
  * @property $image_id
  * @property $image_type_id

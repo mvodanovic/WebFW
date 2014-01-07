@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Database;
+namespace WebFW\Framework\Database;
 
-use WebFW\Core\Exceptions\DBException;
+use WebFW\Framework\Core\Exceptions\DBException;
 use mysqli;
 use mysqli_result;
 

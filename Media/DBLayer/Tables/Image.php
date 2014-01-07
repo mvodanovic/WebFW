@@ -1,11 +1,11 @@
 <?php
 
-namespace WebFW\Media\DBLayer\Tables;
+namespace WebFW\Framework\Media\DBLayer\Tables;
 
-use WebFW\Database\Table;
-use WebFW\Database\TableColumns\IntegerColumn;
-use WebFW\Database\TableColumns\VarcharColumn;
-use WebFW\Database\TableConstraints\PrimaryKey;
+use WebFW\Framework\Database\Table;
+use WebFW\Framework\Database\TableColumns\IntegerColumn;
+use WebFW\Framework\Database\TableColumns\VarcharColumn;
+use WebFW\Framework\Database\TableConstraints\PrimaryKey;
 
 class Image extends Table
 {

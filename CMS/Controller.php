@@ -1,13 +1,13 @@
 <?php
 
-namespace WebFW\CMS;
+namespace WebFW\Framework\CMS;
 
-use WebFW\Core\Classes\HTML\Message;
-use WebFW\Core\Config;
-use WebFW\Core\Request;
-use WebFW\Core\Router;
-use WebFW\CMS\Classes\LoggedUser;
-use WebFW\Core\HTMLController;
+use WebFW\Framework\Core\Classes\HTML\Message;
+use WebFW\Framework\Core\Config;
+use WebFW\Framework\Core\Request;
+use WebFW\Framework\Core\Router;
+use WebFW\Framework\CMS\Classes\LoggedUser;
+use WebFW\Framework\Core\HTMLController;
 
 abstract class Controller extends HTMLController
 {
@@ -30,24 +30,26 @@ abstract class Controller extends HTMLController
             $this->simpleOutput = true;
         }
 
-        $this->addLinkedCSS('/static/css/webfw/reset.css');
-        $this->addLinkedCSS('/static/css/webfw/formalize.css');
-        $this->addLinkedCSS('/static/css/webfw/jquery-ui-1.10.3.custom.min.css');
-        $this->addLinkedCSS('/static/css/webfw/jquery-ui-timepicker-addon.min.css');
-        $this->addLinkedCSS('/static/css/webfw/cms.css');
-        $this->addLinkedJS('/static/js/webfw/jquery-1.10.2.min.js');
-        $this->addLinkedJS('/static/js/webfw/jquery-ui-1.10.3.custom.min.js');
-        $this->addLinkedJS('/static/js/webfw/jquery-ui-timepicker-addon.min.js');
-        $this->addLinkedJS('/static/js/webfw/tinymce/tinymce.min.js');
-        $this->addLinkedJS('/static/js/webfw/tinymce/jquery.tinymce.min.js');
-        $this->addLinkedJS('/static/js/webfw/referencepicker.class.js');
-        $this->addLinkedJS('/static/js/webfw/cmspage.class.js');
+        $this->addLinkedCSS('/Static/CSS/WebFW/reset.css');
+        $this->addLinkedCSS('/Static/CSS/WebFW/formalize.css');
+        $this->addLinkedCSS('/Static/CSS/WebFW/jquery-ui-1.10.3.custom.min.css');
+        $this->addLinkedCSS('/Static/CSS/WebFW/jquery-ui-timepicker-addon.min.css');
+        $this->addLinkedCSS('/Static/CSS/WebFW/cms.css');
+        $this->addLinkedJS('/Static/JS/WebFW/jquery-1.10.2.min.js');
+        $this->addLinkedJS('/Static/JS/WebFW/jquery-ui-1.10.3.custom.min.js');
+        $this->addLinkedJS('/Static/JS/WebFW/jquery-ui-timepicker-addon.min.js');
+        $this->addLinkedJS('/Static/JS/WebFW/tinymce/tinymce.min.js');
+        $this->addLinkedJS('/Static/JS/WebFW/tinymce/jquery.tinymce.min.js');
+        $this->addLinkedJS('/Static/JS/WebFW/referencepicker.class.js');
+        $this->addLinkedJS('/Static/JS/WebFW/cmspage.class.js');
         $this->addHeadMeta('Content-Type', 'text/html; charset=UTF-8', 'http-equiv');
     }
 
     protected function init()
     {
-        $this->baseTemplate = \WebFW\Core\FW_PATH . '/cms/templates/base';
+        $this->baseTemplate = 'base';
+        $this->baseTemplateDirectory = \WebFW\Framework\Core\FW_PATH . '/CMS/Templates';
+        $this->templateDirectory = \WebFW\Framework\Core\FW_PATH . '/CMS/Templates';
         $this->setPageTitle();
     }
 

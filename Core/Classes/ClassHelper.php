@@ -1,15 +1,15 @@
 <?php
 
-namespace WebFW\Core\Classes;
+namespace WebFW\Framework\Core\Classes;
 
-use WebFW\Cache\Cache;
-use WebFW\Cache\Classes\Cacheable;
-use WebFW\Cache\Classes\CacheGroupHelper;
-use WebFW\Core\Exception;
+use WebFW\Framework\Cache\Cache;
+use WebFW\Framework\Cache\Classes\tCacheable;
+use WebFW\Framework\Cache\Classes\CacheGroupHelper;
+use WebFW\Framework\Core\Exception;
 
 class ClassHelper extends BaseClass
 {
-    use Cacheable;
+    use tCacheable;
 
     protected static $classExtension = '.class.php';
 
@@ -28,7 +28,7 @@ class ClassHelper extends BaseClass
         }
 
         if ($directory === null) {
-            $directory = \WebFW\Core\BASE_PATH;
+            $directory = \WebFW\Framework\Core\BASE_PATH;
         }
         if (!file_exists($directory) || !is_dir($directory)) {
             throw new Exception('Directory ' . $directory . ' does not exist');
@@ -82,7 +82,7 @@ class ClassHelper extends BaseClass
                 continue;
             }
             $entry = $directory . DIRECTORY_SEPARATOR . $entry;
-            if ($entry === \WebFW\Core\PUBLIC_PATH) {
+            if ($entry === \WebFW\Framework\Core\PUBLIC_PATH) {
                 continue;
             }
             if (is_dir($entry)) {

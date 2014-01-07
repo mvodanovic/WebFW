@@ -1,15 +1,15 @@
 <?php
 
-namespace WebFW\CMS\Classes;
+namespace WebFW\Framework\CMS\Classes;
 
-use WebFW\Core\ArrayAccess;
+use WebFW\Framework\Core\ArrayAccess;
 
 /**
  * Class ListHelper
  *
  * Helper class containing functions with common operations on lists.
  *
- * @package WebFW\CMS
+ * @package WebFW\Framework\CMS
  */
 class ListHelper
 {

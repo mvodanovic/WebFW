@@ -1,11 +1,11 @@
 <?php
 
-namespace WebFW\Cache;
+namespace WebFW\Framework\Cache;
 
-use WebFW\Core\Classes\BaseClass;
-use WebFW\Core\Config;
-use WebFW\Core\Exception;
-use WebFW\Dev\Classes\DevHelper;
+use WebFW\Framework\Core\Classes\BaseClass;
+use WebFW\Framework\Core\Config;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Dev\Classes\DevHelper;
 
 /**
  * Class Cache
@@ -13,7 +13,7 @@ use WebFW\Dev\Classes\DevHelper;
  * Basic interface for the caching mechanism.
  * All cache provider interfaces should extend this class.
  *
- * @package WebFW\Cache
+ * @package WebFW\Framework\Cache
  */
 abstract class Cache extends BaseClass
 {
@@ -39,7 +39,7 @@ abstract class Cache extends BaseClass
      * Get the instance of the used cache provider.
      *
      * @return Cache
-     * @throws \WebFW\Core\Exception If an instance cannot be created
+     * @throws \WebFW\Framework\Core\Exception If an instance cannot be created
      */
     public static function getInstance()
     {

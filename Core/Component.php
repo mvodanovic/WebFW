@@ -1,14 +1,14 @@
 <?php
 
-namespace WebFW\Core;
+namespace WebFW\Framework\Core;
 
-use WebFW\Cache\Classes\Cacheable;
-use WebFW\Core\Classes\BaseClass;
-use WebFW\Externals\PHPTemplate;
+use WebFW\Framework\Cache\Classes\tCacheable;
+use WebFW\Framework\Core\Classes\BaseClass;
+use WebFW\Framework\Externals\PHPTemplate;
 
 abstract class Component extends BaseClass
 {
-    use Cacheable;
+    use tCacheable;
 
     protected $useTemplate = true;
     protected $params = array();
@@ -38,11 +38,7 @@ abstract class Component extends BaseClass
                     $this->getParam('templateDirectory')
                 );
             } catch (Exception $e) {
-                throw new Exception('Component template missing: '
-                    . $this->getParam('templateDirectory')
-                    . $this->getParam('template')
-                    . '.template.php'
-                );
+                throw new Exception('Template missing in component ' . static::className(), 500, $e);
             }
             $template->set('component', $this);
             $template->set('ownerObject', $this->ownerObject);
@@ -68,11 +64,8 @@ abstract class Component extends BaseClass
     protected function setDefaultParams()
     {
         $templateDirectory = explode('\\', static::className());
-        $templateDirectory = strtolower(end($templateDirectory));
-        $templateDirectory = \WebFW\Core\CMP_TEMPLATE_PATH
-            . DIRECTORY_SEPARATOR
-            . $templateDirectory
-            . DIRECTORY_SEPARATOR;
+        $templateDirectory = end($templateDirectory);
+        $templateDirectory = \WebFW\Framework\Core\CMP_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDirectory;
 
         $this->setParam('templateDirectory', $templateDirectory);
         $this->setParam('template', 'default');

@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\Database\TableConstraints;
+namespace WebFW\Framework\Database\TableConstraints;
 
-use WebFW\Core\Exception;
-use WebFW\Database\Table;
-use WebFW\Database\TableColumns\Column;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Database\Table;
+use WebFW\Framework\Database\TableColumns\Column;
 
 abstract class Constraint
 {

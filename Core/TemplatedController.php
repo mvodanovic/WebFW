@@ -1,12 +1,13 @@
 <?php
 
-namespace WebFW\Core;
+namespace WebFW\Framework\Core;
 
-use WebFW\Externals\PHPTemplate;
+use WebFW\Framework\Externals\PHPTemplate;
 
 abstract class TemplatedController extends Controller
 {
-    protected $template = 'default';
+    protected $template;
+    protected $templateDirectory;
     protected $useTemplate = true;
     protected $templateVariables = array();
 
@@ -17,10 +18,14 @@ abstract class TemplatedController extends Controller
         parent::__construct();
 
         if ($this->action !== static::DEFAULT_ACTION_NAME) {
-            $this->template = strtolower($this->action);
+            $this->template = $this->action;
         } else {
             $this->template = static::DEFAULT_TEMPLATE_NAME;
         }
+
+        $templateDir = explode('\\', static::className());
+        $templateDir = end($templateDir);
+        $this->templateDirectory = \WebFW\Framework\Core\CTL_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDir;
     }
 
     public function processOutput()
@@ -33,14 +38,10 @@ abstract class TemplatedController extends Controller
             return;
         }
 
-        $templateDir = explode('\\', static::className());
-        $templateDir = strtolower(end($templateDir));
-        $templateDir = \WebFW\Core\CTL_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDir . DIRECTORY_SEPARATOR;
-
         try {
-            $template = new PHPTemplate($this->template . '.template.php', $templateDir);
+            $template = new PHPTemplate($this->template . '.template.php', $this->templateDirectory);
         } catch (Exception $e) {
-            throw new Exception('Controller template missing: ' . $templateDir . $this->template . '.template.php');
+            throw new Exception('Template missing in controller ' . static::className(), 500, $e);
         }
         foreach ($this->templateVariables as $name => &$value) {
             $template->set($name, $value);

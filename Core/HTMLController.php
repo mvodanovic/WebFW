@@ -1,17 +1,26 @@
 <?php
 
-namespace WebFW\Core;
+namespace WebFW\Framework\Core;
 
-use WebFW\Externals\PHPTemplate;
+use WebFW\Framework\Externals\PHPTemplate;
 
 abstract class HTMLController extends TemplatedController
 {
-    protected $baseTemplate = 'default';
+    protected $baseTemplate;
+    protected $baseTemplateDirectory;
     protected $pageTitle = '';
     protected $simpleOutput = false;
     protected $headHTML = array();
     protected $headJS = array();
     protected $headCSS = array();
+
+    protected function __construct()
+    {
+        parent::__construct();
+
+        $this->baseTemplate = static::DEFAULT_TEMPLATE_NAME;
+        $this->baseTemplateDirectory = \WebFW\Framework\Core\BASE_TEMPLATE_PATH;
+    }
 
     public function getTitle()
     {
@@ -47,12 +56,10 @@ abstract class HTMLController extends TemplatedController
                 );
             }
 
-            $templateDir = \WebFW\Core\BASE_TEMPLATE_PATH . DIRECTORY_SEPARATOR;
-
             try {
-                $template = new PHPTemplate($this->baseTemplate . '.template.php', $templateDir);
+                $template = new PHPTemplate($this->baseTemplate . '.template.php', $this->baseTemplateDirectory);
             } catch (Exception $e) {
-                throw new Exception('Base template missing: ' . $templateDir . $this->baseTemplate . '.template.php');
+                throw new Exception('Base template missing in controller ' . static::className(), 500, $e);
             }
             foreach ($this->templateVariables as $name => &$value) {
                 $template->set($name, $value);

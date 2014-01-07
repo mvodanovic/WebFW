@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\Core;
+namespace WebFW\Framework\Core;
 
-use WebFW\Core\Classes\BaseClass;
-use WebFW\Core\Classes\GeneralHelper;
-use WebFW\Core\Exceptions\NotFoundException;
+use WebFW\Framework\Core\Classes\BaseClass;
+use WebFW\Framework\Core\Classes\GeneralHelper;
+use WebFW\Framework\Core\Exceptions\NotFoundException;
 
 /**
  * Class Request
@@ -12,7 +12,7 @@ use WebFW\Core\Exceptions\NotFoundException;
  * Handles the request received from the client.
  * Is a singleton.
  *
- * @package WebFW\Core
+ * @package WebFW\Framework\Core
  */
 class Request extends BaseClass
 {

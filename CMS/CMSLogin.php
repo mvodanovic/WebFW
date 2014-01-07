@@ -1,22 +1,22 @@
 <?php
 
-namespace WebFW\CMS;
+namespace WebFW\Framework\CMS;
 
-use WebFW\CMS\DBLayer\ListFetchers\Navigation;
-use WebFW\CMS\DBLayer\Navigation as TGNavigation;
-use WebFW\Core\Classes\HTML\Button;
-use WebFW\Core\Classes\HTML\FormStart;
-use WebFW\Core\Classes\HTML\Input;
-use WebFW\Core\Classes\HTML\Message;
-use WebFW\Core\Exception;
-use WebFW\Core\HTMLController;
-use WebFW\Core\Exceptions\NotFoundException;
-use WebFW\Core\Exceptions\UnauthorizedException;
-use WebFW\Core\Exceptions\ForbiddenException;
-use WebFW\Core\Request;
-use WebFW\Core\SessionHandler;
-use WebFW\Core\Router;
-use WebFW\CMS\Classes\LoggedUser;
+use WebFW\Framework\CMS\DBLayer\ListFetchers\Navigation;
+use WebFW\Framework\CMS\DBLayer\Navigation as TGNavigation;
+use WebFW\Framework\Core\Classes\HTML\Button;
+use WebFW\Framework\Core\Classes\HTML\FormStart;
+use WebFW\Framework\Core\Classes\HTML\Input;
+use WebFW\Framework\Core\Classes\HTML\Message;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Core\HTMLController;
+use WebFW\Framework\Core\Exceptions\NotFoundException;
+use WebFW\Framework\Core\Exceptions\UnauthorizedException;
+use WebFW\Framework\Core\Exceptions\ForbiddenException;
+use WebFW\Framework\Core\Request;
+use WebFW\Framework\Core\SessionHandler;
+use WebFW\Framework\Core\Router;
+use WebFW\Framework\CMS\Classes\LoggedUser;
 
 class CMSLogin extends HTMLController
 {
@@ -24,13 +24,13 @@ class CMSLogin extends HTMLController
     {
         parent::__construct();
 
-        $this->addLinkedCSS('/static/css/webfw/reset.css');
-        $this->addLinkedCSS('/static/css/webfw/formalize.css');
-        $this->addLinkedCSS('/static/css/webfw/cms.css');
-        $this->addLinkedCSS('/static/css/webfw/jquery-ui-1.10.3.custom.min.css');
-        $this->addLinkedJS('/static/js/webfw/jquery-1.10.2.min.js');
-        $this->addLinkedJS('/static/js/webfw/jquery-ui-1.10.3.custom.min.js');
-        $this->addLinkedJS('/static/js/webfw/cmspage.class.js');
+        $this->addLinkedCSS('/Static/CSS/WebFW/reset.css');
+        $this->addLinkedCSS('/Static/CSS/WebFW/formalize.css');
+        $this->addLinkedCSS('/Static/CSS/WebFW/cms.css');
+        $this->addLinkedCSS('/Static/CSS/WebFW/jquery-ui-1.10.3.custom.min.css');
+        $this->addLinkedJS('/Static/JS/WebFW/jquery-1.10.2.min.js');
+        $this->addLinkedJS('/Static/JS/WebFW/jquery-ui-1.10.3.custom.min.js');
+        $this->addLinkedJS('/Static/JS/WebFW/cmspage.class.js');
         $this->addHeadMeta('Content-Type', 'text/html; charset=UTF-8', 'http-equiv');
     }
 
@@ -47,8 +47,10 @@ class CMSLogin extends HTMLController
 
         $this->setTemplateVariables(null, null);
 
-        $this->baseTemplate = \WebFW\Core\FW_PATH . '/cms/templates/base';
-        $this->template = \WebFW\Core\FW_PATH . '/cms/templates/login';
+        $this->baseTemplate = 'base';
+        $this->baseTemplateDirectory = \WebFW\Framework\Core\FW_PATH . '/cms/templates';
+        $this->template = 'login';
+        $this->templateDirectory = \WebFW\Framework\Core\FW_PATH . '/cms/templates';
         $this->pageTitle = 'CMS Login' . Controller::TITLE_SUFFIX;
     }
 

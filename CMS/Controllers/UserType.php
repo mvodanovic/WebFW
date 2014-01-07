@@ -1,16 +1,16 @@
 <?php
 
-namespace WebFW\CMS\Controllers;
+namespace WebFW\Framework\CMS\Controllers;
 
-use WebFW\CMS\ListController;
-use WebFW\CMS\DBLayer\ListFetchers\UserType as LFUserType;
-use WebFW\CMS\DBLayer\UserType as TGUserType;
-use WebFW\CMS\DBLayer\User as TGUser;
-use WebFW\CMS\DBLayer\Tables\User as TUser;
-use WebFW\Core\Classes\HTML\Input;
-use WebFW\CMS\Classes\EditTab;
-use WebFW\Core\Classes\HTML\ReferencedListPicker;
-use WebFW\Core\Route;
+use WebFW\Framework\CMS\ListController;
+use WebFW\Framework\CMS\DBLayer\ListFetchers\UserType as LFUserType;
+use WebFW\Framework\CMS\DBLayer\UserType as TGUserType;
+use WebFW\Framework\CMS\DBLayer\User as TGUser;
+use WebFW\Framework\CMS\DBLayer\Tables\User as TUser;
+use WebFW\Framework\Core\Classes\HTML\Input;
+use WebFW\Framework\CMS\Classes\EditTab;
+use WebFW\Framework\Core\Classes\HTML\ReferencedListPicker;
+use WebFW\Framework\Core\Route;
 
 class UserType extends ListController
 {

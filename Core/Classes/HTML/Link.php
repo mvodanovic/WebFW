@@ -1,15 +1,15 @@
 <?php
 
-namespace WebFW\Core\Classes\HTML;
+namespace WebFW\Framework\Core\Classes\HTML;
 
-use WebFW\Core\Classes\HTML\Base\GeneralHTMLItem;
+use WebFW\Framework\Core\Classes\HTML\Base\GeneralHTMLItem;
 
 /**
  * Class Link
  *
  * A class for creating HTML links (anchors).
  *
- * @package WebFW\Core
+ * @package WebFW\Framework\Core
  */
 class Link extends GeneralHTMLItem
 {

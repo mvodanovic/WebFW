@@ -1,16 +1,17 @@
 <?php
 
-namespace WebFW\Core\DBLayer\ListFetchers;
+namespace WebFW\Framework\Core\DBLayer\ListFetchers;
 
-use WebFW\Database\ListFetcher;
-use WebFW\Core\DBLayer\Tables\RouteDefinitionParam as TRouteDefinitionParam;
+use WebFW\Framework\Database\ListFetcher;
+use WebFW\Framework\Core\DBLayer\Tables\RouteDefinitionParam as TRouteDefinitionParam;
+use WebFW\Framework\Core\DBLayer\RouteDefinitionParam as TGRouteDefinitionParam;
 
 class RouteDefinitionParam extends ListFetcher
 {
     public function __construct()
     {
         $this->setTable(TRouteDefinitionParam::getInstance());
-        $this->setTableGateway('RouteDefinitionParam', '\\WebFW\\Core\\DBLayer\\');
+        $this->setTableGateway(TGRouteDefinitionParam::className());
         parent::__construct();
     }
 }

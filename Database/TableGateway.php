@@ -1,27 +1,27 @@
 <?php
 
-namespace WebFW\Database;
+namespace WebFW\Framework\Database;
 
-use WebFW\Cache\Cache;
-use WebFW\Cache\Classes\Cacheable;
-use WebFW\Cache\Classes\CacheGroupHelper;
-use WebFW\Core\Interfaces\iValidate;
-use WebFW\Database\TableColumns\Column;
-use WebFW\Database\TableConstraints\ForeignKey;
-use WebFW\Database\Query\Select;
-use WebFW\Database\Query\Insert;
-use WebFW\Database\Query\Update;
-use WebFW\Database\Query\Delete;
-use WebFW\Core\Exceptions\DBException;
-use WebFW\Core\Exceptions\NotFoundException;
-use WebFW\Core\Exception;
-use WebFW\Core\ArrayAccess;
+use WebFW\Framework\Cache\Cache;
+use WebFW\Framework\Cache\Classes\tCacheable;
+use WebFW\Framework\Cache\Classes\CacheGroupHelper;
+use WebFW\Framework\Core\Interfaces\iValidate;
+use WebFW\Framework\Database\TableColumns\Column;
+use WebFW\Framework\Database\TableConstraints\ForeignKey;
+use WebFW\Framework\Database\Query\Select;
+use WebFW\Framework\Database\Query\Insert;
+use WebFW\Framework\Database\Query\Update;
+use WebFW\Framework\Database\Query\Delete;
+use WebFW\Framework\Core\Exceptions\DBException;
+use WebFW\Framework\Core\Exceptions\NotFoundException;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Core\ArrayAccess;
 
 abstract class TableGateway extends ArrayAccess implements iValidate
 {
-    use Cacheable {
-        getCacheExpirationTime as private getCacheExpirationTimeFromCacheable;
-        isCacheEnabled as private isCacheEnabledFromCacheable;
+    use tCacheable {
+        getCacheExpirationTime as private getCacheExpirationTimeFromtCacheable;
+        isCacheEnabled as private isCacheEnabledFromtCacheable;
     }
 
     const PRIMARY_KEY_PREFIX = 'pk_';
@@ -75,7 +75,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
      * @param string $collectionFieldName Name under which the list will be stored in the table gateway
      * @param ForeignKey $foreignKey The foreign key instance
      * @param string $listFetcher Name of the list fetcher
-     * @throws \WebFW\Core\Exception If called with invalid parameters
+     * @throws \WebFW\Framework\Core\Exception If called with invalid parameters
      * @see useForeignListFetchers
      */
     public function addForeignListFetcher($collectionFieldName, ForeignKey $foreignKey, $listFetcher)
@@ -830,7 +830,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 
     public function getCacheExpirationTime()
     {
-        $expirationTime = static::getCacheExpirationTimeFromCacheable();
+        $expirationTime = static::getCacheExpirationTimeFromtCacheable();
         if ($expirationTime === null) {
             $expirationTime = $this->table->getCacheExpirationTime();
         }
@@ -840,7 +840,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
 
     public function isCacheEnabled()
     {
-        $isCacheEnabled = static::isCacheEnabledFromCacheable();
+        $isCacheEnabled = static::isCacheEnabledFromtCacheable();
         if ($isCacheEnabled === false) {
             $isCacheEnabled = $this->table->isCacheEnabled();
         }

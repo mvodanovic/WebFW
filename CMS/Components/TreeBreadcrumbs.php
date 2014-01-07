@@ -1,31 +1,30 @@
 <?php
 
-namespace WebFW\CMS\Components;
+namespace WebFW\Framework\CMS\Components;
 
-use WebFW\CMS\Classes\EditTab;
-use WebFW\CMS\DBLayer\Navigation as TGNavigation;
-use WebFW\CMS\TreeController;
-use WebFW\Core\Classes\HTML\Link;
-use WebFW\Core\Component;
-use WebFW\Core\Exceptions\NotFoundException;
-use WebFW\Database\TreeTableGateway;
+use WebFW\Framework\CMS\Classes\EditTab;
+use WebFW\Framework\CMS\DBLayer\Navigation as TGNavigation;
+use WebFW\Framework\CMS\TreeController;
+use WebFW\Framework\Core\Classes\HTML\Link;
+use WebFW\Framework\Core\Component;
+use WebFW\Framework\Core\Controller;
+use WebFW\Framework\Core\Exceptions\NotFoundException;
+use WebFW\Framework\Database\TreeTableGateway;
 
 class TreeBreadcrumbs extends Component
 {
-    /** @var TreeController */
-    protected $controller;
-
     public function execute()
     {
-        if (!($this->controller instanceof TreeController)) {
+        $controller = Controller::getInstance();
+        if (!($controller instanceof TreeController)) {
             $this->useTemplate = false;
             return;
         }
 
         /** @var TGNavigation $node */
-        $node = $this->controller->getTableGateway();
+        $node = $controller->getTableGateway();
         $nodeColumns = $node->getParentNodeKeyColumns();
-        $treeFilter = $this->controller->getParentNodeValues();
+        $treeFilter = $controller->getParentNodeValues();
         $parentNodeKey = array();
         foreach ($treeFilter as $parentColumn => $value) {
             $parentNodeKey[$nodeColumns[$parentColumn]] = $value;
@@ -43,7 +42,7 @@ class TreeBreadcrumbs extends Component
             foreach ($node->getParentNodeKeyColumns() as $parentColumn => $childColumn) {
                 $key[EditTab::FIELD_PREFIX . $parentColumn] = $node->$childColumn;
             }
-            $url = $this->controller->getURL(null, false, $key, false);
+            $url = $controller->getURL(null, false, $key, false);
             $options = array(
                 'label' => $node->getCaption(),
             );
@@ -56,7 +55,7 @@ class TreeBreadcrumbs extends Component
             'icons' => array('primary' => 'ui-icon-home'),
             'text' => false,
         );
-        $link = new Link(null, $this->controller->getURL(null, false, null, false), $options);
+        $link = new Link(null, $controller->getURL(null, false, null, false), $options);
         $breadcrumbs[] = $link;
         $breadcrumbs[0]->addClass('ui-state-active');
         $breadcrumbs[0]->addClass('ui-state-persist');
@@ -70,6 +69,6 @@ class TreeBreadcrumbs extends Component
         parent::setDefaultParams();
 
         $this->setParam('template', 'treebreadcrumbs');
-        $this->setParam('templateDirectory', \WebFW\Core\FW_PATH . '/cms/templates/components/');
+        $this->setParam('templateDirectory', \WebFW\Framework\Core\FW_PATH . '/CMS/Templates/Components');
     }
 }

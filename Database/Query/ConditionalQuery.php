@@ -1,6 +1,6 @@
 <?php
 
-namespace WebFW\Database\Query;
+namespace WebFW\Framework\Database\Query;
 
 abstract class ConditionalQuery extends Query
 {

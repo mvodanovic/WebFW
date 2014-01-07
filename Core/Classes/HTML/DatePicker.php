@@ -1,6 +1,6 @@
 <?php
 
-namespace WebFW\Core\Classes\HTML;
+namespace WebFW\Framework\Core\Classes\HTML;
 
 class DatePicker extends Input
 {

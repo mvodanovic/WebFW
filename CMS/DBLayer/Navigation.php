@@ -1,12 +1,12 @@
 <?php
 
-namespace WebFW\CMS\DBLayer;
+namespace WebFW\Framework\CMS\DBLayer;
 
-use WebFW\CMS\DBLayer\ListFetchers\Navigation as NavigationLF;
-use WebFW\CMS\DBLayer\Tables\Navigation as NavigationT;
-use WebFW\Core\Classes\HTML\Link;
-use WebFW\Core\Route;
-use WebFW\Database\TreeTableGateway;
+use WebFW\Framework\CMS\DBLayer\ListFetchers\Navigation as NavigationLF;
+use WebFW\Framework\CMS\DBLayer\Tables\Navigation as NavigationT;
+use WebFW\Framework\Core\Classes\HTML\Link;
+use WebFW\Framework\Core\Route;
+use WebFW\Framework\Database\TreeTableGateway;
 
 class Navigation extends TreeTableGateway
 {

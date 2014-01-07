@@ -1,14 +1,14 @@
 <?php
 
-use WebFW\CMS\Components\Filter;
-use WebFW\CMS\Components\Listing;
-use WebFW\CMS\Components\TreeBreadcrumbs;
-use WebFW\Core\Framework;
+use WebFW\Framework\CMS\Components\Filter;
+use WebFW\Framework\CMS\Components\Listing;
+use WebFW\Framework\CMS\Components\TreeBreadcrumbs;
+use WebFW\Framework\Core\Framework;
 
 ?>
 <?=Framework::runComponent(Filter::className()); ?>
 <?=Framework::runComponent(TreeBreadcrumbs::className()); ?>
 <?=Framework::runComponent(Listing::className(), array(
     'template' => 'images.listing',
-    'templateDirectory' => \WebFW\Core\FW_PATH . '/media/templates/cms/components/',
+    'templateDirectory' => \WebFW\Framework\Core\FW_PATH . '/Media/Templates/CMS/Components',
 )); ?>

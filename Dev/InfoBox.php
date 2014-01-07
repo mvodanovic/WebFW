@@ -1,16 +1,16 @@
 <?php
 
-namespace WebFW\Dev;
+namespace WebFW\Framework\Dev;
 
-use WebFW\Core\Classes\BaseClass;
-use WebFW\Externals\PHPTemplate;
+use WebFW\Framework\Core\Classes\BaseClass;
+use WebFW\Framework\Externals\PHPTemplate;
 
 /**
  * Class InfoBox
  *
  * Represents an info box used to display additional info on pages in dev mode.
  *
- * @package WebFW\Dev
+ * @package WebFW\Framework\Dev
  */
 class InfoBox extends BaseClass
 {
@@ -22,12 +22,9 @@ class InfoBox extends BaseClass
 
     public function __construct()
     {
-        $this->templateDir = \WebFW\Core\FW_PATH
-            . DIRECTORY_SEPARATOR
-            . 'dev'
-            . DIRECTORY_SEPARATOR
-            . 'templates'
-            . DIRECTORY_SEPARATOR;
+        $this->templateDir = \WebFW\Framework\Core\FW_PATH
+            . DIRECTORY_SEPARATOR . 'Dev'
+            . DIRECTORY_SEPARATOR . 'Templates';
         $this->templateName = 'infobox.template.php';
     }
 

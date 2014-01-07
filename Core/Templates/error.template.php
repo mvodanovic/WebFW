@@ -1,6 +1,6 @@
 <?php
-    use WebFW\Core\Exception;
-    use WebFW\Core\Config;
+    use WebFW\Framework\Core\Exception;
+    use WebFW\Framework\Core\Config;
     /** @var $this Exception */
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">

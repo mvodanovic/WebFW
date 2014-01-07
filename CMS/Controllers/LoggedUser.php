@@ -1,12 +1,12 @@
 <?php
 
-namespace WebFW\CMS\Controllers;
+namespace WebFW\Framework\CMS\Controllers;
 
-use WebFW\CMS\ItemController;
-use WebFW\Core\Classes\HTML\Input;
-use WebFW\Core\Classes\HTML\Textarea;
-use WebFW\CMS\Classes\EditTab;
-use WebFW\CMS\Classes\LoggedUser as LUClass;
+use WebFW\Framework\CMS\ItemController;
+use WebFW\Framework\Core\Classes\HTML\Input;
+use WebFW\Framework\Core\Classes\HTML\Textarea;
+use WebFW\Framework\CMS\Classes\EditTab;
+use WebFW\Framework\CMS\Classes\LoggedUser as LUClass;
 
 class LoggedUser extends ItemController
 {

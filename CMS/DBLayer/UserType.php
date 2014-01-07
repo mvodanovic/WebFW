@@ -1,9 +1,9 @@
 <?php
 
-namespace WebFW\CMS\DBLayer;
+namespace WebFW\Framework\CMS\DBLayer;
 
-use WebFW\Database\TableGateway;
-use WebFW\CMS\DBLayer\Tables\UserType as UserTypeT;
+use WebFW\Framework\Database\TableGateway;
+use WebFW\Framework\CMS\DBLayer\Tables\UserType as UserTypeT;
 
 class UserType extends TableGateway
 {

@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\CMS\DBLayer\ListFetchers;
+namespace WebFW\Framework\CMS\DBLayer\ListFetchers;
 
-use WebFW\Database\ListFetcher;
-use WebFW\CMS\DBLayer\Tables\Navigation as NavigationT;
-use WebFW\CMS\DBLayer\Navigation as NavigationTG;
+use WebFW\Framework\Database\ListFetcher;
+use WebFW\Framework\CMS\DBLayer\Tables\Navigation as NavigationT;
+use WebFW\Framework\CMS\DBLayer\Navigation as NavigationTG;
 
 class Navigation extends ListFetcher
 {

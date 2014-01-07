@@ -1,19 +1,19 @@
 <?php
 
-namespace WebFW\CMS;
+namespace WebFW\Framework\CMS;
 
-use WebFW\CMS\Classes\EditAction;
-use WebFW\CMS\Classes\EditTab;
-use WebFW\CMS\Classes\ListAction;
-use WebFW\CMS\Classes\ListRowAction;
-use WebFW\CMS\Classes\PermissionsHelper;
-use WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
-use WebFW\Core\Classes\HTML\Button;
-use WebFW\Core\Classes\HTML\Input;
-use WebFW\Core\Classes\HTML\Link;
-use WebFW\Core\Exception;
-use WebFW\Core\Request;
-use WebFW\Database\TreeTableGateway;
+use WebFW\Framework\CMS\Classes\EditAction;
+use WebFW\Framework\CMS\Classes\EditTab;
+use WebFW\Framework\CMS\Classes\ListAction;
+use WebFW\Framework\CMS\Classes\ListRowAction;
+use WebFW\Framework\CMS\Classes\PermissionsHelper;
+use WebFW\Framework\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
+use WebFW\Framework\Core\Classes\HTML\Button;
+use WebFW\Framework\Core\Classes\HTML\Input;
+use WebFW\Framework\Core\Classes\HTML\Link;
+use WebFW\Framework\Core\Exception;
+use WebFW\Framework\Core\Request;
+use WebFW\Framework\Database\TreeTableGateway;
 
 abstract class TreeController extends ListController
 {

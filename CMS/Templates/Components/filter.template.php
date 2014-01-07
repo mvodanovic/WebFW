@@ -1,8 +1,8 @@
 <?php
 
-use WebFW\Core\Classes\HTML\Base\BaseFormItem;
-use WebFW\Core\Classes\HTML\FormStart;
-use WebFW\Core\Classes\HTML\Button;
+use WebFW\Framework\Core\Classes\HTML\Base\BaseFormItem;
+use WebFW\Framework\Core\Classes\HTML\FormStart;
+use WebFW\Framework\Core\Classes\HTML\Button;
 
 /** @var FormStart $form */
 /** @var array $filters */

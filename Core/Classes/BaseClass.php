@@ -1,13 +1,13 @@
 <?php
 
-namespace WebFW\Core\Classes;
+namespace WebFW\Framework\Core\Classes;
 
 /**
  * Class BaseClass
  *
  * Base class for almost all classes in the framework.
  *
- * @package WebFW\Core
+ * @package WebFW\Framework\Core
  */
 abstract class BaseClass
 {
