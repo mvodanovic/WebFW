@@ -1,6 +1,6 @@
 <?php
 
-namespace WebFW\Framework\Core\Classes\HTML\Base;
+namespace mvodanovic\WebFW\Core\Classes\HTML\Base;
 
 abstract class CompoundFormItem extends BaseFormItem
 {

@@ -1,14 +1,14 @@
 <?php
-namespace WebFW\Framework\Database;
+namespace mvodanovic\WebFW\Database;
 
-use WebFW\Framework\Cache\Classes\tCacheable;
-use WebFW\Framework\Core\Classes\BaseClass;
-use WebFW\Framework\Database\TableColumns\Column;
-use WebFW\Framework\Database\TableConstraints\Constraint;
-use WebFW\Framework\Database\TableConstraints\ForeignKey;
-use WebFW\Framework\Database\TableConstraints\PrimaryKey;
-use WebFW\Framework\Core\Exception;
-use WebFW\Framework\Database\TableConstraints\Unique;
+use mvodanovic\WebFW\Cache\Classes\tCacheable;
+use mvodanovic\WebFW\Core\Classes\BaseClass;
+use mvodanovic\WebFW\Database\TableColumns\Column;
+use mvodanovic\WebFW\Database\TableConstraints\Constraint;
+use mvodanovic\WebFW\Database\TableConstraints\ForeignKey;
+use mvodanovic\WebFW\Database\TableConstraints\PrimaryKey;
+use mvodanovic\WebFW\Core\Exception;
+use mvodanovic\WebFW\Database\TableConstraints\Unique;
 
 abstract class Table extends BaseClass
 {

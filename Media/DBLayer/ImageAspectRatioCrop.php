@@ -1,15 +1,15 @@
 <?php
 
-namespace WebFW\Framework\Media\DBLayer;
+namespace mvodanovic\WebFW\Media\DBLayer;
 
-use WebFW\Framework\Core\Exceptions\NotFoundException;
-use WebFW\Framework\Database\TableGateway;
-use WebFW\Framework\Media\Classes\ImageHelper;
-use WebFW\Framework\Media\DBLayer\Tables\ImageAspectRatioCrop as ImageAspectRatioCropT;
+use mvodanovic\WebFW\Core\Exceptions\NotFoundException;
+use mvodanovic\WebFW\Database\TableGateway;
+use mvodanovic\WebFW\Media\Classes\ImageHelper;
+use mvodanovic\WebFW\Media\DBLayer\Tables\ImageAspectRatioCrop as ImageAspectRatioCropT;
 
 /**
  * Class ImageAspectRatioCrop
- * @package WebFW\Framework\Media
+ * @package mvodanovic\WebFW
  *
  * @property $image_id
  * @property $aspect_ratio_id

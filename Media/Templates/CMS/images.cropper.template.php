@@ -1,16 +1,16 @@
 <?php
 
-use WebFW\Framework\CMS\Classes\EditTab;
-use WebFW\Framework\CMS\Classes\Tooltip;
-use WebFW\Framework\Core\Classes\HTML\Button;
-use WebFW\Framework\Core\Classes\HTML\FormStart;
-use WebFW\Framework\Core\Classes\HTML\Input;
-use WebFW\Framework\Core\Classes\HTML\Message;
-use WebFW\Framework\Core\Controller;
-use WebFW\Framework\Media\Classes\ImageHelper;
-use WebFW\Framework\Media\Controllers\CMS\Image as ImageController;
-use WebFW\Framework\Media\DBLayer\Image;
-use WebFW\Framework\Media\DBLayer\ImageAspectRatio;
+use mvodanovic\WebFW\CMS\Classes\EditTab;
+use mvodanovic\WebFW\CMS\Classes\Tooltip;
+use mvodanovic\WebFW\Core\Classes\HTML\Button;
+use mvodanovic\WebFW\Core\Classes\HTML\FormStart;
+use mvodanovic\WebFW\Core\Classes\HTML\Input;
+use mvodanovic\WebFW\Core\Classes\HTML\Message;
+use mvodanovic\WebFW\Core\Controller;
+use mvodanovic\WebFW\Media\Classes\ImageHelper;
+use mvodanovic\WebFW\Media\Controllers\CMS\Image as ImageController;
+use mvodanovic\WebFW\Media\DBLayer\Image;
+use mvodanovic\WebFW\Media\DBLayer\ImageAspectRatio;
 
 $controller = ImageController::getInstance();
 

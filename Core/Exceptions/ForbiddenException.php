@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Core\Exceptions;
+namespace mvodanovic\WebFW\Core\Exceptions;
 
-use WebFW\Framework\Core\Exception;
+use mvodanovic\WebFW\Core\Exception;
 
 /**
  * Class ForbiddenException
@@ -10,7 +10,7 @@ use WebFW\Framework\Core\Exception;
  * Exception intended to be thrown when the user tries to access a resource he doesn't have sufficient privileges for.
  * This exception has it's code automatically set to 403.
  *
- * @package WebFW\Framework\Core\Exceptions
+ * @package mvodanovic\WebFW\Exceptions
  * @see Exception
  */
 class ForbiddenException extends Exception

@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\Framework\Core;
+namespace mvodanovic\WebFW\Core;
 
-use WebFW\Framework\Cache\Classes\tCacheable;
-use WebFW\Framework\Core\Classes\BaseClass;
-use WebFW\Framework\Externals\PHPTemplate;
+use mvodanovic\WebFW\Cache\Classes\tCacheable;
+use mvodanovic\WebFW\Core\Classes\BaseClass;
+use mvodanovic\WebFW\Externals\PHPTemplate;
 
 abstract class Component extends BaseClass
 {
@@ -65,7 +65,7 @@ abstract class Component extends BaseClass
     {
         $templateDirectory = explode('\\', static::className());
         $templateDirectory = end($templateDirectory);
-        $templateDirectory = \WebFW\Framework\Core\CMP_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDirectory;
+        $templateDirectory = \mvodanovic\WebFW\Core\CMP_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDirectory;
 
         $this->setParam('templateDirectory', $templateDirectory);
         $this->setParam('template', 'default');

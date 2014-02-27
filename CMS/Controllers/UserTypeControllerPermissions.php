@@ -1,17 +1,17 @@
 <?php
 
-namespace WebFW\Framework\CMS\Controllers;
+namespace mvodanovic\WebFW\CMS\Controllers;
 
-use WebFW\Framework\CMS\Classes\ListHelper;
-use WebFW\Framework\CMS\Controller;
-use WebFW\Framework\CMS\ListController;
-use WebFW\Framework\CMS\DBLayer\ListFetchers\UserTypeControllerPermissions as LFUTCP;
-use WebFW\Framework\CMS\DBLayer\UserTypeControllerPermissions as TGUTCP;
-use WebFW\Framework\Core\Classes\ClassHelper;
-use WebFW\Framework\Core\Classes\HTML\Input;
-use WebFW\Framework\CMS\Classes\EditTab;
-use WebFW\Framework\Core\Classes\HTML\Select;
-use WebFW\Framework\CMS\DBLayer\ListFetchers\UserType as LFUserType;
+use mvodanovic\WebFW\CMS\Classes\ListHelper;
+use mvodanovic\WebFW\CMS\Controller;
+use mvodanovic\WebFW\CMS\ListController;
+use mvodanovic\WebFW\CMS\DBLayer\ListFetchers\UserTypeControllerPermissions as LFUTCP;
+use mvodanovic\WebFW\CMS\DBLayer\UserTypeControllerPermissions as TGUTCP;
+use mvodanovic\WebFW\Core\Classes\ClassHelper;
+use mvodanovic\WebFW\Core\Classes\HTML\Input;
+use mvodanovic\WebFW\CMS\Classes\EditTab;
+use mvodanovic\WebFW\Core\Classes\HTML\Select;
+use mvodanovic\WebFW\CMS\DBLayer\ListFetchers\UserType as LFUserType;
 
 class UserTypeControllerPermissions extends ListController
 {

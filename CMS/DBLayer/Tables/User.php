@@ -1,14 +1,14 @@
 <?php
 
-namespace WebFW\Framework\CMS\DBLayer\Tables;
+namespace mvodanovic\WebFW\CMS\DBLayer\Tables;
 
-use WebFW\Framework\Database\Table;
-use WebFW\Framework\Database\TableColumns\IntegerColumn;
-use WebFW\Framework\Database\TableColumns\VarcharColumn;
-use WebFW\Framework\Database\TableColumns\BooleanColumn;
-use WebFW\Framework\Database\TableConstraints\PrimaryKey;
-use WebFW\Framework\Database\TableConstraints\ForeignKey;
-use WebFW\Framework\Database\TableConstraints\Unique;
+use mvodanovic\WebFW\Database\Table;
+use mvodanovic\WebFW\Database\TableColumns\IntegerColumn;
+use mvodanovic\WebFW\Database\TableColumns\VarcharColumn;
+use mvodanovic\WebFW\Database\TableColumns\BooleanColumn;
+use mvodanovic\WebFW\Database\TableConstraints\PrimaryKey;
+use mvodanovic\WebFW\Database\TableConstraints\ForeignKey;
+use mvodanovic\WebFW\Database\TableConstraints\Unique;
 
 class User extends Table
 {

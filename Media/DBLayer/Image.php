@@ -1,17 +1,17 @@
 <?php
 
-namespace WebFW\Framework\Media\DBLayer;
+namespace mvodanovic\WebFW\Media\DBLayer;
 
-use WebFW\Framework\CMS\Classes\EditTab;
-use WebFW\Framework\Core\Router;
-use WebFW\Framework\Database\TableGateway;
-use WebFW\Framework\Media\Classes\ImageHelper;
-use WebFW\Framework\Media\Controllers\InternalImage;
-use WebFW\Framework\Media\DBLayer\Tables\Image as ImageT;
+use mvodanovic\WebFW\CMS\Classes\EditTab;
+use mvodanovic\WebFW\Core\Router;
+use mvodanovic\WebFW\Database\TableGateway;
+use mvodanovic\WebFW\Media\Classes\ImageHelper;
+use mvodanovic\WebFW\Media\Controllers\InternalImage;
+use mvodanovic\WebFW\Media\DBLayer\Tables\Image as ImageT;
 
 /**
  * Class Image
- * @package WebFW\Framework\Media\DBLayer
+ * @package mvodanovic\WebFW
  *
  * @property $image_id
  * @property $image_type_id

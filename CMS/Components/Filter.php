@@ -1,14 +1,14 @@
 <?php
 
-namespace WebFW\Framework\CMS\Components;
+namespace mvodanovic\WebFW\CMS\Components;
 
-use WebFW\Framework\Core\Classes\HTML\Button;
-use WebFW\Framework\Core\Classes\HTML\FormStart;
-use WebFW\Framework\Core\Component;
-use WebFW\Framework\Core\Exception;
-use WebFW\Framework\CMS\ListController;
-use WebFW\Framework\Core\Route;
-use WebFW\Framework\Dev\Controller;
+use mvodanovic\WebFW\Core\Classes\HTML\Button;
+use mvodanovic\WebFW\Core\Classes\HTML\FormStart;
+use mvodanovic\WebFW\Core\Component;
+use mvodanovic\WebFW\Core\Exception;
+use mvodanovic\WebFW\CMS\ListController;
+use mvodanovic\WebFW\Core\Route;
+use mvodanovic\WebFW\Dev\Controller;
 
 class Filter extends Component
 {
@@ -54,6 +54,6 @@ class Filter extends Component
         parent::setDefaultParams();
 
         $this->setParam('template', 'filter');
-        $this->setParam('templateDirectory', \WebFW\Framework\Core\FW_PATH . '/CMS/Templates/Components');
+        $this->setParam('templateDirectory', \mvodanovic\WebFW\Core\FW_PATH . '/CMS/Templates/Components');
     }
 }

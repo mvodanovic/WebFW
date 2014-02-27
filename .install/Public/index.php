@@ -2,7 +2,7 @@
 /**
  * Entry point for the framework.
  *
- * @package WebFW\Framework\Core
+ * @package mvodanovic\WebFW
  */
 
 session_start();
@@ -22,10 +22,10 @@ if (!file_exists('../WebFW/Framework/Core/__bootstrap.php')) {
 require_once('../WebFW/Framework/Core/__bootstrap.php');
 
 try {
-    \WebFW\Framework\Core\Framework::start();
-} catch (\WebFW\Framework\Core\Exception $e) {
+    \mvodanovic\WebFW\Core\Framework::start();
+} catch (\mvodanovic\WebFW\Core\Exception $e) {
     $e->ErrorMessage();
 } catch (Exception $e) {
-    $e = new \WebFW\Framework\Core\Exception($e->getMessage(), $e->getCode(), $e);
+    $e = new \mvodanovic\WebFW\Core\Exception($e->getMessage(), $e->getCode(), $e);
     $e->ErrorMessage();
 }

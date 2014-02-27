@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\Framework\Core\DBLayer\ListFetchers;
+namespace mvodanovic\WebFW\Core\DBLayer\ListFetchers;
 
-use WebFW\Framework\Database\ListFetcher;
-use WebFW\Framework\Core\DBLayer\Tables\RouteDefinitionRegex as TRouteDefinitionRegex;
-use WebFW\Framework\Core\DBLayer\RouteDefinitionRegex as TGRouteDefinitionRegex;
+use mvodanovic\WebFW\Database\ListFetcher;
+use mvodanovic\WebFW\Core\DBLayer\Tables\RouteDefinitionRegex as TRouteDefinitionRegex;
+use mvodanovic\WebFW\Core\DBLayer\RouteDefinitionRegex as TGRouteDefinitionRegex;
 
 class RouteDefinitionRegex extends ListFetcher
 {

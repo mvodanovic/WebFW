@@ -1,15 +1,15 @@
 <?php
 
-use WebFW\Framework\CMS\Classes\ListAction;
-use WebFW\Framework\CMS\Classes\ListMassAction;
-use WebFW\Framework\CMS\Components\Listing;
-use WebFW\Framework\Core\Classes\HTML\Message;
-use WebFW\Framework\Core\Components\Paginator;
-use WebFW\Framework\Core\Controller;
-use WebFW\Framework\Core\Framework;
-use WebFW\Framework\Media\Controllers\CMS\Image;
-use WebFW\Framework\Media\DBLayer\Image as TGImage;
-use WebFW\Framework\Media\DBLayer\ImageVariation;
+use mvodanovic\WebFW\CMS\Classes\ListAction;
+use mvodanovic\WebFW\CMS\Classes\ListMassAction;
+use mvodanovic\WebFW\CMS\Components\Listing;
+use mvodanovic\WebFW\Core\Classes\HTML\Message;
+use mvodanovic\WebFW\Core\Components\Paginator;
+use mvodanovic\WebFW\Core\Controller;
+use mvodanovic\WebFW\Core\Framework;
+use mvodanovic\WebFW\Media\Controllers\CMS\Image;
+use mvodanovic\WebFW\Media\DBLayer\Image as TGImage;
+use mvodanovic\WebFW\Media\DBLayer\ImageVariation;
 
 /**
  * @var Listing $component
@@ -45,7 +45,7 @@ $variation = $controller->getVariationObject();
     Paginator::className(),
     array(
         'template' => 'paginator',
-        'templateDirectory' => \WebFW\Framework\Core\FW_PATH . '/cms/templates/components/',
+        'templateDirectory' => \mvodanovic\WebFW\Core\FW_PATH . '/cms/templates/components/',
         'page' => $page,
         'totalItemsCount' => $totalCount,
         'itemsPerPage' => $itemsPerPage,

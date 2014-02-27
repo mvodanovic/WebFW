@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Externals;
+namespace mvodanovic\WebFW\Externals;
 
-use WebFW\Framework\Core\Exception;
+use mvodanovic\WebFW\Core\Exception;
 
 class PHPTemplate
 {

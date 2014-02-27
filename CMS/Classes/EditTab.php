@@ -1,15 +1,15 @@
 <?php
 
-namespace WebFW\Framework\CMS\Classes;
+namespace mvodanovic\WebFW\CMS\Classes;
 
-use WebFW\Framework\CMS\ItemController;
-use WebFW\Framework\Core\Classes\HTML\Base\BaseFormItem;
-use WebFW\Framework\Core\Classes\HTML\Base\CompoundFormItem;
-use WebFW\Framework\Core\Classes\HTML\Base\SimpleFormItem;
-use WebFW\Framework\Core\Classes\HTML\Button;
-use WebFW\Framework\Core\Classes\HTML\Input;
-use WebFW\Framework\Core\Controller;
-use WebFW\Framework\Database\TableGateway;
+use mvodanovic\WebFW\CMS\ItemController;
+use mvodanovic\WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use mvodanovic\WebFW\Core\Classes\HTML\Base\CompoundFormItem;
+use mvodanovic\WebFW\Core\Classes\HTML\Base\SimpleFormItem;
+use mvodanovic\WebFW\Core\Classes\HTML\Button;
+use mvodanovic\WebFW\Core\Classes\HTML\Input;
+use mvodanovic\WebFW\Core\Controller;
+use mvodanovic\WebFW\Database\TableGateway;
 
 class EditTab
 {

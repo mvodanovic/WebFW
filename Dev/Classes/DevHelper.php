@@ -1,18 +1,18 @@
 <?php
 
-namespace WebFW\Framework\Dev\Classes;
+namespace mvodanovic\WebFW\Dev\Classes;
 
-use WebFW\Framework\Core\Classes\BaseClass;
-use WebFW\Framework\Core\Config;
-use WebFW\Framework\Core\Exceptions\ForbiddenException;
-use WebFW\Framework\Core\Request;
+use mvodanovic\WebFW\Core\Classes\BaseClass;
+use mvodanovic\WebFW\Core\Config;
+use mvodanovic\WebFW\Core\Exceptions\ForbiddenException;
+use mvodanovic\WebFW\Core\Request;
 
 /**
  * Class DevHelper
  *
  * General helper class for the Dev module.
  *
- * @package WebFW\Framework\Dev
+ * @package mvodanovic\WebFW
  */
 class DevHelper extends BaseClass
 {
@@ -32,7 +32,7 @@ class DevHelper extends BaseClass
      * If it isn't in dev mode and there are no developer credentials specified, a ForbiddenException is thrown.
      *
      * @param string $realmMessage The realm message to display to the user when requesting authentication
-     * @throws \WebFW\Framework\Core\Exceptions\ForbiddenException
+     * @throws \mvodanovic\WebFW\Core\Exceptions\ForbiddenException
      */
     public static function requestAuthentication($realmMessage)
     {

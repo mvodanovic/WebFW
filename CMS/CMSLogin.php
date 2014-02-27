@@ -1,22 +1,22 @@
 <?php
 
-namespace WebFW\Framework\CMS;
+namespace mvodanovic\WebFW\CMS;
 
-use WebFW\Framework\CMS\DBLayer\ListFetchers\Navigation;
-use WebFW\Framework\CMS\DBLayer\Navigation as TGNavigation;
-use WebFW\Framework\Core\Classes\HTML\Button;
-use WebFW\Framework\Core\Classes\HTML\FormStart;
-use WebFW\Framework\Core\Classes\HTML\Input;
-use WebFW\Framework\Core\Classes\HTML\Message;
-use WebFW\Framework\Core\Exception;
-use WebFW\Framework\Core\HTMLController;
-use WebFW\Framework\Core\Exceptions\NotFoundException;
-use WebFW\Framework\Core\Exceptions\UnauthorizedException;
-use WebFW\Framework\Core\Exceptions\ForbiddenException;
-use WebFW\Framework\Core\Request;
-use WebFW\Framework\Core\SessionHandler;
-use WebFW\Framework\Core\Router;
-use WebFW\Framework\CMS\Classes\LoggedUser;
+use mvodanovic\WebFW\CMS\DBLayer\ListFetchers\Navigation;
+use mvodanovic\WebFW\CMS\DBLayer\Navigation as TGNavigation;
+use mvodanovic\WebFW\Core\Classes\HTML\Button;
+use mvodanovic\WebFW\Core\Classes\HTML\FormStart;
+use mvodanovic\WebFW\Core\Classes\HTML\Input;
+use mvodanovic\WebFW\Core\Classes\HTML\Message;
+use mvodanovic\WebFW\Core\Exception;
+use mvodanovic\WebFW\Core\HTMLController;
+use mvodanovic\WebFW\Core\Exceptions\NotFoundException;
+use mvodanovic\WebFW\Core\Exceptions\UnauthorizedException;
+use mvodanovic\WebFW\Core\Exceptions\ForbiddenException;
+use mvodanovic\WebFW\Core\Request;
+use mvodanovic\WebFW\Core\SessionHandler;
+use mvodanovic\WebFW\Core\Router;
+use mvodanovic\WebFW\CMS\Classes\LoggedUser;
 
 class CMSLogin extends HTMLController
 {
@@ -48,9 +48,9 @@ class CMSLogin extends HTMLController
         $this->setTemplateVariables(null, null);
 
         $this->baseTemplate = 'base';
-        $this->baseTemplateDirectory = \WebFW\Framework\Core\FW_PATH . '/cms/templates';
+        $this->baseTemplateDirectory = \mvodanovic\WebFW\Core\FW_PATH . '/CMS/Templates';
         $this->template = 'login';
-        $this->templateDirectory = \WebFW\Framework\Core\FW_PATH . '/cms/templates';
+        $this->templateDirectory = \mvodanovic\WebFW\Core\FW_PATH . '/CMS/Templates';
         $this->pageTitle = 'CMS Login' . Controller::TITLE_SUFFIX;
     }
 

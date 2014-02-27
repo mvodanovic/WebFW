@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\CMS\Classes;
+namespace mvodanovic\WebFW\CMS\Classes;
 
-use WebFW\Framework\Externals\PHPTemplate;
+use mvodanovic\WebFW\Externals\PHPTemplate;
 
 class Tooltip
 {
@@ -27,7 +27,7 @@ class Tooltip
                 break;
         }
 
-        $tpl = new PHPTemplate(\WebFW\Framework\Core\FW_PATH . '/CMS/Templates/tooltip.template.php');
+        $tpl = new PHPTemplate(\mvodanovic\WebFW\Core\FW_PATH . '/CMS/Templates/tooltip.template.php');
         $tpl->set('message', $message);
         $tpl->set('imageHTML', $imageHTML);
         $tpl->set('class', $class);

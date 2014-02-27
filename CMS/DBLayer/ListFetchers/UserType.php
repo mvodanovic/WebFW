@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\Framework\CMS\DBLayer\ListFetchers;
+namespace mvodanovic\WebFW\CMS\DBLayer\ListFetchers;
 
-use WebFW\Framework\Database\ListFetcher;
-use WebFW\Framework\CMS\DBLayer\Tables\UserType as UserTypeT;
-use WebFW\Framework\CMS\DBLayer\UserType as UserTypeTG;
+use mvodanovic\WebFW\Database\ListFetcher;
+use mvodanovic\WebFW\CMS\DBLayer\Tables\UserType as UserTypeT;
+use mvodanovic\WebFW\CMS\DBLayer\UserType as UserTypeTG;
 
 class UserType extends ListFetcher
 {

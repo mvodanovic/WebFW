@@ -1,0 +1,14 @@
+{
+    "name": "mvodanovic/WebFW",
+    "type": "project",
+    "description": "A lightweight object-oriented PHP framework",
+    "keywords": ["framework", "OOP", "mvodanovic"],
+    "homepage": "https://github.com/mvodanovic/WebFW",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "mvodanovic\\": "",
+            "": ""
+        }
+    }
+}

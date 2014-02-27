@@ -1,15 +1,15 @@
 <?php
 
-namespace WebFW\Framework\Core\Classes\HTML;
+namespace mvodanovic\WebFW\Core\Classes\HTML;
 
-use WebFW\Framework\Core\Classes\HTML\Base\SimpleFormItem;
+use mvodanovic\WebFW\Core\Classes\HTML\Base\SimpleFormItem;
 
 /**
  * Class Button
  *
  * A class for creating HTML buttons.
  *
- * @package WebFW\Framework\Core
+ * @package mvodanovic\WebFW
  */
 class Button extends SimpleFormItem
 {

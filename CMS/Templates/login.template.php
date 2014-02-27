@@ -1,9 +1,9 @@
 <?php
 
-use WebFW\Framework\Core\Classes\HTML\Button;
-use WebFW\Framework\Core\Classes\HTML\FormStart;
-use WebFW\Framework\Core\Classes\HTML\Input;
-use WebFW\Framework\Core\Classes\HTML\Message;
+use mvodanovic\WebFW\Core\Classes\HTML\Button;
+use mvodanovic\WebFW\Core\Classes\HTML\FormStart;
+use mvodanovic\WebFW\Core\Classes\HTML\Input;
+use mvodanovic\WebFW\Core\Classes\HTML\Message;
 
 /** @var $errorMessage Message */
 /** @var $loginForm FormStart */

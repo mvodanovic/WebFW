@@ -1,21 +1,21 @@
 <?php
 
-namespace WebFW\Framework\Database;
+namespace mvodanovic\WebFW\Database;
 
-use WebFW\Framework\Cache\Cache;
-use WebFW\Framework\Cache\Classes\tCacheable;
-use WebFW\Framework\Cache\Classes\CacheGroupHelper;
-use WebFW\Framework\Core\Interfaces\iValidate;
-use WebFW\Framework\Database\TableColumns\Column;
-use WebFW\Framework\Database\TableConstraints\ForeignKey;
-use WebFW\Framework\Database\Query\Select;
-use WebFW\Framework\Database\Query\Insert;
-use WebFW\Framework\Database\Query\Update;
-use WebFW\Framework\Database\Query\Delete;
-use WebFW\Framework\Core\Exceptions\DBException;
-use WebFW\Framework\Core\Exceptions\NotFoundException;
-use WebFW\Framework\Core\Exception;
-use WebFW\Framework\Core\ArrayAccess;
+use mvodanovic\WebFW\Cache\Cache;
+use mvodanovic\WebFW\Cache\Classes\tCacheable;
+use mvodanovic\WebFW\Cache\Classes\CacheGroupHelper;
+use mvodanovic\WebFW\Core\Interfaces\iValidate;
+use mvodanovic\WebFW\Database\TableColumns\Column;
+use mvodanovic\WebFW\Database\TableConstraints\ForeignKey;
+use mvodanovic\WebFW\Database\Query\Select;
+use mvodanovic\WebFW\Database\Query\Insert;
+use mvodanovic\WebFW\Database\Query\Update;
+use mvodanovic\WebFW\Database\Query\Delete;
+use mvodanovic\WebFW\Core\Exceptions\DBException;
+use mvodanovic\WebFW\Core\Exceptions\NotFoundException;
+use mvodanovic\WebFW\Core\Exception;
+use mvodanovic\WebFW\Core\ArrayAccess;
 
 abstract class TableGateway extends ArrayAccess implements iValidate
 {
@@ -75,7 +75,7 @@ abstract class TableGateway extends ArrayAccess implements iValidate
      * @param string $collectionFieldName Name under which the list will be stored in the table gateway
      * @param ForeignKey $foreignKey The foreign key instance
      * @param string $listFetcher Name of the list fetcher
-     * @throws \WebFW\Framework\Core\Exception If called with invalid parameters
+     * @throws \mvodanovic\WebFW\Core\Exception If called with invalid parameters
      * @see useForeignListFetchers
      */
     public function addForeignListFetcher($collectionFieldName, ForeignKey $foreignKey, $listFetcher)

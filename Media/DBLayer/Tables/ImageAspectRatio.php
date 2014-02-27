@@ -1,13 +1,13 @@
 <?php
 
-namespace WebFW\Framework\Media\DBLayer\Tables;
+namespace mvodanovic\WebFW\Media\DBLayer\Tables;
 
-use WebFW\Framework\Database\Table;
-use WebFW\Framework\Database\TableColumns\IntegerColumn;
-use WebFW\Framework\Database\TableColumns\VarcharColumn;
-use WebFW\Framework\Database\TableConstraints\PrimaryKey;
-use WebFW\Framework\Database\TableConstraints\ForeignKey;
-use WebFW\Framework\Database\TableConstraints\Unique;
+use mvodanovic\WebFW\Database\Table;
+use mvodanovic\WebFW\Database\TableColumns\IntegerColumn;
+use mvodanovic\WebFW\Database\TableColumns\VarcharColumn;
+use mvodanovic\WebFW\Database\TableConstraints\PrimaryKey;
+use mvodanovic\WebFW\Database\TableConstraints\ForeignKey;
+use mvodanovic\WebFW\Database\TableConstraints\Unique;
 
 class ImageAspectRatio extends Table
 {

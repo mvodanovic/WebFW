@@ -1,9 +1,9 @@
 <?php
 
-namespace WebFW\Framework\Core\DBLayer;
+namespace mvodanovic\WebFW\Core\DBLayer;
 
-use WebFW\Framework\Database\TableGateway;
-use WebFW\Framework\Core\DBLayer\Tables\RouteDefinitionRegex as TRouteDefinitionRegex;
+use mvodanovic\WebFW\Database\TableGateway;
+use mvodanovic\WebFW\Core\DBLayer\Tables\RouteDefinitionRegex as TRouteDefinitionRegex;
 
 class RouteDefinitionRegex extends TableGateway
 {

@@ -1,20 +1,20 @@
 <?php
 
-namespace WebFW\Framework\Core;
+namespace mvodanovic\WebFW\Core;
 
 use ReflectionClass;
-use WebFW\Framework\CMS\CMSLogin;
-use WebFW\Framework\CMS\Controllers\User;
-use WebFW\Framework\Core\Classes\BaseClass;
-use WebFW\Framework\Dev\Profiler;
-use WebFW\Framework\Media\Controllers\CMS\Image;
+use mvodanovic\WebFW\CMS\CMSLogin;
+use mvodanovic\WebFW\CMS\Controllers\User;
+use mvodanovic\WebFW\Core\Classes\BaseClass;
+use mvodanovic\WebFW\Dev\Profiler;
+use mvodanovic\WebFW\Media\Controllers\CMS\Image;
 
 /**
  * Class Router
  *
  * Handles route-to-URL conversions.
  *
- * @package WebFW\Framework\Core
+ * @package mvodanovic\WebFW
  */
 class Router extends BaseClass
 {

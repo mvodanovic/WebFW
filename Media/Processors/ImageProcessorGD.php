@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Media\Processors;
+namespace mvodanovic\WebFW\Media\Processors;
 
-use WebFW\Framework\Core\Config;
+use mvodanovic\WebFW\Core\Config;
 
 class ImageProcessorGD extends ImageProcessor
 {

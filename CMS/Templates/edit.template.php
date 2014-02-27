@@ -1,11 +1,11 @@
 <?php
 
-use WebFW\Framework\CMS\Classes\EditAction;
-use WebFW\Framework\CMS\Classes\EditTab;
-use WebFW\Framework\CMS\ItemController;
-use WebFW\Framework\Core\Classes\HTML\Base\BaseFormItem;
-use WebFW\Framework\Core\Classes\HTML\Message;
-use WebFW\Framework\Core\Controller;
+use mvodanovic\WebFW\CMS\Classes\EditAction;
+use mvodanovic\WebFW\CMS\Classes\EditTab;
+use mvodanovic\WebFW\CMS\ItemController;
+use mvodanovic\WebFW\Core\Classes\HTML\Base\BaseFormItem;
+use mvodanovic\WebFW\Core\Classes\HTML\Message;
+use mvodanovic\WebFW\Core\Controller;
 
 /**
  * @var ItemController $controller

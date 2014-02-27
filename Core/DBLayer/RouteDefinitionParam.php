@@ -1,9 +1,9 @@
 <?php
 
-namespace WebFW\Framework\Core\DBLayer;
+namespace mvodanovic\WebFW\Core\DBLayer;
 
-use WebFW\Framework\Database\TableGateway;
-use WebFW\Framework\Core\DBLayer\Tables\RouteDefinitionParam as TRouteDefinitionParam;
+use mvodanovic\WebFW\Database\TableGateway;
+use mvodanovic\WebFW\Core\DBLayer\Tables\RouteDefinitionParam as TRouteDefinitionParam;
 
 class RouteDefinitionParam extends TableGateway
 {

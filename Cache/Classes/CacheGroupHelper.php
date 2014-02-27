@@ -1,16 +1,16 @@
 <?php
 
-namespace WebFW\Framework\Cache\Classes;
+namespace mvodanovic\WebFW\Cache\Classes;
 
-use WebFW\Framework\Cache\Cache;
-use WebFW\Framework\Core\Classes\BaseClass;
+use mvodanovic\WebFW\Cache\Cache;
+use mvodanovic\WebFW\Core\Classes\BaseClass;
 
 /**
  * Class CacheGroupHelper
  *
  * Enables working with groups of cached data.
  *
- * @package WebFW\Framework\Cache
+ * @package mvodanovic\WebFW
  */
 class CacheGroupHelper extends BaseClass
 {

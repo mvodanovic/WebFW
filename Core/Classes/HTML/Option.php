@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Core\Classes\HTML;
+namespace mvodanovic\WebFW\Core\Classes\HTML;
 
-use WebFW\Framework\Core\Classes\HTML\Base\SimpleFormItem;
+use mvodanovic\WebFW\Core\Classes\HTML\Base\SimpleFormItem;
 
 class Option extends SimpleFormItem
 {

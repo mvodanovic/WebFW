@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Media\Exceptions;
+namespace mvodanovic\WebFW\Media\Exceptions;
 
-use WebFW\Framework\Core\Exceptions\NotFoundException;
+use mvodanovic\WebFW\Core\Exceptions\NotFoundException;
 
 class MediaNotFoundException extends NotFoundException
 {

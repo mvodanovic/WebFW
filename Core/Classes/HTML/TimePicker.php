@@ -1,6 +1,6 @@
 <?php
 
-namespace WebFW\Framework\Core\Classes\HTML;
+namespace mvodanovic\WebFW\Core\Classes\HTML;
 
 class TimePicker extends Input
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Database\TableColumns;
+namespace mvodanovic\WebFW\Database\TableColumns;
 
-use WebFW\Framework\Database\Table;
+use mvodanovic\WebFW\Database\Table;
 
 class Column
 {

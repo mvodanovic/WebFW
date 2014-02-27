@@ -1,18 +1,18 @@
 <?php
 
-namespace WebFW\Framework\Media\Classes;
+namespace mvodanovic\WebFW\Media\Classes;
 
-use WebFW\Framework\Core\Classes\BaseClass;
-use WebFW\Framework\Core\Config;
-use WebFW\Framework\Core\Exception;
-use WebFW\Framework\Core\Exceptions\NotFoundException;
-use WebFW\Framework\Media\DBLayer\Image;
-use WebFW\Framework\Media\DBLayer\ImageAspectRatio;
-use WebFW\Framework\Media\DBLayer\ImageAspectRatioCrop;
-use WebFW\Framework\Media\DBLayer\ListFetchers\ImageVariation;
-use WebFW\Framework\Media\DBLayer\Tables\ImageVariation as TImageVariation;
-use WebFW\Framework\Media\DBLayer\ImageVariation as TGImageVariation;
-use WebFW\Framework\Media\Processors\ImageProcessor;
+use mvodanovic\WebFW\Core\Classes\BaseClass;
+use mvodanovic\WebFW\Core\Config;
+use mvodanovic\WebFW\Core\Exception;
+use mvodanovic\WebFW\Core\Exceptions\NotFoundException;
+use mvodanovic\WebFW\Media\DBLayer\Image;
+use mvodanovic\WebFW\Media\DBLayer\ImageAspectRatio;
+use mvodanovic\WebFW\Media\DBLayer\ImageAspectRatioCrop;
+use mvodanovic\WebFW\Media\DBLayer\ListFetchers\ImageVariation;
+use mvodanovic\WebFW\Media\DBLayer\Tables\ImageVariation as TImageVariation;
+use mvodanovic\WebFW\Media\DBLayer\ImageVariation as TGImageVariation;
+use mvodanovic\WebFW\Media\Processors\ImageProcessor;
 
 class ImageHelper extends BaseClass
 {
@@ -65,7 +65,7 @@ class ImageHelper extends BaseClass
         if ($path === null) {
             $path = 'media';
         }
-        $path = \WebFW\Framework\Core\BASE_PATH . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . 'images';
+        $path = \mvodanovic\WebFW\Core\BASE_PATH . DIRECTORY_SEPARATOR . $path . DIRECTORY_SEPARATOR . 'images';
         if ($variation !== null) {
             $path .= DIRECTORY_SEPARATOR . 'variations' . DIRECTORY_SEPARATOR . $variation;
         }

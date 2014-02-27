@@ -1,16 +1,16 @@
 <?php
 
-namespace WebFW\Framework\Dev;
+namespace mvodanovic\WebFW\Dev;
 
-use WebFW\Framework\Core\HTMLController;
-use WebFW\Framework\Dev\Classes\DevHelper;
+use mvodanovic\WebFW\Core\HTMLController;
+use mvodanovic\WebFW\Dev\Classes\DevHelper;
 
 /**
  * Class Controller
  *
  * A basic controller used to display developer options.
  *
- * @package WebFW\Framework\Dev
+ * @package mvodanovic\WebFW
  */
 abstract class Controller extends HTMLController
 {

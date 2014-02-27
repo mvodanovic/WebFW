@@ -1,11 +1,11 @@
 <?php
 
-namespace WebFW\Framework\CMS\DBLayer;
+namespace mvodanovic\WebFW\CMS\DBLayer;
 
-use WebFW\Framework\Core\Exceptions\NotFoundException;
-use WebFW\Framework\Database\TableGateway;
-use WebFW\Framework\CMS\DBLayer\Tables\User as UserT;
-use WebFW\Framework\CMS\Classes\LoggedUser;
+use mvodanovic\WebFW\Core\Exceptions\NotFoundException;
+use mvodanovic\WebFW\Database\TableGateway;
+use mvodanovic\WebFW\CMS\DBLayer\Tables\User as UserT;
+use mvodanovic\WebFW\CMS\Classes\LoggedUser;
 
 class User extends TableGateway
 {

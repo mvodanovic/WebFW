@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Core;
+namespace mvodanovic\WebFW\Core;
 
-use WebFW\Framework\Externals\PHPTemplate;
+use mvodanovic\WebFW\Externals\PHPTemplate;
 
 abstract class TemplatedController extends Controller
 {
@@ -25,7 +25,7 @@ abstract class TemplatedController extends Controller
 
         $templateDir = explode('\\', static::className());
         $templateDir = end($templateDir);
-        $this->templateDirectory = \WebFW\Framework\Core\CTL_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDir;
+        $this->templateDirectory = \mvodanovic\WebFW\Core\CTL_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDir;
     }
 
     public function processOutput()

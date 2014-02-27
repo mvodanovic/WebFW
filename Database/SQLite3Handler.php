@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Database;
+namespace mvodanovic\WebFW\Database;
 
-use WebFW\Framework\Core\Exceptions\DBException;
+use mvodanovic\WebFW\Core\Exceptions\DBException;
 use SQLite3;
 use SQLite3Result;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Database\Query;
+namespace mvodanovic\WebFW\Database\Query;
 
-use WebFW\Framework\Database\BaseHandler;
+use mvodanovic\WebFW\Database\BaseHandler;
 
 class Insert extends Query
 {

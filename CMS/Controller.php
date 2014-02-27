@@ -1,13 +1,13 @@
 <?php
 
-namespace WebFW\Framework\CMS;
+namespace mvodanovic\WebFW\CMS;
 
-use WebFW\Framework\Core\Classes\HTML\Message;
-use WebFW\Framework\Core\Config;
-use WebFW\Framework\Core\Request;
-use WebFW\Framework\Core\Router;
-use WebFW\Framework\CMS\Classes\LoggedUser;
-use WebFW\Framework\Core\HTMLController;
+use mvodanovic\WebFW\Core\Classes\HTML\Message;
+use mvodanovic\WebFW\Core\Config;
+use mvodanovic\WebFW\Core\Request;
+use mvodanovic\WebFW\Core\Router;
+use mvodanovic\WebFW\CMS\Classes\LoggedUser;
+use mvodanovic\WebFW\Core\HTMLController;
 
 abstract class Controller extends HTMLController
 {
@@ -48,8 +48,8 @@ abstract class Controller extends HTMLController
     protected function init()
     {
         $this->baseTemplate = 'base';
-        $this->baseTemplateDirectory = \WebFW\Framework\Core\FW_PATH . '/CMS/Templates';
-        $this->templateDirectory = \WebFW\Framework\Core\FW_PATH . '/CMS/Templates';
+        $this->baseTemplateDirectory = \mvodanovic\WebFW\Core\FW_PATH . '/CMS/Templates';
+        $this->templateDirectory = \mvodanovic\WebFW\Core\FW_PATH . '/CMS/Templates';
         $this->setPageTitle();
     }
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Core\Classes\HTML\Base;
+namespace mvodanovic\WebFW\Core\Classes\HTML\Base;
 
-use WebFW\Framework\Core\Classes\BaseClass;
+use mvodanovic\WebFW\Core\Classes\BaseClass;
 
 class GeneralHTMLItem extends BaseClass
 {

@@ -1,14 +1,14 @@
 <?php
 
-namespace WebFW\Framework\Media\DBLayer;
+namespace mvodanovic\WebFW\Media\DBLayer;
 
-use WebFW\Framework\Core\Exceptions\NotFoundException;
-use WebFW\Framework\Database\TableGateway;
-use WebFW\Framework\Media\DBLayer\Tables\ImageAspectRatio as ImageAspectRatioT;
+use mvodanovic\WebFW\Core\Exceptions\NotFoundException;
+use mvodanovic\WebFW\Database\TableGateway;
+use mvodanovic\WebFW\Media\DBLayer\Tables\ImageAspectRatio as ImageAspectRatioT;
 
 /**
  * Class ImageAspectRatio
- * @package WebFW\Framework\Media
+ * @package mvodanovic\WebFW
  *
  * @property $aspect_ratio_id
  * @property $caption

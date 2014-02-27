@@ -1,16 +1,16 @@
 <?php
 
-namespace WebFW\Framework\CMS\Controllers;
+namespace mvodanovic\WebFW\CMS\Controllers;
 
-use WebFW\Framework\CMS\ListController;
-use WebFW\Framework\CMS\DBLayer\ListFetchers\UserType as LFUserType;
-use WebFW\Framework\CMS\DBLayer\UserType as TGUserType;
-use WebFW\Framework\CMS\DBLayer\User as TGUser;
-use WebFW\Framework\CMS\DBLayer\Tables\User as TUser;
-use WebFW\Framework\Core\Classes\HTML\Input;
-use WebFW\Framework\CMS\Classes\EditTab;
-use WebFW\Framework\Core\Classes\HTML\ReferencedListPicker;
-use WebFW\Framework\Core\Route;
+use mvodanovic\WebFW\CMS\ListController;
+use mvodanovic\WebFW\CMS\DBLayer\ListFetchers\UserType as LFUserType;
+use mvodanovic\WebFW\CMS\DBLayer\UserType as TGUserType;
+use mvodanovic\WebFW\CMS\DBLayer\User as TGUser;
+use mvodanovic\WebFW\CMS\DBLayer\Tables\User as TUser;
+use mvodanovic\WebFW\Core\Classes\HTML\Input;
+use mvodanovic\WebFW\CMS\Classes\EditTab;
+use mvodanovic\WebFW\Core\Classes\HTML\ReferencedListPicker;
+use mvodanovic\WebFW\Core\Route;
 
 class UserType extends ListController
 {

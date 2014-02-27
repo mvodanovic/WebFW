@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Core;
+namespace mvodanovic\WebFW\Core;
 
-use WebFW\Framework\Externals\PHPTemplate;
+use mvodanovic\WebFW\Externals\PHPTemplate;
 
 abstract class HTMLController extends TemplatedController
 {
@@ -19,7 +19,7 @@ abstract class HTMLController extends TemplatedController
         parent::__construct();
 
         $this->baseTemplate = static::DEFAULT_TEMPLATE_NAME;
-        $this->baseTemplateDirectory = \WebFW\Framework\Core\BASE_TEMPLATE_PATH;
+        $this->baseTemplateDirectory = \mvodanovic\WebFW\Core\BASE_TEMPLATE_PATH;
     }
 
     public function getTitle()

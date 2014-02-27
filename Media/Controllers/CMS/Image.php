@@ -1,28 +1,28 @@
 <?php
 
-namespace WebFW\Framework\Media\Controllers\CMS;
+namespace mvodanovic\WebFW\Media\Controllers\CMS;
 
-use WebFW\Framework\CMS\Classes\ListRowAction;
-use WebFW\Framework\CMS\Classes\PermissionsHelper;
-use WebFW\Framework\CMS\ListController;
-use WebFW\Framework\Core\Classes\HTML\Link;
-use WebFW\Framework\Core\Classes\HTML\Message;
-use WebFW\Framework\Core\Config;
-use WebFW\Framework\Core\Exception;
-use WebFW\Framework\Core\Exceptions\NotFoundException;
-use WebFW\Framework\Core\Request;
-use WebFW\Framework\Media\DBLayer\ImageAspectRatioCrop;
-use WebFW\Framework\Media\DBLayer\ImageVariation;
-use WebFW\Framework\Media\DBLayer\ListFetchers\Image as LFImage;
-use WebFW\Framework\Media\DBLayer\ListFetchers\ImageAspectRatio;
-use WebFW\Framework\Media\DBLayer\Tables\Image as TImage;
-use WebFW\Framework\Media\DBLayer\Tables\ImageVariation as TImageVariation;
-use WebFW\Framework\Media\DBLayer\Image as TGImage;
-use WebFW\Framework\Core\Classes\HTML\Input;
-use WebFW\Framework\Core\Classes\HTML\Select;
-use WebFW\Framework\CMS\Classes\EditTab;
-use WebFW\Framework\CMS\Classes\ListHelper;
-use WebFW\Framework\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
+use mvodanovic\WebFW\CMS\Classes\ListRowAction;
+use mvodanovic\WebFW\CMS\Classes\PermissionsHelper;
+use mvodanovic\WebFW\CMS\ListController;
+use mvodanovic\WebFW\Core\Classes\HTML\Link;
+use mvodanovic\WebFW\Core\Classes\HTML\Message;
+use mvodanovic\WebFW\Core\Config;
+use mvodanovic\WebFW\Core\Exception;
+use mvodanovic\WebFW\Core\Exceptions\NotFoundException;
+use mvodanovic\WebFW\Core\Request;
+use mvodanovic\WebFW\Media\DBLayer\ImageAspectRatioCrop;
+use mvodanovic\WebFW\Media\DBLayer\ImageVariation;
+use mvodanovic\WebFW\Media\DBLayer\ListFetchers\Image as LFImage;
+use mvodanovic\WebFW\Media\DBLayer\ListFetchers\ImageAspectRatio;
+use mvodanovic\WebFW\Media\DBLayer\Tables\Image as TImage;
+use mvodanovic\WebFW\Media\DBLayer\Tables\ImageVariation as TImageVariation;
+use mvodanovic\WebFW\Media\DBLayer\Image as TGImage;
+use mvodanovic\WebFW\Core\Classes\HTML\Input;
+use mvodanovic\WebFW\Core\Classes\HTML\Select;
+use mvodanovic\WebFW\CMS\Classes\EditTab;
+use mvodanovic\WebFW\CMS\Classes\ListHelper;
+use mvodanovic\WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
 
 class Image extends ListController
 {
@@ -48,7 +48,7 @@ class Image extends ListController
     {
         parent::initList();
         $this->template = 'images.list';
-        $this->templateDirectory = \WebFW\Framework\Core\FW_PATH . '/Media/Templates/CMS';
+        $this->templateDirectory = \mvodanovic\WebFW\Core\FW_PATH . '/Media/Templates/CMS';
 
         $variation = Config::get('General', 'cmsImageVariation');
         $this->variationObject = new ImageVariation();
@@ -142,7 +142,7 @@ class Image extends ListController
         $this->addLinkedJS('/Static/JS/WebFW/imagecropper.class.js');
         $this->addLinkedCSS('/Static/CSS/WebFW/jquery.Jcrop.min.css');
         $this->template = 'images.cropper';
-        $this->templateDirectory = \WebFW\Framework\Core\FW_PATH . '/Media/Templates/CMS';
+        $this->templateDirectory = \mvodanovic\WebFW\Core\FW_PATH . '/Media/Templates/CMS';
         $image = new TGImage();
         $image->loadBy($this->getPrimaryKeyValues(false));
         $LFAspectRatio = new ImageAspectRatio();

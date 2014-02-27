@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\Framework\Core;
+namespace mvodanovic\WebFW\Core;
 
-use WebFW\Framework\Cache\Classes\tCacheable;
-use WebFW\Framework\Core\Classes\BaseClass;
-use WebFW\Framework\Core\Exceptions\NotFoundException;
+use mvodanovic\WebFW\Cache\Classes\tCacheable;
+use mvodanovic\WebFW\Core\Classes\BaseClass;
+use mvodanovic\WebFW\Core\Exceptions\NotFoundException;
 use ReflectionMethod;
 
 abstract class Controller extends BaseClass

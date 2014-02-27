@@ -1,17 +1,17 @@
 <?php
 
-namespace WebFW\Framework\Cache\Providers;
+namespace mvodanovic\WebFW\Cache\Providers;
 
-use WebFW\Framework\Cache\Cache;
-use WebFW\Framework\Core\Config;
-use WebFW\Framework\Core\Exception;
+use mvodanovic\WebFW\Cache\Cache;
+use mvodanovic\WebFW\Core\Config;
+use mvodanovic\WebFW\Core\Exception;
 
 /**
  * Class MemcachedProvider
  *
  * Implements the caching mechanism using Memcached as a service.
  *
- * @package WebFW\Framework\Cache
+ * @package mvodanovic\WebFW
  */
 class MemcachedProvider extends Cache
 {

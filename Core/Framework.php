@@ -1,21 +1,21 @@
 <?php
 
-namespace WebFW\Framework\Core;
+namespace mvodanovic\WebFW\Core;
 
-use WebFW\Framework\Cache\Cache;
-use WebFW\Framework\Core\Classes\GeneralHelper;
-use WebFW\Framework\Core\Exceptions\NotFoundException;
-use WebFW\Framework\Dev\Classes\DevHelper;
-use WebFW\Framework\Dev\Controller as DevController;
-use WebFW\Framework\Dev\InfoBox;
-use WebFW\Framework\Dev\Profiler;
+use mvodanovic\WebFW\Cache\Cache;
+use mvodanovic\WebFW\Core\Classes\GeneralHelper;
+use mvodanovic\WebFW\Core\Exceptions\NotFoundException;
+use mvodanovic\WebFW\Dev\Classes\DevHelper;
+use mvodanovic\WebFW\Dev\Controller as DevController;
+use mvodanovic\WebFW\Dev\InfoBox;
+use mvodanovic\WebFW\Dev\Profiler;
 
 /**
  * Class Framework
  *
  * Class used for executing core framework operations.
  *
- * @package WebFW\Framework\Core
+ * @package mvodanovic\WebFW
  */
 final class Framework
 {
@@ -53,7 +53,7 @@ final class Framework
             $ctl = Config::get('General', 'defaultController');
         }
         if ($ctl === null || $ctl === '') {
-            require_once \WebFW\Framework\Core\FW_PATH . '/Core/Templates/helloworld.template.php';
+            require_once \mvodanovic\WebFW\Core\FW_PATH . '/Core/Templates/helloworld.template.php';
             return;
         }
 

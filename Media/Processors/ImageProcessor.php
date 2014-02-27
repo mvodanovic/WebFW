@@ -1,11 +1,11 @@
 <?php
 
-namespace WebFW\Framework\Media\Processors;
+namespace mvodanovic\WebFW\Media\Processors;
 
-use WebFW\Framework\Core\Classes\BaseClass;
-use WebFW\Framework\Core\Config;
-use WebFW\Framework\Core\Exception;
-use WebFW\Framework\Media\Classes\ImageHelper;
+use mvodanovic\WebFW\Core\Classes\BaseClass;
+use mvodanovic\WebFW\Core\Config;
+use mvodanovic\WebFW\Core\Exception;
+use mvodanovic\WebFW\Media\Classes\ImageHelper;
 
 abstract class ImageProcessor extends BaseClass
 {
@@ -45,7 +45,7 @@ abstract class ImageProcessor extends BaseClass
 
     /**
      * @return ImageProcessor
-     * @throws \WebFW\Framework\Core\Exception
+     * @throws \mvodanovic\WebFW\Core\Exception
      */
     public static function getInstance()
     {

@@ -1,15 +1,15 @@
 <?php
 
-namespace WebFW\Framework\CMS\Components;
+namespace mvodanovic\WebFW\CMS\Components;
 
-use WebFW\Framework\CMS\Classes\EditTab;
-use WebFW\Framework\CMS\DBLayer\Navigation as TGNavigation;
-use WebFW\Framework\CMS\TreeController;
-use WebFW\Framework\Core\Classes\HTML\Link;
-use WebFW\Framework\Core\Component;
-use WebFW\Framework\Core\Controller;
-use WebFW\Framework\Core\Exceptions\NotFoundException;
-use WebFW\Framework\Database\TreeTableGateway;
+use mvodanovic\WebFW\CMS\Classes\EditTab;
+use mvodanovic\WebFW\CMS\DBLayer\Navigation as TGNavigation;
+use mvodanovic\WebFW\CMS\TreeController;
+use mvodanovic\WebFW\Core\Classes\HTML\Link;
+use mvodanovic\WebFW\Core\Component;
+use mvodanovic\WebFW\Core\Controller;
+use mvodanovic\WebFW\Core\Exceptions\NotFoundException;
+use mvodanovic\WebFW\Database\TreeTableGateway;
 
 class TreeBreadcrumbs extends Component
 {
@@ -69,6 +69,6 @@ class TreeBreadcrumbs extends Component
         parent::setDefaultParams();
 
         $this->setParam('template', 'treebreadcrumbs');
-        $this->setParam('templateDirectory', \WebFW\Framework\Core\FW_PATH . '/CMS/Templates/Components');
+        $this->setParam('templateDirectory', \mvodanovic\WebFW\Core\FW_PATH . '/CMS/Templates/Components');
     }
 }

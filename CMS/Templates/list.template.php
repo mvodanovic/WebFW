@@ -1,9 +1,9 @@
 <?php
 
-use WebFW\Framework\CMS\Components\Filter;
-use WebFW\Framework\CMS\Components\Listing;
-use WebFW\Framework\CMS\Components\TreeBreadcrumbs;
-use WebFW\Framework\Core\Framework;
+use mvodanovic\WebFW\CMS\Components\Filter;
+use mvodanovic\WebFW\CMS\Components\Listing;
+use mvodanovic\WebFW\CMS\Components\TreeBreadcrumbs;
+use mvodanovic\WebFW\Core\Framework;
 
 ?>
 <?=Framework::runComponent(Filter::className()); ?>

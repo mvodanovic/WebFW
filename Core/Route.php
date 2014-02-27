@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Core;
+namespace mvodanovic\WebFW\Core;
 
-use WebFW\Framework\Core\Classes\BaseClass;
+use mvodanovic\WebFW\Core\Classes\BaseClass;
 
 /**
  * Class Route
@@ -13,7 +13,7 @@ use WebFW\Framework\Core\Classes\BaseClass;
  * @property $action
  * @property $namespace
  * @property $params
- * @package WebFW\Framework\Core
+ * @package mvodanovic\WebFW
  */
 class Route extends BaseClass
 {

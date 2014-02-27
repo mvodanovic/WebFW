@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\CMS\Classes;
+namespace mvodanovic\WebFW\CMS\Classes;
 
-use WebFW\Framework\Core\Classes\HTML\Base\GeneralHTMLItem;
+use mvodanovic\WebFW\Core\Classes\HTML\Base\GeneralHTMLItem;
 
 class EditAction
 {

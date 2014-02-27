@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Core\Exceptions;
+namespace mvodanovic\WebFW\Core\Exceptions;
 
-use WebFW\Framework\Core\Exception;
+use mvodanovic\WebFW\Core\Exception;
 
 /**
  * Class BadRequestException
@@ -10,7 +10,7 @@ use WebFW\Framework\Core\Exception;
  * Exception intended to be thrown when a bad request has been made.
  * This exception has it's code automatically set to 400.
  *
- * @package WebFW\Framework\Core\Exceptions
+ * @package mvodanovic\WebFW\Exceptions
  * @see Exception
  */
 class BadRequestException extends Exception

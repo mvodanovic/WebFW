@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Core\Exceptions;
+namespace mvodanovic\WebFW\Core\Exceptions;
 
-use WebFW\Framework\Core\Exception;
+use mvodanovic\WebFW\Core\Exception;
 
 /**
  * Class DBException
@@ -10,7 +10,7 @@ use WebFW\Framework\Core\Exception;
  * Exception intended to be thrown when a database system reports a problem.
  * This exception has it's code automatically set to 500.
  *
- * @package WebFW\Framework\Core\Exceptions
+ * @package mvodanovic\WebFW\Exceptions
  * @see Exception
  */
 class DBException extends Exception

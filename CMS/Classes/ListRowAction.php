@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\Framework\CMS\Classes;
+namespace mvodanovic\WebFW\CMS\Classes;
 
-use WebFW\Framework\Core\Classes\HTML\Link;
-use WebFW\Framework\Core\Route;
-use WebFW\Framework\Database\TableGateway;
+use mvodanovic\WebFW\Core\Classes\HTML\Link;
+use mvodanovic\WebFW\Core\Route;
+use mvodanovic\WebFW\Database\TableGateway;
 
 class ListRowAction
 {

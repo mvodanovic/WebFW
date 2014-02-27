@@ -1,10 +1,10 @@
 <?php
 
-namespace WebFW\Framework\Core\DBLayer\ListFetchers;
+namespace mvodanovic\WebFW\Core\DBLayer\ListFetchers;
 
-use WebFW\Framework\Database\ListFetcher;
-use WebFW\Framework\Core\DBLayer\Tables\RouteDefinition as TRouteDefinition;
-use WebFW\Framework\Core\DBLayer\RouteDefinition as TGRouteDefinition;
+use mvodanovic\WebFW\Database\ListFetcher;
+use mvodanovic\WebFW\Core\DBLayer\Tables\RouteDefinition as TRouteDefinition;
+use mvodanovic\WebFW\Core\DBLayer\RouteDefinition as TGRouteDefinition;
 
 class RouteDefinition extends ListFetcher
 {

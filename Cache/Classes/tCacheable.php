@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Cache\Classes;
+namespace mvodanovic\WebFW\Cache\Classes;
 
-use WebFW\Framework\Cache\Cache;
+use mvodanovic\WebFW\Cache\Cache;
 
 /**
  * Trait tCacheable
@@ -10,7 +10,7 @@ use WebFW\Framework\Cache\Cache;
  * Contains logic common to all cacheable classes.
  * All cacheable classes should use this trait.
  *
- * @package WebFW\Framework\Cache
+ * @package mvodanovic\WebFW
  */
 trait tCacheable
 {

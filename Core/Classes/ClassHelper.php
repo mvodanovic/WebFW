@@ -1,11 +1,11 @@
 <?php
 
-namespace WebFW\Framework\Core\Classes;
+namespace mvodanovic\WebFW\Core\Classes;
 
-use WebFW\Framework\Cache\Cache;
-use WebFW\Framework\Cache\Classes\tCacheable;
-use WebFW\Framework\Cache\Classes\CacheGroupHelper;
-use WebFW\Framework\Core\Exception;
+use mvodanovic\WebFW\Cache\Cache;
+use mvodanovic\WebFW\Cache\Classes\tCacheable;
+use mvodanovic\WebFW\Cache\Classes\CacheGroupHelper;
+use mvodanovic\WebFW\Core\Exception;
 
 class ClassHelper extends BaseClass
 {
@@ -28,7 +28,7 @@ class ClassHelper extends BaseClass
         }
 
         if ($directory === null) {
-            $directory = \WebFW\Framework\Core\BASE_PATH;
+            $directory = \mvodanovic\WebFW\Core\BASE_PATH;
         }
         if (!file_exists($directory) || !is_dir($directory)) {
             throw new Exception('Directory ' . $directory . ' does not exist');
@@ -82,7 +82,7 @@ class ClassHelper extends BaseClass
                 continue;
             }
             $entry = $directory . DIRECTORY_SEPARATOR . $entry;
-            if ($entry === \WebFW\Framework\Core\PUBLIC_PATH) {
+            if ($entry === \mvodanovic\WebFW\Core\PUBLIC_PATH) {
                 continue;
             }
             if (is_dir($entry)) {

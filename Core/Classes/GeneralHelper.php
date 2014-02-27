@@ -1,13 +1,13 @@
 <?php
 
-namespace WebFW\Framework\Core\Classes;
+namespace mvodanovic\WebFW\Core\Classes;
 
 /**
  * Class GeneralHelper
  *
  * Class containing some helpful functions for general use.
  *
- * @package WebFW\Framework\Core
+ * @package mvodanovic\WebFW
  */
 class GeneralHelper extends BaseClass
 {

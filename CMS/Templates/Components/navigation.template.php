@@ -1,6 +1,6 @@
 <?php
-    use WebFW\Framework\CMS\Components\Navigation;
-    use WebFW\Framework\CMS\DBLayer\Navigation as TGNavigation;
+    use mvodanovic\WebFW\CMS\Components\Navigation;
+    use mvodanovic\WebFW\CMS\DBLayer\Navigation as TGNavigation;
 
     /** @var $navList array */
     /** @var $component Navigation */

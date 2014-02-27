@@ -1,9 +1,9 @@
 <?php
 
-use WebFW\Framework\CMS\Components\Navigation;
-use WebFW\Framework\CMS\Components\UserActions;
-use WebFW\Framework\Core\Framework;
-use WebFW\Framework\CMS\Controller;
+use mvodanovic\WebFW\CMS\Components\Navigation;
+use mvodanovic\WebFW\CMS\Components\UserActions;
+use mvodanovic\WebFW\Core\Framework;
+use mvodanovic\WebFW\CMS\Controller;
 
 /**
  * @var string $htmlHead

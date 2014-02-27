@@ -1,16 +1,16 @@
 <?php
 
-namespace WebFW\Framework\CMS\Components;
+namespace mvodanovic\WebFW\CMS\Components;
 
-use WebFW\Framework\CMS\Classes\PermissionsHelper;
-use WebFW\Framework\CMS\CMSLogin;
-use WebFW\Framework\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
-use WebFW\Framework\Core\Classes\HTML\Link;
-use WebFW\Framework\Core\Component;
-use WebFW\Framework\CMS\Classes\LoggedUser;
-use WebFW\Framework\CMS\Controllers\LoggedUser as LoggedUserCtl;
-use WebFW\Framework\Core\Classes\HTML\Message;
-use WebFW\Framework\Core\Router;
+use mvodanovic\WebFW\CMS\Classes\PermissionsHelper;
+use mvodanovic\WebFW\CMS\CMSLogin;
+use mvodanovic\WebFW\CMS\DBLayer\UserTypeControllerPermissions as UTCP;
+use mvodanovic\WebFW\Core\Classes\HTML\Link;
+use mvodanovic\WebFW\Core\Component;
+use mvodanovic\WebFW\CMS\Classes\LoggedUser;
+use mvodanovic\WebFW\CMS\Controllers\LoggedUser as LoggedUserCtl;
+use mvodanovic\WebFW\Core\Classes\HTML\Message;
+use mvodanovic\WebFW\Core\Router;
 
 class UserActions extends Component
 {
@@ -63,6 +63,6 @@ class UserActions extends Component
         parent::setDefaultParams();
 
         $this->setParam('template', 'useractions');
-        $this->setParam('templateDirectory', \WebFW\Framework\Core\FW_PATH . '/CMS/Templates/Components');
+        $this->setParam('templateDirectory', \mvodanovic\WebFW\Core\FW_PATH . '/CMS/Templates/Components');
     }
 }

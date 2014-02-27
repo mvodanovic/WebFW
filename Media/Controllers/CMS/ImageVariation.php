@@ -1,16 +1,16 @@
 <?php
 
-namespace WebFW\Framework\Media\Controllers\CMS;
+namespace mvodanovic\WebFW\Media\Controllers\CMS;
 
-use WebFW\Framework\CMS\ListController;
-use WebFW\Framework\Media\DBLayer\ListFetchers\ImageAspectRatio;
-use WebFW\Framework\Media\DBLayer\ListFetchers\ImageVariation as LFImageVariation;
-use WebFW\Framework\Media\DBLayer\ImageVariation as TGImageVariation;
-use WebFW\Framework\Media\DBLayer\Tables\ImageVariation as TImageVariation;
-use WebFW\Framework\Core\Classes\HTML\Input;
-use WebFW\Framework\Core\Classes\HTML\Select;
-use WebFW\Framework\CMS\Classes\EditTab;
-use WebFW\Framework\CMS\Classes\ListHelper;
+use mvodanovic\WebFW\CMS\ListController;
+use mvodanovic\WebFW\Media\DBLayer\ListFetchers\ImageAspectRatio;
+use mvodanovic\WebFW\Media\DBLayer\ListFetchers\ImageVariation as LFImageVariation;
+use mvodanovic\WebFW\Media\DBLayer\ImageVariation as TGImageVariation;
+use mvodanovic\WebFW\Media\DBLayer\Tables\ImageVariation as TImageVariation;
+use mvodanovic\WebFW\Core\Classes\HTML\Input;
+use mvodanovic\WebFW\Core\Classes\HTML\Select;
+use mvodanovic\WebFW\CMS\Classes\EditTab;
+use mvodanovic\WebFW\CMS\Classes\ListHelper;
 
 class ImageVariation extends ListController
 {

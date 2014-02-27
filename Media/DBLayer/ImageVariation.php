@@ -1,14 +1,14 @@
 <?php
 
-namespace WebFW\Framework\Media\DBLayer;
+namespace mvodanovic\WebFW\Media\DBLayer;
 
-use WebFW\Framework\Core\Exceptions\NotFoundException;
-use WebFW\Framework\Database\TableGateway;
-use WebFW\Framework\Media\DBLayer\Tables\ImageVariation as ImageVariationT;
+use mvodanovic\WebFW\Core\Exceptions\NotFoundException;
+use mvodanovic\WebFW\Database\TableGateway;
+use mvodanovic\WebFW\Media\DBLayer\Tables\ImageVariation as ImageVariationT;
 
 /**
  * Class ImageVariation
- * @package WebFW\Framework\Media
+ * @package mvodanovic\WebFW
  *
  * @property $variation
  * @property $width

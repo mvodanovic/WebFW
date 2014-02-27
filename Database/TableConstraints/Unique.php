@@ -1,8 +1,8 @@
 <?php
 
-namespace WebFW\Framework\Database\TableConstraints;
+namespace mvodanovic\WebFW\Database\TableConstraints;
 
-use WebFW\Framework\Database\Table;
+use mvodanovic\WebFW\Database\Table;
 
 class Unique extends Constraint
 {

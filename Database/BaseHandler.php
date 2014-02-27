@@ -1,11 +1,11 @@
 <?php
 
-namespace WebFW\Framework\Database;
+namespace mvodanovic\WebFW\Database;
 
-use WebFW\Framework\Core\Classes\BaseClass;
-use WebFW\Framework\Core\Exception;
-use WebFW\Framework\Core\Config;
-use WebFW\Framework\Dev\Profiler;
+use mvodanovic\WebFW\Core\Classes\BaseClass;
+use mvodanovic\WebFW\Core\Exception;
+use mvodanovic\WebFW\Core\Config;
+use mvodanovic\WebFW\Dev\Profiler;
 
 abstract class BaseHandler extends BaseClass
 {
@@ -27,7 +27,7 @@ abstract class BaseHandler extends BaseClass
      *
      * @param int $instanceID - ID of DB instance to fetch, NULL for last active instance
      * @return BaseHandler - instance of the implementing class
-     * @throws \WebFW\Framework\Core\Exception - if invalid instance ID given or couldn't create a new instance
+     * @throws \mvodanovic\WebFW\Core\Exception - if invalid instance ID given or couldn't create a new instance
      */
     public static function getInstance($instanceID = null)
     {
@@ -67,7 +67,7 @@ abstract class BaseHandler extends BaseClass
      * Set the instance with the given ID as active.
      *
      * @param int $instanceID - the instance ID
-     * @throws \WebFW\Framework\Core\Exception - if invalid instance ID given
+     * @throws \mvodanovic\WebFW\Core\Exception - if invalid instance ID given
      */
     public static function setActiveInstanceID($instanceID)
     {

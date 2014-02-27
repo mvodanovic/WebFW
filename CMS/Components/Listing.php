@@ -1,17 +1,17 @@
 <?php
 
-namespace WebFW\Framework\CMS\Components;
+namespace mvodanovic\WebFW\CMS\Components;
 
-use WebFW\Framework\CMS\Classes\ListRowAction;
-use WebFW\Framework\Core\ArrayAccess;
-use WebFW\Framework\Core\Classes\HTML\Input;
-use WebFW\Framework\Core\Component;
-use WebFW\Framework\Core\Exception;
-use WebFW\Framework\CMS\ListController;
-use WebFW\Framework\Database\ListFetcher;
-use WebFW\Framework\Database\TableColumns\Column;
-use WebFW\Framework\Database\TableGateway;
-use WebFW\Framework\Dev\Controller;
+use mvodanovic\WebFW\CMS\Classes\ListRowAction;
+use mvodanovic\WebFW\Core\ArrayAccess;
+use mvodanovic\WebFW\Core\Classes\HTML\Input;
+use mvodanovic\WebFW\Core\Component;
+use mvodanovic\WebFW\Core\Exception;
+use mvodanovic\WebFW\CMS\ListController;
+use mvodanovic\WebFW\Database\ListFetcher;
+use mvodanovic\WebFW\Database\TableColumns\Column;
+use mvodanovic\WebFW\Database\TableGateway;
+use mvodanovic\WebFW\Dev\Controller;
 
 class Listing extends Component
 {
@@ -19,7 +19,7 @@ class Listing extends Component
     protected $controller;
 
     /**
-     * @throws \WebFW\Framework\Core\Exception
+     * @throws \mvodanovic\WebFW\Core\Exception
      */
     public function execute()
     {
@@ -77,7 +77,7 @@ class Listing extends Component
         parent::setDefaultParams();
 
         $this->setParam('template', 'listing');
-        $this->setParam('templateDirectory', \WebFW\Framework\Core\FW_PATH . '/CMS/Templates/Components');
+        $this->setParam('templateDirectory', \mvodanovic\WebFW\Core\FW_PATH . '/CMS/Templates/Components');
     }
 
     public function getRowButton(ListRowAction $action, TableGateway $listRow)
