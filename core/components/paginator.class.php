@@ -5,7 +5,6 @@ namespace WebFW\Core\Components;
 use WebFW\Core\Component;
 use WebFW\Core\Router;
 use WebFW\Core\Controller;
-use WebFW\Core\Config;
 
 class Paginator extends Component
 {

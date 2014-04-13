@@ -5,6 +5,7 @@ use WebFW\CMS\Classes\EditTab;
 use WebFW\CMS\ItemController;
 use WebFW\Core\Classes\HTML\Base\BaseFormItem;
 use WebFW\Core\Classes\HTML\Message;
+use WebFW\Core\Controller;
 
 /**
  * @var ItemController $controller
@@ -15,6 +16,8 @@ use WebFW\Core\Classes\HTML\Message;
  * @var array $editActions
  * @var EditAction $action
  */
+
+$controller = Controller::getInstance();
 
 ?>
 <?php foreach ($controller->getMessages() as $message): ?>

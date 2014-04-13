@@ -5,8 +5,12 @@ namespace WebFW\CMS\Controllers;
 use WebFW\CMS\ListController;
 use WebFW\CMS\DBLayer\ListFetchers\UserType as LFUserType;
 use WebFW\CMS\DBLayer\UserType as TGUserType;
+use WebFW\CMS\DBLayer\User as TGUser;
+use WebFW\CMS\DBLayer\Tables\User as TUser;
 use WebFW\Core\Classes\HTML\Input;
 use WebFW\CMS\Classes\EditTab;
+use WebFW\Core\Classes\HTML\ReferencedListPicker;
+use WebFW\Core\Route;
 
 class UserType extends ListController
 {
@@ -49,6 +53,14 @@ class UserType extends ListController
             'Is Root',
             "Is this user type the root type.\n Root types have full access rights.",
             true
+        );
+        $tab->addField(
+            new ReferencedListPicker(
+                new Route(User::className()),
+                TUser::getInstance()->getConstraint('fk_cms_user_user_type_id'),
+                TGUser::className()
+            ),
+            'Users'
         );
 
         $this->editTabs[] = $tab;
