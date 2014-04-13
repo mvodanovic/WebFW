@@ -2,21 +2,34 @@
 
 namespace WebFW\Framework\Core;
 
+use WebFW\Framework\Core\Traits\tDualTemplated;
 use WebFW\Framework\Externals\PHPTemplate;
 
-abstract class HTMLController extends TemplatedController
+abstract class HTMLController extends Controller
 {
-    protected $baseTemplate;
-    protected $baseTemplateDirectory;
+    use tDualTemplated;
+
     protected $pageTitle = '';
     protected $simpleOutput = false;
     protected $headHTML = array();
     protected $headJS = array();
     protected $headCSS = array();
 
+    const DEFAULT_TEMPLATE_NAME = 'default';
+
     protected function __construct()
     {
         parent::__construct();
+
+        if ($this->action !== static::DEFAULT_ACTION_NAME) {
+            $this->template = $this->action;
+        } else {
+            $this->template = static::DEFAULT_TEMPLATE_NAME;
+        }
+
+        $templateDir = explode('\\', static::className());
+        $templateDir = end($templateDir);
+        $this->templateDirectory = \WebFW\Framework\Core\CTL_TEMPLATE_PATH . DIRECTORY_SEPARATOR . $templateDir;
 
         $this->baseTemplate = static::DEFAULT_TEMPLATE_NAME;
         $this->baseTemplateDirectory = \WebFW\Framework\Core\BASE_TEMPLATE_PATH;

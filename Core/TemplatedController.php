@@ -2,14 +2,11 @@
 
 namespace WebFW\Framework\Core;
 
-use WebFW\Framework\Externals\PHPTemplate;
+use WebFW\Framework\Core\Traits\tTemplated;
 
 abstract class TemplatedController extends Controller
 {
-    protected $template;
-    protected $templateDirectory;
-    protected $useTemplate = true;
-    protected $templateVariables = array();
+    use tTemplated;
 
     const DEFAULT_TEMPLATE_NAME = 'default';
 
@@ -34,25 +31,11 @@ abstract class TemplatedController extends Controller
             $this->setRedirectUrl($this->redirectUrl, true);
         }
 
-        if ($this->useTemplate !== true) {
-            return;
-        }
-
         try {
-            $template = new PHPTemplate($this->template . '.template.php', $this->templateDirectory);
+            $this->output = $this->processTemplate();
         } catch (Exception $e) {
             throw new Exception('Template missing in controller ' . static::className(), 500, $e);
         }
-        foreach ($this->templateVariables as $name => &$value) {
-            $template->set($name, $value);
-        }
-
-        $this->output = $template->fetch();
-    }
-
-    final protected function setTplVar($name, $value)
-    {
-        $this->templateVariables[$name] = $value;
     }
 
     public function getOutput()
