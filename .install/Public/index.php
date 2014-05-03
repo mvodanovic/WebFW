@@ -5,27 +5,27 @@
  * @package mvodanovic\WebFW
  */
 
+use mvodanovic\WebFW\Bootstrap;
+use mvodanovic\WebFW\Core\Framework;
+use mvodanovic\WebFW\Core\Exception as WebFWException;
+
 session_start();
 ob_start();
 
-if (!file_exists('../WebFW/Framework/Core/__bootstrap.php')) {
+if (!file_exists('../.Bootstrap.php')) {
     header('Content-type: text/plain; charset=UTF-8');
-    echo 'WebFW Fatal Error: Bootstrap unreachable: ',
-        realpath('..'), DIRECTORY_SEPARATOR,
-        'WebFW', DIRECTORY_SEPARATOR,
-        'Framework', DIRECTORY_SEPARATOR,
-        'Core', DIRECTORY_SEPARATOR,
-        '__bootstrap.php';
+    echo 'WebFW Fatal Error: Bootstrap unreachable: ', realpath('..'), DIRECTORY_SEPARATOR, '.Bootstrap.php';
     die;
 }
 
-require_once('../WebFW/Framework/Core/__bootstrap.php');
+require_once('../.Bootstrap.php');
+Bootstrap::init();
 
 try {
-    \mvodanovic\WebFW\Core\Framework::start();
-} catch (\mvodanovic\WebFW\Core\Exception $e) {
+    Framework::start();
+} catch (WebFWException $e) {
     $e->ErrorMessage();
 } catch (Exception $e) {
-    $e = new \mvodanovic\WebFW\Core\Exception($e->getMessage(), $e->getCode(), $e);
+    $e = new WebFWException($e->getMessage(), $e->getCode(), $e);
     $e->ErrorMessage();
 }

@@ -18,7 +18,7 @@ class Config extends BaseClass
     protected static function loadConfig()
     {
         /// Load the main config file, throw an exception on fail
-        $file = \mvodanovic\WebFW\Core\BASE_PATH . DIRECTORY_SEPARATOR . 'config'
+        $file = \mvodanovic\WebFW\Core\BASE_PATH . DIRECTORY_SEPARATOR . 'Config'
             . DIRECTORY_SEPARATOR . 'config.ini';
         if (!file_exists($file)) {
             throw new Exception('Config file missing: ' . $file);
@@ -30,7 +30,7 @@ class Config extends BaseClass
         static::addData($data);
 
         /// Load the specifics definition file, return on fail
-        $file = \mvodanovic\WebFW\Core\BASE_PATH . DIRECTORY_SEPARATOR . 'config'
+        $file = \mvodanovic\WebFW\Core\BASE_PATH . DIRECTORY_SEPARATOR . 'Config'
             . DIRECTORY_SEPARATOR . 'specifics.ini';
         if (!file_exists($file)) {
             return;
@@ -42,8 +42,8 @@ class Config extends BaseClass
         $specifics = $data['specifics'];
 
         /// Load the specifics file, return on fail
-        $file = \mvodanovic\WebFW\Core\BASE_PATH . DIRECTORY_SEPARATOR . 'config'
-            . DIRECTORY_SEPARATOR . 'specifics' . DIRECTORY_SEPARATOR . $specifics . '.ini';
+        $file = \mvodanovic\WebFW\Core\BASE_PATH . DIRECTORY_SEPARATOR . 'Config'
+            . DIRECTORY_SEPARATOR . 'Specifics' . DIRECTORY_SEPARATOR . $specifics . '.ini';
         if (!file_exists($file)) {
             return;
         }
