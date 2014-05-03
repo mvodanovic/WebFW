@@ -41,8 +41,8 @@ abstract class ItemController extends Controller implements iValidate
             throw new UnauthorizedException('Insufficient privileges');
         }
 
-        $this->initForm();
         $this->initEdit();
+        $this->initForm();
         $this->checkTableGateway();
         $this->afterInit();
         $this->afterInitEdit();

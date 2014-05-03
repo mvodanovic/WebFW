@@ -100,7 +100,7 @@ class Exception extends \Exception
      *
      * @internal
      */
-    public function ErrorMessage()
+    public function errorMessage()
     {
         if ($this->getCode() >= 500 && $this->getCode() <= 599) {
             trigger_error($this->getFile() . ': ' . $this->getLine() . ': ' .  $this->getMessage());

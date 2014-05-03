@@ -2,11 +2,14 @@
 
 namespace mvodanovic\WebFW;
 
+use Exception;
+
 /**
  * Class Bootstrap
  *
  * Framework bootstrap.
  * Loads required constants and initializes the autoloader.
+ * This class is used before the framework is started.
  *
  * @package mvodanovic\WebFW
  */
@@ -44,7 +47,8 @@ final class Bootstrap
      * Function used by the autoloader to load classes.
      *
      * @param string $className Name of the class to load
-     * @return bool True if class is found, false otherwise
+     * @return bool True if class is found
+     * @throws BootstrapException if class is not found
      */
     private function loadClass($className)
     {
@@ -69,7 +73,7 @@ final class Bootstrap
             return true;
         }
 
-        return false;
+        throw new BootstrapException('Class "' . $className . '" not found in "' . $file . '"');
     }
 
     /**
@@ -170,4 +174,31 @@ final class Bootstrap
      * Class cannot be cloned.
      */
     private function __clone() {}
+}
+
+/**
+ * Class BootstrapException
+ *
+ * This exception should be thrown only within the Bootstrap class.
+ * If it is thrown, it is probable it occurred before the framework was started.
+ * This is why all exception details are echoed in plain text.
+ *
+ * @package mvodanovic\WebFW
+ */
+final class BootstrapException extends Exception
+{
+    /**
+     * Echoes exception details in plain text.
+     */
+    public function errorMessage()
+    {
+        header('Content-type: text/plain; charset=UTF-8');
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+        echo "*** Bootstrap Exception ***\n\n";
+        echo 'File: ', $this->getFile(), ', line: ', $this->getLine(), "\n";
+        echo $this->getMessage(), "\n";
+        echo "\nStack trace:\n", $this->getTraceAsString();
+    }
 }
