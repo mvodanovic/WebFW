@@ -11,7 +11,7 @@ class ClassHelper extends BaseClass
 {
     use tCacheable;
 
-    protected static $classExtension = '.class.php';
+    protected static $classExtension = '.php';
 
     protected static function init()
     {
@@ -78,11 +78,11 @@ class ClassHelper extends BaseClass
         $list = array();
         $handle = opendir($directory);
         while (($entry = readdir($handle)) !== false) {
-            if ($entry === '.' || $entry === '..' || $entry === '.git' || $entry === '__install') {
+            if ($entry === '.' || $entry === '..' || $entry === '.git' || $entry === '.install') {
                 continue;
             }
             $entry = $directory . DIRECTORY_SEPARATOR . $entry;
-            if ($entry === \mvodanovic\WebFW\Core\PUBLIC_PATH) {
+            if (defined('\mvodanovic\WebFW\Core\PUBLIC_PATH') && $entry === \mvodanovic\WebFW\Core\PUBLIC_PATH) {
                 continue;
             }
             if (is_dir($entry)) {

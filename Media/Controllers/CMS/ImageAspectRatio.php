@@ -5,7 +5,7 @@ namespace mvodanovic\WebFW\Media\Controllers\CMS;
 use mvodanovic\WebFW\CMS\ListController;
 use mvodanovic\WebFW\Media\DBLayer\ListFetchers\ImageAspectRatio as LFImageAspectRatio;
 use mvodanovic\WebFW\Media\DBLayer\ImageAspectRatio as TGImageAspectRatio;
-use mvodanovic\WebFW\Media\DBLayer\ListFetchers\ImageVariation;
+use mvodanovic\WebFW\Media\DBLayer\ListFetchers\ImageVariation as LFImageVariation;
 use mvodanovic\WebFW\Media\DBLayer\Tables\ImageVariation as TImageVariation;
 use mvodanovic\WebFW\Core\Classes\HTML\Input;
 use mvodanovic\WebFW\Core\Classes\HTML\Select;
@@ -43,8 +43,8 @@ class ImageAspectRatio extends ListController
 
         $tab = new EditTab('default');
 
-        $variationLM = new ImageVariation();
-        $variations = $variationLM->getList(
+        $variationLF = new LFImageVariation();
+        $variations = $variationLF->getList(
             array('type' => TImageVariation::TYPE_CROPPED),
             array('aspect_ratio_id' => 'ASC')
         );

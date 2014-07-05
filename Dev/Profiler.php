@@ -2,6 +2,10 @@
 
 namespace mvodanovic\WebFW\Dev;
 
+use mvodanovic\WebFW\CLI\Terminal;
+use mvodanovic\WebFW\CLI\Writer\String;
+use mvodanovic\WebFW\CLI\Writer\Style;
+use mvodanovic\WebFW\CLI\Writer\Writer;
 use mvodanovic\WebFW\Core\Classes\BaseClass;
 use mvodanovic\WebFW\Core\Config;
 use mvodanovic\WebFW\Core\Exception;
@@ -155,6 +159,61 @@ class Profiler extends BaseClass
     {
         $template = new PHPTemplate($this->templateName, $this->templateDir);
         return $template->fetch();
+    }
+
+    public function outputToCLI()
+    {
+        $width = Terminal::getInstance()->getWidth();
+        $writer = Writer::getInstance();
+        $styleContainer = (new Style())->setColor(Style::VT_GREEN);
+        $styleHeader = (new Style())->setColor(Style::VT_WHITE)->setBold();
+        $styleReset = (new Style())->setReset();
+
+        $borderTop = (new String(str_pad('### Profiler: ', $width, '#', STR_PAD_RIGHT)))->setStyle($styleContainer);
+        $borderBottom = (new String(str_pad('#', $width, '#', STR_PAD_RIGHT)))->setStyle($styleContainer);
+        $borderLeft = (new String('# '))->setStyle($styleContainer);
+        $borderRight = (new String(' #'))->setStyle($styleContainer);
+        $borderInner = (new String(str_pad('# ', $width-2, '-', STR_PAD_RIGHT) . ' #'))->setStyle($styleContainer);
+
+        $writer->add($styleReset)->addLine($borderTop);
+        $time = str_pad('TIME', 10, ' ', STR_PAD_RIGHT);
+        $memory = str_pad('MEMORY', 10, ' ', STR_PAD_RIGHT);
+        $queries = str_pad('QUERIES', 8, ' ', STR_PAD_RIGHT);
+        $description = str_pad('DESCRIPTION', $width - 41, ' ', STR_PAD_RIGHT);
+        $writer->add($borderLeft);
+        $writer->add((new String($time . '   ' . $memory . '   ' . $queries . '   ' . $description))->setStyle($styleHeader));
+        $writer->addLine($borderRight);
+        foreach ($this->getMoments() as $moment) {
+            $time = str_pad($moment['time'] . ' s', 10, ' ', STR_PAD_RIGHT);
+            $memory = str_pad($moment['memory'] . ' B', 10, ' ', STR_PAD_RIGHT);
+            $queries = str_pad($moment['queryCount'], 8, ' ', STR_PAD_RIGHT);
+
+            $description = wordwrap($moment['description'], $width - 41, PHP_EOL, true);
+            $descriptionList = explode(PHP_EOL, $description);
+            $description = str_pad(array_shift($descriptionList), $width - 41, ' ', STR_PAD_RIGHT);
+            $writer->add($borderLeft);
+            $writer->add($time . '   ' . $memory . '   ' . $queries . '   ' . $description);
+            $writer->addLine($borderRight);
+            foreach ($descriptionList as $description) {
+                $writer->add($borderLeft)->add(str_pad('', 39, ' ', STR_PAD_RIGHT))
+                    ->add(str_pad($description, $width - 41, ' ', STR_PAD_RIGHT))->addLine($borderRight);
+            }
+        }
+
+        $bottomInfo = [
+            'Total time' => $this->getTotalTime() . ' s',
+            'Peak memory usage' => $this->getPeakMemoryUsage() . ' B',
+        ];
+        $writer->addLine($borderInner);
+        foreach ($bottomInfo as $name => $value) {
+            $writer->add($borderLeft);
+            $writer->add((new String($name . ': '))->setStyle($styleHeader));
+            $writer->add(str_pad($value, $width - (6 + strlen($name)), ' '));
+            $writer->addLine($borderRight);
+        }
+        $writer->add($borderBottom);
+
+        $writer->write();
     }
 
     protected function getTime()

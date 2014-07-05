@@ -53,7 +53,7 @@ final class Bootstrap
     private function loadClass($className)
     {
         $classNameChunks = explode('\\', $className);
-        $file = str_replace(array('\\', '_'), array(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), $className);
+        $file = str_replace(['\\', '_'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $className);
         $pointer = &$this->autoLoadDefinitions;
         foreach ($classNameChunks as $chunk) {
 
@@ -73,7 +73,7 @@ final class Bootstrap
             return true;
         }
 
-        throw new BootstrapException('Class "' . $className . '" not found in "' . $file . '"');
+        throw new BootstrapException('Class "' . $className . '" not found in "' . $file . '"', 1);
     }
 
     /**
@@ -81,12 +81,24 @@ final class Bootstrap
      */
     private function initBasicConstants()
     {
-        define ('mvodanovic\WebFW\Core\PUBLIC_PATH', realpath(dirname($_SERVER['SCRIPT_FILENAME'])));
-        define ('mvodanovic\WebFW\Core\BASE_PATH', realpath(Core\PUBLIC_PATH . '/..'));
-        define ('mvodanovic\WebFW\Core\GENERAL_TEMPLATE_PATH', realpath(Core\BASE_PATH . '/Templates'));
-        define ('mvodanovic\WebFW\Core\CTL_TEMPLATE_PATH', realpath(Core\GENERAL_TEMPLATE_PATH . '/Controllers'));
-        define ('mvodanovic\WebFW\Core\BASE_TEMPLATE_PATH', realpath(Core\GENERAL_TEMPLATE_PATH . '/Base'));
-        define ('mvodanovic\WebFW\Core\CMP_TEMPLATE_PATH', realpath(Core\GENERAL_TEMPLATE_PATH . '/Components'));
+        switch (PHP_SAPI) {
+            case 'apache':
+            case 'apache2filter':
+            case 'apache2handler':
+                define('mvodanovic\WebFW\Core\PUBLIC_PATH', realpath(dirname($_SERVER['SCRIPT_FILENAME'])));
+                define('mvodanovic\WebFW\Core\BASE_PATH', realpath(Core\PUBLIC_PATH . '/..'));
+                break;
+            case 'cli':
+            case 'cli-server':
+                define('mvodanovic\WebFW\Core\BASE_PATH', realpath(dirname(__FILE__)));
+                break;
+            default:
+                throw new BootstrapException('PHP SAPI "' . PHP_SAPI . '" not supported', 1);
+        }
+        define('mvodanovic\WebFW\Core\GENERAL_TEMPLATE_PATH', realpath(Core\BASE_PATH . '/Templates'));
+        define('mvodanovic\WebFW\Core\CTL_TEMPLATE_PATH', realpath(Core\GENERAL_TEMPLATE_PATH . '/Controllers'));
+        define('mvodanovic\WebFW\Core\BASE_TEMPLATE_PATH', realpath(Core\GENERAL_TEMPLATE_PATH . '/Base'));
+        define('mvodanovic\WebFW\Core\CMP_TEMPLATE_PATH', realpath(Core\GENERAL_TEMPLATE_PATH . '/Components'));
     }
 
     /**
@@ -153,7 +165,7 @@ final class Bootstrap
             }
 
             if ($autoLoadType === 'psr-0') {
-                $path = str_replace(array('\\', '_'), array(DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR), $class) . $path;
+                $path = str_replace(['\\', '_'], [DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR], $class) . $path;
             }
 
             $pointer = $path;
